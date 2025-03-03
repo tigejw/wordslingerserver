@@ -1,18 +1,40 @@
+import { availableMemory } from "process";
+
 const db = require("../connection.ts");
 const format = require("pg-format");
-// {
-//     achievementsData,
-//     friendsData,
-//     gamesData,
-//     languagesData,
-//     leaderboardData,
-//     usersData,
-//     word_masteryData,
-//     wordsData,
-//   }
-const seed = () => {
+
+type Data = {
+  achievementsData: Array<object>;
+  friendsData: Array<object>;
+  gamesData: Array<object>;
+  languagesData: Array<Languages>;
+  leaderboardData: Array<object>;
+  usersData: [User];
+  word_masteryData: Array<object>;
+  wordsData: Array<object>;
+};
+
+type User = {
+  username: string;
+  name: string;
+  avatar_url: string;
+  role: string;
+  bio: string;
+};
+
+type Languages = {
+  user_id: number;
+  language: string;
+  current_level: number;
+};
+
+function seed(data: Data) {
+  //look up destructing objects in TS
   return db
     .query("DROP TABLE IF EXISTS users;")
+    .then(() => {
+      return db.query(`DROP TABLE IF EXISTS avaliableLanguages;`);
+    })
     .then(() => {
       return db.query(`DROP TABLE IF EXISTS languages;`);
     })
@@ -38,6 +60,9 @@ const seed = () => {
       return createUsersTable();
     })
     .then(() => {
+      return createAvaliableLanguages();
+    })
+    .then(() => {
       return createLanguagesTable();
     })
     .then(() => {
@@ -57,8 +82,17 @@ const seed = () => {
     })
     .then(() => {
       return createWordMasteryTable();
+    })
+    .then(() => {
+      return insertUserData(data.usersData);
+    })
+    .then(() => {
+      return insertAvaliableLanguages();
+    })
+    .then(() => {
+      return insertLanguagesData(data.languagesData);
     });
-};
+}
 
 function createUsersTable() {
   return db.query(`CREATE TABLE users(
@@ -71,9 +105,14 @@ function createUsersTable() {
         );`);
 }
 
+function createAvaliableLanguages() {
+  return db.query(`CREATE TABLE availableLanguages (
+    language varchar PRIMARY KEY);`);
+}
 function createLanguagesTable() {
   return db.query(`CREATE TABLE languages(
-        language VARCHAR PRIMARY KEY,
+        language_id SERIAL PRIMARY KEY,
+        language VARCHAR REFERENCES availableLanguages(language),
         user_id INT REFERENCES users(user_id),
         current_level INT
         );`);
@@ -103,7 +142,7 @@ function createLeaderboardTable() {
         leaderboard_id SERIAL PRIMARY KEY,
         rank INT,
         user_id INT REFERENCES users(user_id),
-        language VARCHAR REFERENCES languages(language)
+        language VARCHAR REFERENCES availableLanguages(language)
         )`);
 }
 
@@ -147,6 +186,41 @@ function createWordMasteryTable() {
             french_mastery mastery_level
             )`);
     });
+}
+
+function insertUserData(usersData: Array<User>) {
+  const formattedData = usersData.map((user) => {
+    const { username, name, avatar_url, role, bio } = user;
+    return [username, name, avatar_url, role, bio];
+  });
+  const queryString = format(
+    `INSERT INTO users (username, name, avatar_url, role, bio)
+    VALUES %L RETURNING *`,
+    formattedData
+  );
+
+  return db.query(queryString);
+}
+
+function insertAvaliableLanguages() {
+  const languages = ["English", "French", "German", "Spanish"];
+  return db.query(
+    `INSERT INTO availableLanguages(language) VALUES ($1), ($2), ($3), ($4) RETURNING *`,
+    languages
+  );
+}
+
+function insertLanguagesData(languagesData: Array<Languages>) {
+  const formattedData = languagesData.map((languageData) => {
+    const { language, user_id, current_level } = languageData;
+    return [language, user_id, current_level];
+  });
+  const queryString = format(
+    `INSERT INTO languages (language, user_id, current_level)
+    VALUES %L RETURNING *`,
+    formattedData
+  );
+  return db.query(queryString);
 }
 
 module.exports = seed;
