@@ -3,21 +3,26 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon ./api/index.ts",
+    "build": "tsc",
+    "serve": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "nodemon": "^3.1.9",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.6",
+    "ts-node": "^10.9.2",
     "tsc": "^2.0.4",
-    "typescript": "^5.8.2",
-    "nodemon": "^3.1.9"
+    "typescript": "^5.8.2"
   },
   "dependencies": {
-    "nodemon": "^3.1.9",
+    "@types/express": "^5.0.0",
     "axios": "^1.8.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
