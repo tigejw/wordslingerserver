@@ -1,6 +1,5 @@
 module.exports = [
   {
-    user_id: 1,
     username: "testUser1",
     name: "Test McTest",
     avatar_url:
@@ -9,7 +8,6 @@ module.exports = [
     bio: "A wordslinging cowboy",
   },
   {
-    user_id: 2,
     username: "testUser2",
     name: "Ranger McTest",
     avatar_url:
