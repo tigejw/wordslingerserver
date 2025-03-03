@@ -1,15 +1,18 @@
 const request = require("supertest");
 const app = require("../index");
+import { beforeEach } from "node:test"; 
 
-// const seed = require(seed.js)
-// const db = require(connection.js)
-// const {testdata} =
+const seedDatabase = require("../../db/seeds/seed.js");
+const connection = require("../../db/connection");
+
+const {achievementsData, friendsData, gamesData, languagesData, leaderboardData, usersData, word_masteryData, wordsData} = require("../../db/data/testData/index")
+
 beforeEach(() => {
-  return seed({ testdata });
+  return seedDatabase({});
 });
 
 afterAll(() => {
-  return db.end();
+  return connection.end();
 });
 
 describe("/users", () => {

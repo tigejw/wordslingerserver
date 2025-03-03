@@ -19,7 +19,7 @@ usersRouter.route("/").get(getUsers).post(postUser);
 usersRouter
   .route("/:user_id")
   .get(getUserByUserId)
-  .patch(patchUserByUserId)
+  // .patch(patchUserByUserId)
   .delete(deleteUserByUserId);
 
 export default usersRouter;
