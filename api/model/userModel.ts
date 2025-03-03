@@ -5,7 +5,7 @@ exports.selectUsers = () => {
   return db.selectFrom("users").selectAll().execute();
 };
 
-exports.insertUser = (user: User) => {
+exports.insertUser = (user: NewUser) => {
   return db
     .insertInto("users")
     .values({
@@ -29,4 +29,9 @@ exports.selectUserByUserId = (user_id: number) => {
 
 // exports.updateUserByUserId = () => {};
 
-exports.deleteFromUsersByUserId = () => {};
+exports.deleteFromUsersByUserId = (user_id: number) => {
+  return db
+    .deleteFrom("users")
+    .where("user_id", "=", user_id)
+    .executeTakeFirst();
+};
