@@ -1,11 +1,11 @@
 module.exports = [
   {
-    username: "testUser1",
+    user_id: 1,
     language: "German",
     current_level: 1,
   },
   {
-    username: "testUser2",
+    user_id: 2,
     language: "German",
     current_level: 1,
   },
