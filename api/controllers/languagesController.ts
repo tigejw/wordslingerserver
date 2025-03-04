@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from "express";
 const {
   selectLanguageByUserId,
   updateCurrentLevelByUserId,
-  insertLanguage
+  insertLanguage,
 } = require("../model/languagesModel");
 
 exports.postLanguage = (req: Request, res: Response, next: NextFunction) => {
-    //insertLanguage
+  //insertLanguage
 };
 exports.getLanguageByUserId = (
   req: Request,
