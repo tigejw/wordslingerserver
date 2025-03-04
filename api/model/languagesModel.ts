@@ -1,5 +1,5 @@
 import { Language } from "@/types";
-const db = require("../database");
+const db = require("../../db/connection");
 
 exports.insertLanguage = (language: Language) => {
   return db

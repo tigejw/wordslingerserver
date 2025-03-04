@@ -1,4 +1,4 @@
-const db = require("../database");
+const db = require("../../db/connection");
 import { Word } from "@/types";
 
 exports.selectWords = (
