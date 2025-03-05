@@ -92,9 +92,11 @@ export function createLeaderboardData() {
 }
 
 export function createWordMasteryData(): WordMastery {
+  //how does the app keep track of a user's word mastery?
   return {
-    user_id: faker.number.int({ min: 1, max: 20 }),
+    // user_id: faker.number.int({ min: 1, max: 20 }),
     //english_word:  faker.helpers.arrayElement([ARRAY OF ENGLISH WORDS]
+    english: "hkfdgfnjgnd bjd",
     german_mastery: faker.helpers.arrayElement([
       "beginner",
       "intermediate",
@@ -115,9 +117,6 @@ export function createWordMasteryData(): WordMastery {
 
 //let user_id < faker generate number
 // while id2 and id2 are the same, keep generating
-
-// in the datbase, user_id1 needs to be called sender, user_id2 needs to be called reciever,
-//and then when the sender sends the request, that changes the status to pending and when the reicever sends a request confirming friensship, it goes to "accepted", we also need "declined"
 
 // ON HOLD - might be better to use a csv .wordsData = require("./words.ts");
 // OM HOLD - write some achievements to go in an array
