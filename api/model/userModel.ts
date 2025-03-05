@@ -1,7 +1,12 @@
 import { User } from "@/types";
 const db = require("../../db/connection");
 
-exports.selectUsers = () => {};
+exports.selectUsers = () => {
+  return db.query("SELECT * FROM users").then((res: Response) => {
+    console.log(res);
+    return res;
+  });
+};
 
 exports.insertUser = (user: User) => {};
 
