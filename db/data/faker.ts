@@ -11,6 +11,42 @@ import {
   WordMastery,
 } from "../../types";
 
+//for lnguages, we need a while loop to make sure a user doesn't have multiple ranks for one language
+// exists = false, the while loop will end
+
+export function dataGeneration() {
+  // const usersData = [];
+  // const friendsData = [];
+  // const gamesData = [];
+  const usersLanguagesData = [];
+  const leaderboardData = [];
+
+  // for (let i = 0; i < 21; i++) {
+  //   usersData.push(createUsersData(i));
+  //   friendsData.push(createFriendsData(i));
+  // }
+
+  for (let i = 0; i < 50; i++) {
+    usersLanguagesData.push(createUsersLanguagesData());
+  }
+  for (let i = 0; i < 50; i++) {
+    // gamesData.push(createGameData(i));
+    leaderboardData.push(createLeaderboardData());
+  }
+
+  console.log(
+    // "Users:",
+    // usersData,
+    // "Friends:",
+    // friendsData,
+    // "Games:",
+    // gamesData,
+    "Users languages:",
+    usersLanguagesData,
+    "Leaderboard:",
+    leaderboardData
+  );
+}
 export function createUsersData(seed: number) {
   faker.seed(seed);
   const user: User = {
@@ -28,10 +64,9 @@ export function createUsersData(seed: number) {
 
 export function createFriendsData(seed: number) {
   faker.seed(seed);
-
   const friends: Friend = {
-    user_id1: faker.number.int({ min: 1, max: 20 }),
-    user_id2: faker.number.int({ min: 1, max: 20 }),
+    user_id1: seed,
+    user_id2: faker.number.int({ min: seed + 1, max: 20 }),
     status: faker.helpers.arrayElement([
       "req_from_uid1",
       "req_from_uid2",
@@ -59,44 +94,41 @@ export function createGameData(seed: number) {
     games.loser = faker.number.int({ min: 1, max: 20 });
   }
 
-  const drawnGames: Game = {
-    game: faker.helpers.arrayElement(["Shoot out"]),
-    winner: null,
-    loser: null,
-    isDraw: true,
-  };
+  //this can be uncommented if more game modes are added, please add them to the game array.
 
-  return [games, drawnGames];
+  // const drawnGames: Game = {
+  //   game: faker.helpers.arrayElement(["Shoot out"]),
+  //   winner: null,
+  //   loser: null,
+  //   isDraw: true,
+  //};
+
+  return games;
 }
 
 export function createUsersLanguagesData() {
-  faker.seed(0);
   return {
-    user_id: faker.number.int({ min: 1, max: 20 }),
+    user_id: faker.number.int({ min: 1, max: 30 }),
     language: faker.helpers.arrayElement(["German", "Spanish", "French"]),
-    current_level: faker.number.int({ min: 1, max: 500 }),
+    current_level: faker.number.int({ min: 1, max: 10 }),
   };
-}
-
-export function createWordData() {
-  // an array of words
-  // or just look at how to import a spreadsheet into PSQL
 }
 
 export function createLeaderboardData() {
   return {
-    rank: faker.number.int({ min: 1, max: 2000 }),
     user_id: faker.number.int({ min: 1, max: 20 }),
     language: faker.helpers.arrayElement(["German", "Spanish", "French"]),
+    rank: faker.number.int({ min: 1, max: 2000 }),
   };
 }
 
-export function createWordMasteryData(): WordMastery {
+export function createWordMasteryData(seed: number): WordMastery {
+  faker.seed(seed);
   //how does the app keep track of a user's word mastery?
   return {
     // user_id: faker.number.int({ min: 1, max: 20 }),
     //english_word:  faker.helpers.arrayElement([ARRAY OF ENGLISH WORDS]
-    english: "hkfdgfnjgnd bjd",
+    english: "PlaceHolder",
     german_mastery: faker.helpers.arrayElement([
       "beginner",
       "intermediate",
