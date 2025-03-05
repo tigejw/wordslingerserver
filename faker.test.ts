@@ -1,19 +1,20 @@
-import {
-  createFriendsData,
-  createGameData,
-  createLeaderboardData,
-  createUsersData,
-  createUsersLanguagesData,
-  createWordMasteryData,
-} from "./db/data/faker";
+// import {
+//   createFriendsData,
+//   createGameData,
+//   createLeaderboardData,
+//   createUsersData,
+//   createUsersLanguagesData,
+//   createWordMasteryData,
+//   dataGeneration,
+// } from "./db/data/faker";
 
 describe("testing", () => {
   test("testing", () => {});
 
-  console.log(createGameData(1));
-  console.log(createUsersData(2));
-  console.log(createFriendsData(3));
-  console.log(createUsersLanguagesData());
-  console.log(createLeaderboardData());
-  console.log(createWordMasteryData());
+  //   // console.log(createGameData(1));
+  //   console.log(dataGeneration());
+  //   // console.log(createFriendsData(1));
+  //   // console.log(createUsersLanguagesData(1));
+  //   // console.log(createLeaderboardData(1));
+  //   // console.log(createWordMasteryData(1));
 });

@@ -42,6 +42,7 @@ export type Game = {
 export type Achievement = {
   achievement: string;
   user_id: number;
+  achievement_unlocked: boolean;
 };
 
 export type Leaderboard = {
