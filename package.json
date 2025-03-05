@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
-    "seed": " npx ts-node ./db/seeds/run-seed.ts",
+    "seed": "npx ts-node ./db/seeds/run-seed.ts",
     "test": "jest",
     "start": "node listen.ts",
     "seed-prod": "NODE_ENV=production npm run seed",
@@ -15,6 +15,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@faker-js/faker": "^9.5.1",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.8",
@@ -24,7 +25,6 @@
     "pg-format": "^1.0.4",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.6",
-    "ts-node": "^10.9.2",
     "ts-node": "^10.9.2",
     "tsc": "^2.0.4",
     "typescript": "^5.8.2"
