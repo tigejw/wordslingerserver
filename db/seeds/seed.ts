@@ -36,6 +36,7 @@ type Game = {
 type Achievement = {
   achievement: string;
   user_id: number;
+  achievement_unlocked: boolean;
 };
 
 type Leaderboard = {
@@ -187,7 +188,8 @@ function createAchievementsTable() {
   return db.query(`CREATE TABLE achievements(
         achievement_id SERIAL PRIMARY KEY,
         achievement VARCHAR,
-        user_id INT REFERENCES users(user_id)
+        user_id INT REFERENCES users(user_id),
+        achievement_unlocked BOOLEAN
         )`);
 }
 
@@ -293,12 +295,12 @@ function insertGamesData(gamesData: Array<Game>) {
 
 function insertAchievementsData(achievementsData: Array<Achievement>) {
   const formattedData = achievementsData.map((achievementData) => {
-    const { achievement, user_id } = achievementData;
-    return [achievement, user_id];
+    const { achievement, user_id, achievement_unlocked } = achievementData;
+    return [achievement, user_id, achievement_unlocked];
   });
   const queryString = format(
     `
-    INSERT INTO achievements (achievement, user_id)
+    INSERT INTO achievements (achievement, user_id, achievement_unlocked)
     VALUES %L RETURNING *
     `,
     formattedData
