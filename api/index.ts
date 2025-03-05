@@ -2,6 +2,7 @@ import express from "express";
 import http from "http";
 import { Server, Socket } from "socket.io";
 import cors from "cors";
+import { Zoom } from "swiper";
 
 // Create an Express app and HTTP server
 const app = express();
@@ -27,9 +28,24 @@ interface Players {
   [socketId: string]: Player;
 }
 
+interface GameInstance {
+  playerOneId: string;
+  playerTwoId: string;
+  playerOneCorrectAnswers: Array<string>;
+  playerTwoCorrectAnswers: Array<string>;
+  timer: number;
+}
+
 let players: Players = {};
 let wordList: string[] = ["apple", "banana", "orange", "grape", "watermelon"];
 let gameInProgress = false;
+let gameInstance: GameInstance = {
+  playerOneId: "",
+  playerTwoId: "",
+  playerOneCorrectAnswers: [],
+  playerTwoCorrectAnswers: [],
+  timer: 30,
+};
 
 io.on("connection", (socket: Socket) => {
   console.log(`User connected: ${socket.id}`);
@@ -54,7 +70,24 @@ io.on("connection", (socket: Socket) => {
       Object.values(players).every((player) => player.ready)
     ) {
       gameInProgress = true;
+      gameInstance.playerOneId = Object.keys(players)[0];
+      gameInstance.playerTwoId = Object.keys(players)[1];
+      gameInstance.timer = 30;
+      gameInstance.playerOneCorrectAnswers = [];
+      gameInstance.playerTwoCorrectAnswers = [];
       io.emit("gameStart", { wordList });
+      for (let i = 0; i <= gameInstance.timer; i++) {
+        setTimeout(() => {
+          gameInstance.timer--;
+          console.log(gameInstance.timer);
+          if (gameInstance.timer === 0) {
+            console.log("this if statement is working");
+            io.emit("gameOver", { gameInstance });
+            // checkGameEnd();
+          }
+        }, i * 1000);
+      }
+
       console.log("Starting game...");
     }
   });
@@ -62,9 +95,18 @@ io.on("connection", (socket: Socket) => {
   // Handle player answer submission
   socket.on("submitAnswer", (answer: string) => {
     const player = players[socket.id];
+    console.log("here is the player", player);
+    console.log("here is the socket id", socket.id);
     const currentWord = wordList[player.currentWordIndex];
 
     if (answer.toLowerCase() === currentWord.toLowerCase()) {
+      if (gameInstance.playerOneId === socket.id) {
+        gameInstance.playerOneCorrectAnswers.push(currentWord);
+      }
+      if (gameInstance.playerTwoId === socket.id) {
+        gameInstance.playerTwoCorrectAnswers.push(currentWord);
+      }
+      gameInstance.playerOneCorrectAnswers;
       player.correctAnswers++;
       socket.emit("correctAnswer", { message: "Correct!" });
     } else {
@@ -77,8 +119,8 @@ io.on("connection", (socket: Socket) => {
     // Check if the player has finished all words
     if (player.currentWordIndex >= wordList.length) {
       console.log(player.currentWordIndex);
-      socket.emit("gameComplete", { correctAnswers: player.correctAnswers });
-      checkGameEnd();
+      // socket.emit("gameComplete", { correctAnswers: player.correctAnswers });
+      // checkGameEnd();
     } else {
       // Send the next word
       socket.emit("nextWord", { word: wordList[player.currentWordIndex] });
