@@ -1,70 +1,17 @@
 const db = require("../connection.ts");
 const format = require("pg-format");
+import {
+  User,
+  Language,
+  Word,
+  Data,
+  Game,
+  Achievement,
+  Leaderboard,
+  Friend,
+  WordMastery,
+} from "../../types";
 
-type Data = {
-  achievementsData: Array<Achievement>;
-  friendsData: Array<Friend>;
-  gamesData: Array<Game>;
-  languagesData: Array<Languages>;
-  leaderboardData: Array<Leaderboard>;
-  usersData: Array<User>;
-  word_masteryData: Array<WordMastery>;
-  wordsData: Array<Word>;
-};
-
-type User = {
-  username: string;
-  name: string;
-  avatar_url: string;
-  role: string;
-  bio: string;
-};
-
-type Languages = {
-  user_id: number;
-  language: string;
-  current_level: number;
-};
-
-type Game = {
-  game: string;
-  winner: number | null;
-  loser: number | null;
-  isDraw: boolean;
-};
-
-type Achievement = {
-  achievement: string;
-  user_id: number;
-  achievement_unlocked: boolean;
-};
-
-type Leaderboard = {
-  rank: number;
-  user_id: number;
-  language: string;
-};
-
-type Friend = {
-  user_id1: number;
-  user_id2: number;
-  status: string;
-};
-
-type Word = {
-  english_word: string;
-  french_word: string;
-  german_word: string;
-  spanish_word: string;
-  word_level: number;
-};
-
-type WordMastery = {
-  english_word: string;
-  german_mastery: string;
-  spanish_mastery: string;
-  french_mastery: string;
-};
 function seed(data: Data) {
   //look up destructing objects in TS
   return db
@@ -220,10 +167,10 @@ function createFriendsTable() {
 
 function createWordsTable() {
   return db.query(`CREATE TABLE words(
-        english_word VARCHAR PRIMARY KEY,
-        german_word VARCHAR,
-        spanish_word VARCHAR,
-        french_word VARCHAR,
+        english VARCHAR PRIMARY KEY,
+        german VARCHAR,
+        spanish VARCHAR,
+        french VARCHAR,
         word_level INT
         )`);
 }
@@ -236,7 +183,7 @@ function createWordMasteryTable() {
     .then(() => {
       return db.query(`CREATE TABLE word_mastery(
             mastery_id SERIAL PRIMARY KEY,
-            english_word VARCHAR REFERENCES words(english_word),
+            english VARCHAR REFERENCES words(english),
             german_mastery mastery_level,
             spanish_mastery mastery_level,
             french_mastery mastery_level
@@ -259,14 +206,14 @@ function insertUserData(usersData: Array<User>) {
 }
 
 function insertAvaliableLanguages() {
-  const languages = ["English", "French", "German", "Spanish"];
+  const languages = ["French", "German", "Spanish"];
   return db.query(
-    `INSERT INTO available_languages(language) VALUES ($1), ($2), ($3), ($4) RETURNING *`,
+    `INSERT INTO available_languages(language) VALUES ($1), ($2), ($3) RETURNING *`,
     languages
   );
 }
 
-function insertLanguagesData(languagesData: Array<Languages>) {
+function insertLanguagesData(languagesData: Array<Language>) {
   const formattedData = languagesData.map((languageData) => {
     const { language, user_id, current_level } = languageData;
     return [language, user_id, current_level];
@@ -340,13 +287,12 @@ function insertFriendsData(friendsData: Array<Friend>) {
 
 function insertWordsData(wordsData: Array<Word>) {
   const formattedData = wordsData.map((wordData) => {
-    const { english_word, french_word, german_word, spanish_word, word_level } =
-      wordData;
-    return [english_word, french_word, german_word, spanish_word, word_level];
+    const { english, french, german, spanish, word_level } = wordData;
+    return [english, french, german, spanish, word_level];
   });
   const queryString = format(
     `
-    INSERT INTO words (english_word, french_word, german_word, spanish_word, word_level)
+    INSERT INTO words (english, french, german, spanish, word_level)
     VALUES %L RETURNING *
     `,
     formattedData
@@ -356,13 +302,12 @@ function insertWordsData(wordsData: Array<Word>) {
 
 function insertWordMasteryData(word_masteryData: Array<WordMastery>) {
   const formattedData = word_masteryData.map((data) => {
-    const { english_word, german_mastery, spanish_mastery, french_mastery } =
-      data;
-    return [english_word, german_mastery, spanish_mastery, french_mastery];
+    const { english, german_mastery, spanish_mastery, french_mastery } = data;
+    return [english, german_mastery, spanish_mastery, french_mastery];
   });
   const queryString = format(
     `
-    INSERT INTO word_mastery (english_word, german_mastery, spanish_mastery, french_mastery)
+    INSERT INTO word_mastery (english, german_mastery, spanish_mastery, french_mastery)
     VALUES %L RETURNING *
     `,
     formattedData

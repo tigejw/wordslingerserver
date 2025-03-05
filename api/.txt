@@ -1,0 +1,18 @@
+users
+    get all users
+    get specific user by user_id
+    post user
+    patch user by user_id
+    delete user by user_id
+
+languages
+    get language by user_id
+    update current level by user_id
+    post language 
+
+words
+    get words
+    get word by language
+    get word by level
+    get word by english word 
+    
