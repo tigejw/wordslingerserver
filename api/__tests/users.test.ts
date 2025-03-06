@@ -6,19 +6,10 @@ const { selectUsers } = require("../../api/model/userModel");
 const seedDatabase = require("../../db/seeds/run-seed.ts");
 const connection = require("../../db/connection");
 
-const {
-  achievementsData,
-  friendsData,
-  gamesData,
-  languagesData,
-  leaderboardData,
-  usersData,
-  word_masteryData,
-  wordsData,
-} = require("../../db/data/testData/index");
+const data = require("../../db/data/testData/index");
 
 beforeEach(() => {
-  return seedDatabase({});
+  return seedDatabase(data);
 });
 
 // afterAll(() => {
@@ -28,7 +19,7 @@ beforeEach(() => {
 describe("/users", () => {
   describe("GET /users", () => {
     test("get users", () => {
-      selectUsers();
+      return request(app).get("/api/users/").expect(200);
     });
   });
   describe("GET /users/:user_id", () => {});

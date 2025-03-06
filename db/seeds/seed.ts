@@ -15,7 +15,7 @@ import {
 function seed(data: Data) {
   //look up destructing objects in TS
   return db
-    .query("DROP TABLE IF EXISTS users;")
+    .query("DROP TABLE IF EXISTS users CASCADE;")
     .then(() => {
       return db.query(`DROP TABLE IF EXISTS avaliableLanguages;`);
     })
