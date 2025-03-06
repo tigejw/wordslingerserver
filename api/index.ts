@@ -58,7 +58,9 @@ io.on("connection", (socket: Socket) => {
       const roomId = `${socket.id}${waitingPlayer}`;
       socket.join(roomId);
       io.sockets.sockets.get(waitingPlayer)?.join(roomId);
-      console.log(`${roomId}`);
+      console.log(
+        "users joined the room" + socket.id + "waiting player" + waitingPlayer
+      );
       io.to(roomId).emit("inroom");
       games[roomId] = {
         players: {},
@@ -75,7 +77,10 @@ io.on("connection", (socket: Socket) => {
         correctAnswers: [],
         ready: true,
       };
-      io.emit("gameStart", { testWordList });
+      io.emit("gameStart", {
+        wordList: games[roomId].wordList,
+        roomId: roomId,
+      });
       startTimer(roomId);
       console.log("game is starting" + roomId);
       waitingPlayer = "";
@@ -83,31 +88,40 @@ io.on("connection", (socket: Socket) => {
   });
 
   // Handle player answer submission
-  socket.on("submitAnswer", (answer: string, roomId: string) => {
-    const gameInstance = games[roomId];
-    const currentWordIndex = gameInstance.players[socket.id].currentWordIndex;
-    console.log("here is the socket id", socket.id);
-    const currentWord = gameInstance.wordList[currentWordIndex];
+  socket.on(
+    "submitAnswer",
+    ({ answer, roomId }: { answer: string; roomId: string }) => {
+      const gameInstance = games[roomId];
+      console.log(roomId + "room id");
+      console.log(socket.id + " socket id");
+      console.log(gameInstance);
+      const currentWordIndex = gameInstance.players[socket.id].currentWordIndex;
+      console.log("here is the socket id", socket.id);
+      const currentWord = gameInstance.wordList[currentWordIndex];
+      console.log("index 1" + gameInstance.players[socket.id].currentWordIndex);
+      if (answer.toLowerCase() === currentWord.toLowerCase()) {
+        gameInstance.players[socket.id].currentWordIndex++;
+        gameInstance.players[socket.id].correctAnswers.push(answer);
 
-    if (answer.toLowerCase() === currentWord.toLowerCase()) {
-      gameInstance.players[socket.id].currentWordIndex++;
-      gameInstance.players[socket.id].correctAnswers.push(answer);
+        socket.emit("correctAnswer", { message: "Correct!" });
+      } else {
+        socket.emit("incorrectAnswer", { message: "Incorrect, try again." });
+      }
 
-      socket.emit("correctAnswer", { message: "Correct!" });
-    } else {
-      socket.emit("incorrectAnswer", { message: "Incorrect, try again." });
+      console.log("index" + gameInstance.players[socket.id].currentWordIndex);
+      socket.emit("nextWord", {
+        word: gameInstance.wordList[
+          gameInstance.players[socket.id].currentWordIndex
+        ],
+      });
     }
-
-    socket.emit("nextWord", {
-      word: gameInstance.wordList[
-        gameInstance.players[socket.id].currentWordIndex
-      ],
-    });
-  });
+  );
 
   // Check if both players have completed the game
   function endGame(roomId: string) {
     const gameInstance = games[roomId];
+    console.log(roomId);
+    console.log(gameInstance);
     const gamePlayers = gameInstance.players;
     const gameIds = Object.keys(gamePlayers);
     let winner: string | null = null;
@@ -144,7 +158,7 @@ io.on("connection", (socket: Socket) => {
     console.log(`User disconnected: ${socket.id}`);
     delete players[socket.id];
 
-    endGame(roomId);
+    //endGame(roomId);
     //if player disconnect, the other player in the room will win and we close room
   });
 });
