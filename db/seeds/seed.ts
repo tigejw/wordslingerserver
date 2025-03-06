@@ -17,7 +17,7 @@ function seed(data: Data) {
   return db
     .query("DROP TABLE IF EXISTS users CASCADE;")
     .then(() => {
-      return db.query(`DROP TABLE IF EXISTS avaliableLanguages;`);
+      return db.query(`DROP TABLE IF EXISTS available_languages CASCADE;`);
     })
     .then(() => {
       return db.query(`DROP TABLE IF EXISTS languages;`);
@@ -26,10 +26,13 @@ function seed(data: Data) {
       return db.query(`DROP TABLE IF EXISTS friends;`);
     })
     .then(() => {
+      return db.query("DROP TYPE IF EXISTS friend_status");
+    })
+    .then(() => {
       return db.query(`DROP TABLE IF EXISTS games;`);
     })
     .then(() => {
-      return db.query(`DROP TABLE IF EXISTS words;`);
+      return db.query(`DROP TABLE IF EXISTS words CASCADE;`);
     })
     .then(() => {
       return db.query(`DROP TABLE IF EXISTS achievements;`);
@@ -39,6 +42,9 @@ function seed(data: Data) {
     })
     .then(() => {
       return db.query(`DROP TABLE IF EXISTS word_mastery;`);
+    })
+    .then(() => {
+      return db.query(`DROP TYPE IF EXISTS mastery_level;`);
     })
     .then(() => {
       return createUsersTable();
@@ -314,4 +320,5 @@ function insertWordMasteryData(word_masteryData: Array<WordMastery>) {
   );
   return db.query(queryString);
 }
+
 module.exports = seed;
