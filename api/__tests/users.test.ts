@@ -1,20 +1,17 @@
 const request = require("supertest");
 const app = require("../index");
-import { beforeEach } from "node:test";
 const { selectUsers } = require("../../api/model/userModel");
-
-const seedDatabase = require("../../db/seeds/run-seed.ts");
+const seed = require("../../db/seeds/seed.ts");
 const connection = require("../../db/connection");
-
 const data = require("../../db/data/testData/index");
 
 beforeEach(() => {
-  return seedDatabase(data);
+  return seed(data);
 });
 
-// afterAll(() => {
-//   return connection.end();
-// });
+afterAll(() => {
+  return connection.end();
+});
 
 describe("/users", () => {
   describe("GET /users", () => {
