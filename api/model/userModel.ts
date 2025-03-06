@@ -1,9 +1,10 @@
 import { User } from "@/types";
+import { QueryResult } from "pg";
 const db = require("../../db/connection");
 
 exports.selectUsers = () => {
-  return db.query("SELECT * FROM users").then((res: Response) => {
-    console.log(res.body, "userModel");
+  return db.query("SELECT * FROM users").then((result: QueryResult<User>) => {
+    return result.rows;
   });
 };
 
