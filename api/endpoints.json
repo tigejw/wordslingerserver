@@ -1,0 +1,121 @@
+{
+  "Get/api/word-list": {
+    "description": "serves an array of all the avaible words",
+    "queries": [],
+    "exampleResponse": [
+      {
+        "english": "water",
+        "french": "eau",
+        "german": "Wasser",
+        "spainish": "agua",
+        "word_level": 2
+      },
+      {
+        "english": "wine",
+        "french": "vin",
+        "german": "Wein",
+        "spainish": "vino",
+        "word_level": 10
+      },
+      {
+        "english": "beer",
+        "french": "bière",
+        "german": "bier",
+        "spainish": "cerveza",
+        "word_level": 10
+      }
+    ]
+  },
+
+  "Get/api/word-list/english": {
+    "description": "serves an array of all the avaible words in english",
+    "queries": [],
+    "exampleResponse": [
+      {
+        "english": "water",
+        "word_level": 2
+      },
+      {
+        "english": "wine",
+        "word_level": 10
+      },
+      {
+        "english": "beer",
+        "word_level": 10
+      }
+    ]
+  },
+  "Get/api/word-list/french": {
+    "description": "serves an array of all the avaible words in english",
+    "queries": [],
+    "exampleResponse": [
+      {
+        "french": "eau",
+        "word_level": 2
+      },
+      {
+        "french": "vin",
+        "word_level": 10
+      },
+      {
+        "french": "bière",
+        "word_level": 10
+      }
+    ]
+  },
+
+  "Get/api/word-list/spanish": {
+    "description": "serves an array of all the avaible words in english",
+    "queries": [],
+    "exampleResponse": [
+      {
+        "spainish": "agua",
+        "word_level": 2
+      },
+      {
+        "spainish": "vino",
+        "word_level": 10
+      },
+      {
+        "spainish": "cerveza",
+        "word_level": 10
+      }
+    ]
+  },
+  "Get/api/word-list/german": {
+    "description": "serves an array of all the avaible words in german with it's word_level",
+    "queries": [],
+    "exampleResponse": [
+      {
+        "german": "Wasser",
+        "word_level": 2
+      },
+      {
+        "german": "Wein",
+        "word_level": 10
+      },
+      {
+        "german": "bier",
+        "word_level": 10
+      }
+    ]
+  },
+  "Get/api/word-list/english/level-1": {
+    "description": "Serves an array of all the avaible words in english at the speiced level",
+    "queries": [],
+    "exampleResponse": [
+      {
+        "english": "dog",
+        "word_level": 1
+      },
+      {
+        "english": "cat",
+        "word_level": 1
+      },
+      {
+        "english": "mother",
+        "word_level": 1
+      }
+    ]
+  }
+}
