@@ -19,7 +19,7 @@ app.use(cors());
 
 // Define types for the players
 interface Player {
-  correctAnswers: number;
+  correctAnswers: Array<string>;
   currentWordIndex: number;
   ready: boolean; // Add ready state to track whether player is ready
 }
@@ -29,150 +29,124 @@ interface Players {
 }
 
 interface GameInstance {
-  playerOneId: string;
-  playerTwoId: string;
-  playerOneCorrectAnswers: Array<string>;
-  playerTwoCorrectAnswers: Array<string>;
+  players: Players;
   timer: number;
+  wordList: string[];
 }
 
+let games: { [roomId: string]: GameInstance } = {};
+let waitingPlayer = "";
+
 let players: Players = {};
-let wordList: string[] = ["apple", "banana", "orange", "grape", "watermelon"];
-let gameInProgress = false;
-let gameInstance: GameInstance = {
-  playerOneId: "",
-  playerTwoId: "",
-  playerOneCorrectAnswers: [],
-  playerTwoCorrectAnswers: [],
-  timer: 30,
-};
+let testWordList: string[] = [
+  "apple",
+  "banana",
+  "orange",
+  "grape",
+  "watermelon",
+];
 
 io.on("connection", (socket: Socket) => {
   console.log(`User connected: ${socket.id}`);
 
-  // Add player to the game with the ready flag set to false
-  players[socket.id] = {
-    correctAnswers: 0,
-    currentWordIndex: 0,
-    ready: false,
-  };
-
-  console.log("Players currently connected: ", Object.keys(players));
-
   // Handle when a player signals they're ready to start
   socket.on("playerReady", () => {
-    players[socket.id].ready = true;
-    console.log(`Player ${socket.id} is ready`);
-    console.log(players);
-    // Check if both players are ready
-    if (
-      Object.keys(players).length === 2 &&
-      Object.values(players).every((player) => player.ready)
-    ) {
-      gameInProgress = true;
-      gameInstance.playerOneId = Object.keys(players)[0];
-      gameInstance.playerTwoId = Object.keys(players)[1];
-      gameInstance.timer = 30;
-      gameInstance.playerOneCorrectAnswers = [];
-      gameInstance.playerTwoCorrectAnswers = [];
-      io.emit("gameStart", { wordList });
-      for (let i = 0; i <= gameInstance.timer; i++) {
-        setTimeout(() => {
-          gameInstance.timer--;
-          console.log(gameInstance.timer);
-          if (gameInstance.timer === 0) {
-            console.log("this if statement is working");
-            io.emit("gameOver", { gameInstance });
-            // checkGameEnd();
-          }
-        }, i * 1000);
-      }
-
-      console.log("Starting game...");
+    if (!waitingPlayer) {
+      waitingPlayer = socket.id;
+      console.log(socket.id + "is waiting");
+    } else {
+      const roomId = `${socket.id}${waitingPlayer}`;
+      socket.join(roomId);
+      io.sockets.sockets.get(waitingPlayer)?.join(roomId);
+      console.log(`${roomId}`);
+      io.to(roomId).emit("inroom");
+      games[roomId] = {
+        players: {},
+        wordList: testWordList,
+        timer: 30,
+      };
+      games[roomId].players[socket.id] = {
+        currentWordIndex: 0,
+        correctAnswers: [],
+        ready: true,
+      };
+      games[roomId].players[waitingPlayer] = {
+        currentWordIndex: 0,
+        correctAnswers: [],
+        ready: true,
+      };
+      io.emit("gameStart", { testWordList });
+      startTimer(roomId);
+      console.log("game is starting" + roomId);
+      waitingPlayer = "";
     }
   });
 
   // Handle player answer submission
-  socket.on("submitAnswer", (answer: string) => {
-    const player = players[socket.id];
-    console.log("here is the player", player);
+  socket.on("submitAnswer", (answer: string, roomId: string) => {
+    const gameInstance = games[roomId];
+    const currentWordIndex = gameInstance.players[socket.id].currentWordIndex;
     console.log("here is the socket id", socket.id);
-    const currentWord = wordList[player.currentWordIndex];
+    const currentWord = gameInstance.wordList[currentWordIndex];
 
     if (answer.toLowerCase() === currentWord.toLowerCase()) {
-      if (gameInstance.playerOneId === socket.id) {
-        gameInstance.playerOneCorrectAnswers.push(currentWord);
-      }
-      if (gameInstance.playerTwoId === socket.id) {
-        gameInstance.playerTwoCorrectAnswers.push(currentWord);
-      }
-      gameInstance.playerOneCorrectAnswers;
-      player.correctAnswers++;
+      gameInstance.players[socket.id].currentWordIndex++;
+      gameInstance.players[socket.id].correctAnswers.push(answer);
+
       socket.emit("correctAnswer", { message: "Correct!" });
     } else {
       socket.emit("incorrectAnswer", { message: "Incorrect, try again." });
     }
 
-    // Move to the next word
-    player.currentWordIndex++;
-
-    // Check if the player has finished all words
-    if (player.currentWordIndex >= wordList.length) {
-      console.log(player.currentWordIndex);
-      // socket.emit("gameComplete", { correctAnswers: player.correctAnswers });
-      // checkGameEnd();
-    } else {
-      // Send the next word
-      socket.emit("nextWord", { word: wordList[player.currentWordIndex] });
-    }
-  });
-
-  // Handle player disconnect
-  socket.on("disconnect", () => {
-    console.log(`User disconnected: ${socket.id}`);
-    delete players[socket.id];
-
-    // End the game if there are fewer than two players
-    if (Object.keys(players).length < 2 && gameInProgress) {
-      io.emit("gameOver", { players });
-      socket.disconnect();
-    }
+    socket.emit("nextWord", {
+      word: gameInstance.wordList[
+        gameInstance.players[socket.id].currentWordIndex
+      ],
+    });
   });
 
   // Check if both players have completed the game
-  function checkGameEnd() {
-    const allPlayersFinished = Object.values(players).every(
-      (player) => player.currentWordIndex >= wordList.length
-    );
+  function endGame(roomId: string) {
+    const gameInstance = games[roomId];
+    const gamePlayers = gameInstance.players;
+    const gameIds = Object.keys(gamePlayers);
+    let winner: string | null = null;
+    if (
+      gameInstance.players[gameIds[0]].correctAnswers.length >
+      gameInstance.players[gameIds[1]].correctAnswers.length
+    ) {
+      winner = gameIds[0];
+    } else {
+      winner = gameIds[1]; // account for draw
+    }
 
-    if (allPlayersFinished) {
-      // Determine the winner
-      console.log("all players finished");
-      let winner: string | null = null;
-      let maxCorrectAnswers = 0;
-      for (const socketId in players) {
-        const player = players[socketId];
-        if (player.correctAnswers > maxCorrectAnswers) {
-          maxCorrectAnswers = player.correctAnswers;
-          winner = socketId;
+    io.to(roomId).emit("gameOver", {
+      winner,
+      gameInstance,
+    });
+  }
+
+  function startTimer(roomId: string) {
+    for (let i = 0; i <= games[roomId].timer; i++) {
+      setTimeout(() => {
+        games[roomId].timer--;
+        console.log(games[roomId].timer);
+        if (games[roomId].timer === 0) {
+          console.log("this if statement is working");
+          endGame(roomId);
         }
-      }
-
-      io.emit("gameOver", {
-        winner,
-        correctAnswers: players[winner!].correctAnswers,
-      });
-
-      // Reset the game
-      resetGame();
+      }, i * 1000);
     }
   }
 
-  // Reset the game state
-  function resetGame() {
-    players = {};
-    gameInProgress = false;
-  }
+  // Handle player disconnect
+  socket.on("disconnect", (roomId: string) => {
+    console.log(`User disconnected: ${socket.id}`);
+    delete players[socket.id];
+
+    endGame(roomId);
+    //if player disconnect, the other player in the room will win and we close room
+  });
 });
 
 // Start the server
