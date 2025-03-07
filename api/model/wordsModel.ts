@@ -31,8 +31,6 @@ exports.selectWordByLevel = (
     level
   );
 
-  console.log(queryString);
-
   return db.query(queryString).then((result: QueryResult<Word>) => {
     return result.rows;
   });

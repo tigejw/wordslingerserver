@@ -31,7 +31,6 @@ exports.selectUserByUserId = (user_id: number) => {
 
 exports.deleteFromUsersByUserId = (user_id: number) => {
   const sqlString = format(`DELETE FROM users WHERE user_id = %s`, [user_id]);
-  console.log(sqlString);
   return db.query(sqlString).then((result: QueryResult<any>) => {
     return result.rows;
   });

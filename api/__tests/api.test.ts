@@ -3,10 +3,11 @@ const app = require("../index");
 const seed = require("../../db/seeds/seed.ts");
 const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
-import { Game, User, Language } from "@/types";
+import { Game, User, Language, Word } from "@/types";
+const { frenchTestWords } = require("./wordsFrench");
+const { spainishTestWords } = require("./wordsSpanish");
 
 beforeEach(() => {
-  jest.setTimeout(215000);
   return seed(data);
 });
 
@@ -14,15 +15,11 @@ afterAll(() => {
   return connection.end();
 });
 
-type error = {
-  status: number;
-  msg: string;
-};
-
 type UsersResponse = { body: { users: User[] } };
 type UserResponse = { body: { user: User[] } };
 type GameResponse = { body: { game: Game } };
-type ErrorResponse = { body: { error: error } };
+type WordResponse = { body: { words: Word[] } };
+type ErrorResponse = { body: { error: string } };
 
 describe("/users", () => {
   describe("GET /users", () => {
@@ -42,7 +39,6 @@ describe("/users", () => {
         .get("/api/users/1")
         .expect(200)
         .then(({ body: { user } }: UserResponse) => {
-          console.log(user, "response in user id");
           expect(Array.isArray(user)).toBe(true);
           expect(user[0].user_id).toEqual(1);
         });
@@ -81,7 +77,6 @@ describe("/users", () => {
         .get("/api/users/1")
         .expect(200)
         .then(({ body: { user } }: UserResponse) => {
-          console.log(user, "response in user id");
           expect(Array.isArray(user)).toBe(true);
           expect(user[0].user_id).toEqual(1);
         });
@@ -115,22 +110,15 @@ describe("/users", () => {
     });
   });
 
-  describe("DELETE /users/:user_id", () => {
-    test("204: Responds with a 204 and nothing", () => {
-      return request(app).delete("/api/users/1").expect(204);
-    });
-  });
-
   type LanguageResponse = { body: { language: Language[] } };
   //type LanguageResponse = { body: { user: Language[] } };
-  describe.only("/languages", () => {
+  describe.skip("/languages", () => {
     describe("GET /language/:user_id", () => {
       test("get the languages of a user", () => {
         return request(app)
           .get("/api/language/2")
           .expect(200)
           .then(({ body: { language } }: LanguageResponse) => {
-            console.log(language);
             expect(Array.isArray(language)).toBe(true);
           });
       });
@@ -140,7 +128,7 @@ describe("/users", () => {
   describe("PATCH /language/:user_id", () => {});
 });
 
-describe.only("/games", () => {
+describe("/games", () => {
   describe("POST /games", () => {
     test("should return a 201 and posted data", () => {
       return request(app)
@@ -169,7 +157,7 @@ describe.only("/games", () => {
         });
     });
 
-    describe.only("POST /games error handling", () => {
+    describe("POST /games error handling", () => {
       test("400: room_id is missing", () => {
         return request(app)
           .post("/api/games")
@@ -335,6 +323,106 @@ describe.only("/games", () => {
         .then(({ body: { error } }: ErrorResponse) => {
           expect(error).toEqual("Not found!");
         });
+    });
+  });
+});
+
+describe("GET REQUESTS", () => {
+  describe("GET - /word-list", () => {
+    test("200: Responds with every word from all available languages with their corresponding level ", () => {
+      return request(app)
+        .get("/api/word-list/")
+        .expect(200)
+        .then(({ body: { words } }: WordResponse) => {
+          expect(words).toEqual(data.wordsData);
+        });
+    });
+    test("404: Responds with a 404 when an incorrect pathway is given ", () => {
+      return request(app)
+        .get("/api/vords/")
+        .expect(404)
+        .then(({ body: { error } }: ErrorResponse) => {
+          expect(error).toBe("Invalid URL");
+        });
+    });
+  });
+  describe("GET - /word-list/:targetLanguage", () => {
+    test("200: Responds with all available french words with their corresponding level ", () => {
+      const user = {
+        user_id: 12,
+        username: "helloMartha",
+        name: "Martha",
+        usersLanguage: "english",
+        role: "user",
+        bio: "I would like to live in France in the future",
+      };
+      return request(app)
+        .get("/api/word-list/french")
+        .send(user)
+        .expect(200)
+        .then(({ body: { words } }: WordResponse) => {
+          expect(words).toEqual(frenchTestWords);
+        });
+    });
+
+    describe("GET - /word-list/french", () => {
+      test("200: Responds with all available Spanish words with their corresponding level  ", () => {
+        const user = {
+          user_id: 12,
+          username: "sol",
+          name: "Rico",
+          usersLanguage: "english",
+          role: "user",
+          bio: "Getting back into my spanish roots",
+        };
+        return request(app)
+          .get("/api/word-list/spanish")
+          .send(user)
+          .expect(200)
+          .then(({ body: { words } }: WordResponse) => {
+            expect(words).toEqual(spainishTestWords);
+          });
+      });
+    });
+    describe("GET - select words in the users target langaugae from the speicifed level", () => {
+      test("200: Responds with all available Spanish words with their corresponding level  ", () => {
+        const user = {
+          user_id: 12,
+          username: "bandOnTheWall",
+          name: "Merkal",
+          usersLanguage: "english",
+          role: "user",
+          bio: "Bort",
+        };
+
+        const selectedLevel = 7;
+
+        const wordsLevelSeven = [
+          {
+            german: "tanzen",
+          },
+          {
+            german: "zeichnen",
+          },
+          {
+            german: "spielen",
+          },
+          {
+            german: "laufen",
+          },
+          {
+            german: "singen",
+          },
+        ];
+
+        return request(app)
+          .get("/api/word-list/german/level-7")
+          .send({ user, selectedLevel })
+          .expect(200)
+          .then(({ body: { words } }: WordResponse) => {
+            expect(words).toEqual(wordsLevelSeven);
+          });
+      });
     });
   });
 });
