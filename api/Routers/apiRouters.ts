@@ -5,7 +5,8 @@ import wordsRouter from "./wordsRouter";
 import gameRouter from "./gameRouters";
 apiRouter.use("/users", usersRouter);
 apiRouter.use("/languages", languageRouter);
-apiRouter.use("/words", wordsRouter);
 apiRouter.use("/games", gameRouter);
+apiRouter.use("/word-list", wordsRouter);
+
 
 module.exports = apiRouter;
