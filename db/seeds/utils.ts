@@ -1,7 +1,7 @@
 const db = require("../connection");
 const format = require("pg-format");
 
-const checkExists = (table: any, column: any, value: any) => {
+exports.checkExists = (table: any, column: any, value: any) => {
   return db
     .query(format("SELECT * FROM %I WHERE %I = $1", table, column), [value])
     .then(({ rows }: any) => {
@@ -12,5 +12,3 @@ const checkExists = (table: any, column: any, value: any) => {
       }
     });
 };
-
-module.exports = checkExists;

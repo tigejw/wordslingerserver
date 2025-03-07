@@ -2,6 +2,7 @@ import express from "express";
 import http from "http";
 import { Server, Socket } from "socket.io";
 import cors from "cors";
+import axios from "axios";
 // Create an Express app and HTTP server
 const app = express();
 const server = http.createServer(app);
@@ -159,12 +160,22 @@ io.on("connection", (socket: Socket) => {
     let winner: string | null = null;
     //check who got most answers + assign winner to that person
     if (
+      gameInstance.players[playerIds[0]].correctAnswers.length ===
+      gameInstance.players[playerIds[1]].correctAnswers.length
+    ) {
+      const users = [
+        gameInstance.players[playerIds[0]].user,
+        gameInstance.players[playerIds[1]].user,
+      ];
+      const coinflip = Math.floor(Math.random() * 2);
+      winner = users[coinflip];
+    } else if (
       gameInstance.players[playerIds[0]].correctAnswers.length >
       gameInstance.players[playerIds[1]].correctAnswers.length
     ) {
       winner = gameInstance.players[playerIds[0]].user;
     } else {
-      winner = gameInstance.players[playerIds[1]].user; // account for draw
+      winner = gameInstance.players[playerIds[1]].user; 
     }
     //emit game over to client + send winner and game data
     io.to(roomId).emit("gameOver", {
