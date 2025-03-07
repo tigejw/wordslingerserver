@@ -1,0 +1,13 @@
+import { CustomError } from "../utils/CustomError";
+
+export class BadRequest extends CustomError {
+  StatusCode = 404;
+
+  constructor(public message: string) {
+    super(message);
+    Object.setPrototypeOf(this, BadRequest.prototype);
+  }
+  serialize(): { message: string } {
+    return { message: "Bad Request" };
+  }
+}

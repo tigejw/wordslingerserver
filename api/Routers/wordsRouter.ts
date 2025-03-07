@@ -1,6 +1,6 @@
 const wordsRouter = require("express").Router();
-const { getWords } = require("../controllers/wordsControllers");
+const { words_index } = require("../controllers/wordsControllers");
 
-wordsRouter.route("/").get(getWords);
+wordsRouter.get("/", words_index);
 
 export default wordsRouter;
