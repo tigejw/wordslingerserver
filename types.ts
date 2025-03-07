@@ -60,7 +60,8 @@ export type Friend = {
 
 export type WordMastery = {
   english: string;
+  user_id: number;
   german_mastery: "beginner" | "intermediate" | "master";
-  spanish_mastery: string;
-  french_mastery: string;
+  spanish_mastery: "beginner" | "intermediate" | "master";
+  french_mastery: "beginner" | "intermediate" | "master";
 };

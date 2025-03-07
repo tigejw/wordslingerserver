@@ -10,7 +10,7 @@ const {
 
 //change err: any
 
-exports.getUsers = (req: Request, res: any, next: NextFunction) => {
+exports.getUsers = (req: Request, res: Response, next: NextFunction) => {
   selectUsers()
     .then((users: User[]) => {
       res.status(200).send({ users: users });

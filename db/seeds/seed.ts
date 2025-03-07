@@ -121,7 +121,7 @@ function createLanguagesTable() {
   return db.query(`CREATE TABLE languages(
         language_id SERIAL PRIMARY KEY,
         language VARCHAR REFERENCES available_languages(language),
-        user_id INT REFERENCES users(user_id),
+        user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
         current_level INT
         );`);
 }
@@ -130,8 +130,8 @@ function createGamesTable() {
   return db.query(`CREATE TABLE games(
         game_id SERIAL PRIMARY KEY,
         game VARCHAR,
-        winner INT REFERENCES users(user_id),
-        loser INT REFERENCES users(user_id),
+        winner INT REFERENCES users(user_id) ON DELETE SET NULL,
+        loser INT REFERENCES users(user_id) ON DELETE SET NULL,
         isDraw BOOL,
         match_date TIMESTAMP NOT NULL DEFAULT NOW()
         )`); //match_summary:{round:1, word: ref words table, winner ref user_id}
@@ -141,7 +141,7 @@ function createAchievementsTable() {
   return db.query(`CREATE TABLE achievements(
         achievement_id SERIAL PRIMARY KEY,
         achievement VARCHAR,
-        user_id INT REFERENCES users(user_id),
+        user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
         achievement_unlocked BOOLEAN
         )`);
 }
@@ -150,7 +150,7 @@ function createLeaderboardTable() {
   return db.query(`CREATE TABLE leaderboard(
         leaderboard_id SERIAL PRIMARY KEY,
         rank INT,
-        user_id INT REFERENCES users(user_id),
+        user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
         language VARCHAR REFERENCES available_languages(language)
         )`);
 }
@@ -163,8 +163,8 @@ function createFriendsTable() {
     .then(() => {
       return db.query(`CREATE TABLE friends(
         friend_id SERIAL PRIMARY KEY,
-        user_id1 INT REFERENCES users(user_id),
-        user_id2 INT REFERENCES users(user_id),
+        user_id1 INT REFERENCES users(user_id) ON DELETE CASCADE,
+        user_id2 INT REFERENCES users(user_id) ON DELETE CASCADE,
         status friend_status,
         CHECK (user_id1 < user_id2)
         )`);
@@ -189,10 +189,14 @@ function createWordMasteryTable() {
     .then(() => {
       return db.query(`CREATE TABLE word_mastery(
             mastery_id SERIAL PRIMARY KEY,
+            user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
             english VARCHAR REFERENCES words(english),
             german_mastery mastery_level,
             spanish_mastery mastery_level,
-            french_mastery mastery_level
+            french_mastery mastery_level,
+            german_last_review TIMESTAMP,
+            spanish_last_review TIMESTAMP,
+            french_last_review TIMESTAMP 
             )`);
     });
 }
@@ -308,12 +312,18 @@ function insertWordsData(wordsData: Array<Word>) {
 
 function insertWordMasteryData(word_masteryData: Array<WordMastery>) {
   const formattedData = word_masteryData.map((data) => {
-    const { english, german_mastery, spanish_mastery, french_mastery } = data;
-    return [english, german_mastery, spanish_mastery, french_mastery];
+    const {
+      user_id,
+      english,
+      german_mastery,
+      spanish_mastery,
+      french_mastery,
+    } = data;
+    return [user_id, english, german_mastery, spanish_mastery, french_mastery];
   });
   const queryString = format(
     `
-    INSERT INTO word_mastery (english, german_mastery, spanish_mastery, french_mastery)
+    INSERT INTO word_mastery (user_id, english, german_mastery, spanish_mastery, french_mastery)
     VALUES %L RETURNING *
     `,
     formattedData

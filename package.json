@@ -8,7 +8,7 @@
     "test": "jest",
     "start": "node listen.ts",
     "seed-prod": "NODE_ENV=production npm run seed",
-    "dev": "nodemon ./api/index.ts"
+    "dev": "nodemon ./index.ts"
   },
   "keywords": [],
   "author": "",
@@ -37,6 +37,7 @@
     "fs": "^0.0.1-security",
     "kysely": "^0.27.5",
     "pg": "^8.13.3",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "socketio-auth": "^0.1.1"
   }
 }
