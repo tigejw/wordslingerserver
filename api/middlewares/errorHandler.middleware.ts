@@ -6,9 +6,8 @@ export const errorHandler: ErrorRequestHandler = (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): void => {
   if (error instanceof CustomError) {
-    return res.status(error.StatusCode).json(error.serialize());
-  }
-  return res.status(400).json({ message: "Bad Request" });
+    res.status(error.StatusCode).json(error.serialize());
+  } else res.status(404).send({ message: "Not Found" });
 };

@@ -9,12 +9,17 @@ app.use(express.json());
 //endpoint routing
 app.use("/api", apiRouter);
 
-//error handling middleware
-app.all("*", () => {
-  throw new Error("400: Not Found");
+//invalid URL handling
+app.all("/*", (req, res) => {
+  res.status(404).send({ error: "Invalid URL" });
 });
+//error handling middleware
 
 app.use(errorHandler);
+
+// app.all("*", () => {
+//   throw new Error("400: Not Found");
+// });
 
 //listening
 app.listen(PORT, () => {
