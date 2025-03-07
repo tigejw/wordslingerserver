@@ -191,7 +191,7 @@ function createWordMasteryTable() {
     .then(() => {
       return db.query(`CREATE TABLE word_mastery(
             mastery_id SERIAL PRIMARY KEY,
-            user_id INT REFERENCES users(user_id),
+            user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
             english VARCHAR REFERENCES words(english),
             german_mastery mastery_level,
             spanish_mastery mastery_level,

@@ -67,7 +67,7 @@ describe("/users", () => {
   });
   describe("PATCH /users/:user_id", () => {});
 
-  describe.skip("DELETE /users/:user_id", () => {
+  describe("DELETE /users/:user_id", () => {
     test("204: Responds with a 204 and nothing", () => {
       return request(app).delete("/api/users/1").expect(204);
     });
