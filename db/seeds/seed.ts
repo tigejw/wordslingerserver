@@ -128,14 +128,16 @@ function createLanguagesTable() {
 
 function createGamesTable() {
   return db.query(`CREATE TABLE games(
-        game_id SERIAL PRIMARY KEY,
-        game VARCHAR,
-        winner INT REFERENCES users(user_id) ON DELETE SET NULL,
-        loser INT REFERENCES users(user_id) ON DELETE SET NULL,
-        isDraw BOOL,
+        room_id VARCHAR PRIMARY KEY,
+        winner INT REFERENCES users(user_id) NOT NULL,
+        loser INT REFERENCES users(user_id) NOT NULL,
+        winner_correct_answers JSONB NOT NULL,
+        loser_correct_answers JSONB NOT NULL,
+        wordlist JSONB NOT NULL,
         match_date TIMESTAMP NOT NULL DEFAULT NOW()
-        )`); //match_summary:{round:1, word: ref words table, winner ref user_id}
+        )`);
 }
+//need util that returns user_id when inputted username string!
 
 function createAchievementsTable() {
   return db.query(`CREATE TABLE achievements(
@@ -238,12 +240,26 @@ function insertLanguagesData(languagesData: Array<Language>) {
 
 function insertGamesData(gamesData: Array<Game>) {
   const formattedData = gamesData.map((gameData) => {
-    const { game, winner, loser, isDraw } = gameData;
+    const {
+      room_id,
+      winner,
+      loser,
+      wordlist,
+      winner_correct_answers,
+      loser_correct_answers,
+    } = gameData;
 
-    return [game, winner, loser, isDraw];
+    return [
+      room_id,
+      winner,
+      loser,
+      wordlist,
+      winner_correct_answers,
+      loser_correct_answers,
+    ];
   });
   const queryString = format(
-    `INSERT INTO games (game, winner, loser, isDraw)
+    `INSERT INTO games (room_id, winner, loser, wordlist, winner_correct_answers, loser_correct_answers)
     VALUES %L RETURNING *`,
     formattedData
   );

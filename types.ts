@@ -33,10 +33,12 @@ export type Data = {
 };
 
 export type Game = {
-  game: string;
-  winner: number | null;
-  loser: number | null;
-  isDraw: boolean;
+  room_id: string;
+  winner: number;
+  loser: number;
+  wordlist: string;
+  winner_correct_answers: Array<string> 
+  loser_correct_answers: Array<string> 
 };
 
 export type Achievement = {

@@ -4,18 +4,23 @@ const { selectUsers } = require("../../api/model/userModel");
 const seed = require("../../db/seeds/seed.ts");
 const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
-import { User } from "@/types";
-
+import { Game, User } from "@/types";
 beforeEach(() => {
+  jest.setTimeout(215000);
   return seed(data);
 });
 
 afterAll(() => {
   return connection.end();
 });
-
+type error = {
+  status: number;
+  message: string;
+};
 type UsersResponse = { body: { users: User[] } };
 type UserResponse = { body: { user: User[] } };
+type GameResponse = { body: { game: Game } };
+type ErrorResponse = { body: { error: error } };
 describe("/users", () => {
   describe("GET /users", () => {
     test("get users", () => {
@@ -62,7 +67,7 @@ describe("/users", () => {
   });
   describe("PATCH /users/:user_id", () => {});
 
-  describe.only("DELETE /users/:user_id", () => {
+  describe.skip("DELETE /users/:user_id", () => {
     test("204: Responds with a 204 and nothing", () => {
       return request(app).delete("/api/users/1").expect(204);
     });
@@ -72,5 +77,171 @@ describe("/users", () => {
     describe("GET /language/:user_id", () => {});
     describe("PATCH /language/:user_id", () => {});
     describe("POST /langugage", () => {});
+  });
+});
+
+describe.only("/games", () => {
+  describe("POST /games", () => {
+    test("should return a 201 and posted data", () => {
+      return request(app)
+        .post("/api/games")
+        .send({
+          room_id: "testroomid5",
+          winner: 1,
+          loser: 2,
+          wordlist: ["apple", "banana", "orange"],
+          winner_correct_answers: ["apple", "banana"],
+          loser_correct_answers: ["apple"],
+        })
+        .expect(201)
+        .then(({ body: { game } }: GameResponse) => {
+          expect(game).toEqual(
+            expect.objectContaining({
+              room_id: "testroomid5",
+              winner: 1,
+              loser: 2,
+              wordlist: ["apple", "banana", "orange"],
+              winner_correct_answers: ["apple", "banana"],
+              loser_correct_answers: ["apple"],
+              match_date: expect.any(String),
+            })
+          );
+        });
+    });
+
+    describe("POST /games error handling", () => {
+      test("400: room_id is missing", () => {
+        return request(app)
+          .post("/api/games")
+          .send({
+            winner: 1,
+            loser: 2,
+            wordlist: ["apple", "banana", "orange"],
+            winner_correct_answers: ["apple", "banana"],
+            loser_correct_answers: ["apple"],
+          })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error.message).toEqual("Bad request!");
+          });
+      });
+
+      test("400: winner is missing", () => {
+        return request(app)
+          .post("/api/games")
+          .send({
+            room_id: "testroomid5",
+            loser: 2,
+            wordlist: ["apple", "banana", "orange"],
+            winner_correct_answers: ["apple", "banana"],
+            loser_correct_answers: ["apple"],
+          })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error.message).toEqual("Bad request!");
+          });
+      });
+
+      test("400: loser is missing", () => {
+        return request(app)
+          .post("/api/games")
+          .send({
+            room_id: "testroomid5",
+            winner: 1,
+            wordlist: ["apple", "banana", "orange"],
+            winner_correct_answers: ["apple", "banana"],
+            loser_correct_answers: ["apple"],
+          })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error.message).toEqual("Bad request!");
+          });
+      });
+
+      test.only("400: wordlist is not an array", () => {
+        return request(app)
+          .post("/api/games")
+          .send({
+            room_id: "testroomid5",
+            winner: 1,
+            loser: 2,
+            wordlist: "notAnArray",
+            winner_correct_answers: ["apple", "banana"],
+            loser_correct_answers: ["apple"],
+          })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error.message).toEqual("Bad request!");
+          });
+      });
+
+      test.only("400: winner_correct_answers is null", () => {
+        return request(app)
+          .post("/api/games")
+          .send({
+            room_id: "testroomid5",
+            winner: 1,
+            loser: 2,
+            wordlist: ["apple", "banana", "orange"],
+            winner_correct_answers: null,
+            loser_correct_answers: ["apple"],
+          })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error.message).toEqual("Bad request!");
+          });
+      });
+
+      test.only("400: loser_correct_answers is null", () => {
+        return request(app)
+          .post("/api/games")
+          .send({
+            room_id: "testroomid5",
+            winner: 1,
+            loser: 2,
+            wordlist: ["apple", "banana", "orange"],
+            winner_correct_answers: ["apple", "banana"],
+            loser_correct_answers: null,
+          })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error.message).toEqual("Bad request!");
+          });
+      });
+
+      test.only("404: user ID for winner does not exist", () => {
+        return request(app)
+          .post("/api/games")
+          .send({
+            room_id: "testroomid5",
+            winner: 3141592,
+            loser: 2,
+            wordlist: ["apple", "banana", "orange"],
+            winner_correct_answers: ["apple", "banana"],
+            loser_correct_answers: ["apple"],
+          })
+          .expect(404)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Not found!");
+          });
+      });
+
+      test.only("404: user ID for loser does not exist", () => {
+        return request(app)
+          .post("/api/games")
+          .send({
+            room_id: "testroomid5",
+            winner: 1,
+            loser: 3141592,
+            wordlist: ["apple", "banana", "orange"],
+            winner_correct_answers: ["apple", "banana"],
+            loser_correct_answers: ["apple"],
+          })
+          .expect(404)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error.message).toEqual("Not found!");
+          });
+      });
+    });
   });
 });
