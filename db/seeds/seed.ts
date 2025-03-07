@@ -129,8 +129,8 @@ function createLanguagesTable() {
 function createGamesTable() {
   return db.query(`CREATE TABLE games(
         room_id VARCHAR PRIMARY KEY,
-        winner INT REFERENCES users(user_id) NOT NULL,
-        loser INT REFERENCES users(user_id) NOT NULL,
+        winner INT REFERENCES users(user_id) NOT NULL ON DELETE CASCADE,
+        loser INT REFERENCES users(user_id) NOT NULL ON DELETE CASCADE,
         winner_correct_answers JSONB NOT NULL,
         loser_correct_answers JSONB NOT NULL,
         wordlist JSONB NOT NULL,
