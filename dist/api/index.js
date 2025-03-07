@@ -39,7 +39,4 @@ app.use(errorHandler_middleware_1.errorHandler);
 //   throw new Error("400: Not Found");
 // });
 //listening
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
 module.exports = app;
