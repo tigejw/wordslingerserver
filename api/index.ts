@@ -9,15 +9,15 @@ app.use("/api", apiRouter);
 //error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (err.code === "23502") {
-    res.status(400).send({ error: { message: "Bad request!", status: 400 } });
+    res.status(400).send({ error: { msg: "Bad request!"} });
   } else {
     next(err);
   }
 });
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  if (err.status && err.message) {
-    res.status(err.status).send({ error: { message: err.message } });
+  if (err.status && err.msg) {
+    res.status(err.status).send({ error: err.msg });
   } else next(err);
 });
 

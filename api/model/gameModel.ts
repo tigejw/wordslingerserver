@@ -1,6 +1,7 @@
 const db = require("../../db/connection");
 import { Game } from "@/types";
 import { QueryResult } from "pg";
+const { checkExists } = require("../../db/seeds/utils");
 exports.insertGame = ({
   room_id,
   winner,
@@ -18,22 +19,26 @@ exports.insertGame = ({
   ) {
     return Promise.reject({
       status: 400,
-      message: "Bad request!",
+      msg: "Bad request!",
     });
   }
-
-  return db
-    .query(
-      "INSERT INTO games (room_id, winner, loser, wordlist, winner_correct_answers, loser_correct_answers) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [
-        room_id,
-        winner,
-        loser,
-        JSON.stringify(wordlist),
-        JSON.stringify(winner_correct_answers),
-        JSON.stringify(loser_correct_answers),
-      ]
-    )
+  return checkExists("users", "user_id", winner)
+    .then(() => {
+      return checkExists("users", "user_id", loser);
+    })
+    .then(() => {
+      return db.query(
+        "INSERT INTO games (room_id, winner, loser, wordlist, winner_correct_answers, loser_correct_answers) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+        [
+          room_id,
+          winner,
+          loser,
+          JSON.stringify(wordlist),
+          JSON.stringify(winner_correct_answers),
+          JSON.stringify(loser_correct_answers),
+        ]
+      );
+    })
     .then((result: QueryResult<Game>) => {
       return result.rows[0];
     });

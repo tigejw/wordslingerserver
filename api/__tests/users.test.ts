@@ -15,7 +15,7 @@ afterAll(() => {
 });
 type error = {
   status: number;
-  message: string;
+  msg: string;
 };
 type UsersResponse = { body: { users: User[] } };
 type UserResponse = { body: { user: User[] } };
@@ -109,7 +109,7 @@ describe.only("/games", () => {
         });
     });
 
-    describe("POST /games error handling", () => {
+    describe.only("POST /games error handling", () => {
       test("400: room_id is missing", () => {
         return request(app)
           .post("/api/games")
@@ -122,7 +122,7 @@ describe.only("/games", () => {
           })
           .expect(400)
           .then(({ body: { error } }: ErrorResponse) => {
-            expect(error.message).toEqual("Bad request!");
+            expect(error.msg).toEqual("Bad request!");
           });
       });
 
@@ -138,7 +138,7 @@ describe.only("/games", () => {
           })
           .expect(400)
           .then(({ body: { error } }: ErrorResponse) => {
-            expect(error.message).toEqual("Bad request!");
+            expect(error).toEqual("Bad request!");
           });
       });
 
@@ -154,11 +154,11 @@ describe.only("/games", () => {
           })
           .expect(400)
           .then(({ body: { error } }: ErrorResponse) => {
-            expect(error.message).toEqual("Bad request!");
+            expect(error).toEqual("Bad request!");
           });
       });
 
-      test.only("400: wordlist is not an array", () => {
+      test("400: wordlist is not an array", () => {
         return request(app)
           .post("/api/games")
           .send({
@@ -171,11 +171,11 @@ describe.only("/games", () => {
           })
           .expect(400)
           .then(({ body: { error } }: ErrorResponse) => {
-            expect(error.message).toEqual("Bad request!");
+            expect(error).toEqual("Bad request!");
           });
       });
 
-      test.only("400: winner_correct_answers is null", () => {
+      test("400: winner_correct_answers is null", () => {
         return request(app)
           .post("/api/games")
           .send({
@@ -188,11 +188,11 @@ describe.only("/games", () => {
           })
           .expect(400)
           .then(({ body: { error } }: ErrorResponse) => {
-            expect(error.message).toEqual("Bad request!");
+            expect(error).toEqual("Bad request!");
           });
       });
 
-      test.only("400: loser_correct_answers is null", () => {
+      test("400: loser_correct_answers is null", () => {
         return request(app)
           .post("/api/games")
           .send({
@@ -205,11 +205,11 @@ describe.only("/games", () => {
           })
           .expect(400)
           .then(({ body: { error } }: ErrorResponse) => {
-            expect(error.message).toEqual("Bad request!");
+            expect(error).toEqual("Bad request!");
           });
       });
 
-      test.only("404: user ID for winner does not exist", () => {
+      test("404: user ID for winner does not exist", () => {
         return request(app)
           .post("/api/games")
           .send({
@@ -226,7 +226,7 @@ describe.only("/games", () => {
           });
       });
 
-      test.only("404: user ID for loser does not exist", () => {
+      test("404: user ID for loser does not exist", () => {
         return request(app)
           .post("/api/games")
           .send({
@@ -239,7 +239,7 @@ describe.only("/games", () => {
           })
           .expect(404)
           .then(({ body: { error } }: ErrorResponse) => {
-            expect(error.message).toEqual("Not found!");
+            expect(error).toEqual("Not found!");
           });
       });
     });

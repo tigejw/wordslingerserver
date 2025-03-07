@@ -10,7 +10,6 @@ exports.postGame = (req: Request, res: Response, next: NextFunction) => {
     winner_correct_answers,
     loser_correct_answers,
   }: Partial<Game> = req.body;
-  console.log("getting to controller");
   insertGame({
     room_id,
     winner,
@@ -23,7 +22,6 @@ exports.postGame = (req: Request, res: Response, next: NextFunction) => {
       res.status(201).send({ game: game });
     })
     .catch((err: any) => {
-      console.log("getting to catch controller");
       next(err);
     });
 };
