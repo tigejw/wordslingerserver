@@ -2,6 +2,7 @@ export type User = {
   user_id?: number;
   username: string;
   name: string;
+  language: string;
   avatar_url: string;
   role: "user" | "admin";
   bio: string;

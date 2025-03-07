@@ -5,6 +5,6 @@ import wordsRouter from "./wordsRouter";
 
 apiRouter.use("/users", usersRouter);
 apiRouter.use("/languages", languageRouter);
-apiRouter.use("/words", wordsRouter);
+apiRouter.use("/word-list", wordsRouter);
 
 module.exports = apiRouter;
