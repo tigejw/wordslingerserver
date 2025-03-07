@@ -26,7 +26,6 @@
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
-    "ts-node": "^10.9.2",
     "tsc": "^2.0.4",
     "typescript": "^5.8.2"
   },
@@ -38,6 +37,7 @@
     "fs": "^0.0.1-security",
     "kysely": "^0.27.5",
     "pg": "^8.13.3",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "socketio-auth": "^0.1.1"
   }
 }
