@@ -1,4 +1,8 @@
 {
+  "GET /words": {
+    "description": "serves up a json representation of all the available endpoints of the words api"
+  },
+
   "Get/api/word-list": {
     "description": "serves an array of all the avaible words",
     "queries": [],

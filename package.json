@@ -1,7 +1,7 @@
 {
   "name": "wordslingerserver",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "listen.ts",
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "npx ts-node ./db/seeds/run-seed.ts",
@@ -22,7 +22,6 @@
     "@types/pg": "^8.11.11",
     "husky": "^9.1.7",
     "nodemon": "^3.1.9",
-    "pg-format": "^1.0.4",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
@@ -37,6 +36,7 @@
     "fs": "^0.0.1-security",
     "kysely": "^0.27.5",
     "pg": "^8.13.3",
+    "pg-format": "^1.0.4",
     "socket.io": "^4.8.1",
     "socketio-auth": "^0.1.1"
   }
