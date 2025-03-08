@@ -17,7 +17,7 @@ app.all("/*", (req, res) => {
 //error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (err.code === "23502" || err.code === "22P02") {
-    res.status(400).send({ error: "Bad request!" });
+    res.status(400).send({ error: "Bad request!", err: err });
   } else {
     next(err);
   }
@@ -25,7 +25,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (err.status && err.msg) {
-    res.status(err.status).send({ error: err.msg });
+    res.status(err.status).send({ error: err.msg, err: err });
   } else next(err);
 });
 
