@@ -44,7 +44,6 @@ exports.getUser = (req: Request, res: Response, next: NextFunction) => {
         next(err);
       });
   } else {
-    console.log(user);
     selectUserByUserId(user)
       .then((user: User) => {
         res.status(200).send({ user: user });
