@@ -10,4 +10,4 @@ apiRouter.use("/games", gameRouter);
 apiRouter.use("/word-list", wordsRouter);
 apiRouter.use("/auth", authRouter);
 
-module.exports = apiRouter;
+export default apiRouter;

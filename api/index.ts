@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import express from "express";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
-const apiRouter = require("./Routers/apiRouters");
+import apiRouter from "./Routers/apiRouters";
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -12,8 +12,9 @@ app.use("/api", apiRouter);
 
 //invalid URL handling
 app.all("/*", (req, res) => {
-  res.status(404).send({ error: "Invalid URL" });
+  res.status(404).send({ error: "Invalid URL", req: req });
 });
+
 //error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   if (err.code === "23502" || err.code === "22P02") {

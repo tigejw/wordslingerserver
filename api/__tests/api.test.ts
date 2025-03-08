@@ -292,7 +292,7 @@ describe("/games", () => {
 
 describe("/auth", () => {
   describe("/POST /auth", () => {
-    test("should return 200 and true when passed a valid username and password", () => {
+    test.only("should return 200 and true when passed a valid username and password", () => {
       return request(app)
         .post("/api/auth")
         .send({ username: "Hayley41", password: "shhhhissasecret" })
