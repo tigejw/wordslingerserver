@@ -3,18 +3,9 @@ import { Request, Response, NextFunction } from "express";
 const {
   selectLanguageByUserId,
   updateCurrentLevelByUserId,
-  insertLanguage,
+  insertNewLanguageToUser,
 } = require("../model/languagesModel");
 
-exports.postLanguage = (req: Request, res: Response, next: NextFunction) => {
-  insertLanguage()
-    .then((language: Language) => {
-      res.status(201).send({ language: language });
-    })
-    .catch((err: any) => {
-      next(err);
-    });
-};
 exports.getLanguageByUserId = (
   req: Request,
   res: Response,
@@ -24,6 +15,23 @@ exports.getLanguageByUserId = (
   selectLanguageByUserId(user_id)
     .then((language: Language) => {
       res.status(200).send({ language: language });
+    })
+    .catch((err: any) => {
+      next(err);
+    });
+};
+
+exports.postNewLanguageToUser = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  // const { user_id } = req.params;
+  const { language, user_id } = req.body;
+  console.log(language, user_id);
+  insertNewLanguageToUser(language, user_id)
+    .then((language: Language) => {
+      res.status(201).send(language);
     })
     .catch((err: any) => {
       next(err);
@@ -44,3 +52,29 @@ exports.patchCurrentLevelByUserId = (
       next(err);
     });
 };
+
+// exports.patchAvaliableLanguages = (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   const { language: Language } = req.params;
+//   updateAvaliableLanguages(language)
+//     .then((current_level: number) => {
+//       res.status(200).send({ current_level: current_level });
+//     })
+//     .catch((err: any) => {
+//       next(err);
+//     });
+// };
+
+// exports.selectAvaliableLanguages = () => {};
+// exports.selectAvaliableLanguage = (req: Request, res: Response, next: NextFunction) => {
+//   insertLanguage()
+//     .then((language: Language) => {
+//       res.status(201).send({ language: language });
+//     })
+//     .catch((err: any) => {
+//       next(err);
+//     });
+// };

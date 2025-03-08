@@ -1,10 +1,9 @@
 const request = require("supertest");
 const app = require("../index");
-const { selectUsers } = require("../../api/model/userModel");
 const seed = require("../../db/seeds/seed.ts");
 const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
-import { User } from "@/types";
+import { Language, User, Username, Userid } from "@/types";
 
 beforeEach(() => {
   return seed(data);
@@ -14,8 +13,12 @@ afterAll(() => {
   return connection.end();
 });
 
+//user tests
+
 type UsersResponse = { body: { users: User[] } };
 type UserResponse = { body: { user: User[] } };
+type UsernameResponse = { body: { user: Username } };
+
 describe("/users", () => {
   describe("GET /users", () => {
     test("get users", () => {
@@ -33,8 +36,7 @@ describe("/users", () => {
       return request(app)
         .get("/api/users/1")
         .expect(200)
-        .then(({ body: { user } }: UserResponse) => {
-          console.log(user, "response in user id");
+        .then(({ body: { user } }: any) => {
           expect(Array.isArray(user)).toBe(true);
           expect(user[0].user_id).toEqual(1);
         });
@@ -54,7 +56,7 @@ describe("/users", () => {
         .post("/api/users")
         .send(newUser)
         .expect(201)
-        .then(({ body: { user } }: any) => {
+        .then(({ body: { user } }: UserResponse) => {
           expect(user[0].username).toEqual("Stinkyboy");
           expect(typeof user[0].user_id).toEqual("number");
         });
@@ -62,15 +64,57 @@ describe("/users", () => {
   });
   describe("PATCH /users/:user_id", () => {});
 
+  describe("GET /users/:username", () => {
+    test("200: Responds with a user object containing the user_id", () => {
+      return request(app)
+        .get("/api/users/Hayley41")
+        .expect(200)
+        .then(({ body: { user } }: UsernameResponse) => {
+          expect(Array.isArray(user)).toBe(true);
+          expect(user[0]).toEqual({ user_id: 2 });
+        });
+    });
+  });
+
   describe("DELETE /users/:user_id", () => {
     test("204: Responds with a 204 and nothing", () => {
       return request(app).delete("/api/users/1").expect(204);
     });
   });
+});
 
-  describe("/languages", () => {
-    describe("GET /language/:user_id", () => {});
-    describe("PATCH /language/:user_id", () => {});
-    describe("POST /langugage", () => {});
+type LanguageResponse = { body: { language: Language[] } };
+//type LanguageResponse = { body: { user: Language[] } };
+
+describe("/languages", () => {
+  describe("GET /language/:user_id", () => {
+    test("get the languages of a user", () => {
+      return request(app)
+        .get("/api/language/2")
+        .expect(200)
+        .then(({ body: { language } }: LanguageResponse) => {
+          console.log(language);
+          expect(Array.isArray(language)).toBe(true);
+          language.map((user) => {
+            expect(typeof user.current_level).toEqual("number");
+            expect(typeof user.language).toEqual("string");
+          });
+        });
+    });
   });
 });
+
+describe.only("POST /langugage/:user_id", () => {
+  test("", () => {
+    return request(app)
+      .post("/api/language/2")
+      .send({ language: "French", user_id: 2 })
+      .expect(201)
+      .then(({ body: { language } }: LanguageResponse) => {
+        console.log(language);
+      });
+  });
+});
+
+//   describe("PATCH /language/:user_id", () => {});
+// });

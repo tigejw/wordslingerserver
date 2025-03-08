@@ -1,4 +1,4 @@
-import { User } from "@/types";
+import { User, Username } from "@/types";
 import { QueryResult } from "pg";
 const db = require("../../db/connection");
 const format = require("pg-format");
@@ -29,10 +29,19 @@ exports.selectUserByUserId = (user_id: number) => {
 
 // exports.updateUserByUserId = () => {};
 
+exports.selectUserIdByUsername = (username: Username) => {
+  const sqlString = format(
+    "SELECT user_id FROM users WHERE username = %L",
+    username
+  );
+  return db.query(sqlString).then((result: any) => {
+    return result.rows;
+  });
+};
+
 exports.deleteFromUsersByUserId = (user_id: number) => {
   const sqlString = format(`DELETE FROM users WHERE user_id = %s`, [user_id]);
-  console.log(sqlString);
-  return db.query(sqlString).then((result: QueryResult<any>) => {
+  return db.query(sqlString).then((result: QueryResult<User>) => {
     return result.rows;
   });
 };

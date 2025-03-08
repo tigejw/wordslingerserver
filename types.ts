@@ -1,11 +1,14 @@
 export type User = {
-  user_id?: number;
-  username: string;
+  user_id?: Userid;
+  username: Username;
   name: string;
   avatar_url: string;
   role: "user" | "admin";
   bio: string;
 };
+
+export type Username = string;
+export type Userid = number;
 
 export type Language = {
   user_id: number;

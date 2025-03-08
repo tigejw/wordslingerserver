@@ -2,7 +2,7 @@ const usersRouter = require("express").Router();
 const {
   getUsers,
   postUser,
-  getUserByUserId,
+  getUser,
   patchUserByUserId,
   deleteUserByUserId,
 } = require("../controllers/userController");
@@ -17,8 +17,8 @@ const {
 usersRouter.route("/").get(getUsers).post(postUser);
 
 usersRouter
-  .route("/:user_id")
-  .get(getUserByUserId)
+  .route("/:user")
+  .get(getUser)
   // .patch(patchUserByUserId)
   .delete(deleteUserByUserId);
 
