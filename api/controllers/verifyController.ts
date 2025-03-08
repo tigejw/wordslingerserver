@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
-const { verifyUsernameAndPassword } = require("../model/authModel");
+const { verifyUsernameAndPassword } = require("../model/verifyModel");
 
-exports.authUser = (req: Request, res: Response, next: NextFunction) => {
+exports.verifyUser = (req: Request, res: Response, next: NextFunction) => {
   const { username, password } = req.body;
 
   verifyUsernameAndPassword({ username, password })

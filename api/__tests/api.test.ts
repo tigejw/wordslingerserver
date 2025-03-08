@@ -290,20 +290,20 @@ describe("/games", () => {
   });
 });
 
-describe("/auth", () => {
-  describe("/POST /auth", () => {
-    test.only("should return 200 and true when passed a valid username and password", () => {
+describe("/verify", () => {
+  describe("/POST /verify", () => {
+    test("should return 200 and true when passed a valid username and password", () => {
       return request(app)
-        .post("/api/auth")
+        .post("/api/verify")
         .send({ username: "Hayley41", password: "shhhhissasecret" })
         .expect(200)
         .then(({ body: { verification } }: VerificationResponse) => {
           expect(verification).toBe(true);
         });
     });
-    test("should return 200 and false when passed a valid username and invalid password", () => {
+    test.only("should return 200 and false when passed a valid username and invalid password", () => {
       return request(app)
-        .post("/api/auth")
+        .post("/api/verify")
         .send({ username: "Hayley41", password: "nuHUH" })
         .expect(200)
         .then(({ body: { verification } }: VerificationResponse) => {
@@ -312,7 +312,7 @@ describe("/auth", () => {
     });
     test("should return 400 when passed an invalid username type", () => {
       return request(app)
-        .post("/api/auth")
+        .post("/api/verify")
         .send({ username: 314, password: "shhhhissasecret" })
         .expect(400)
         .then(({ body: { error } }: ErrorResponse) => {
@@ -321,7 +321,7 @@ describe("/auth", () => {
     });
     test("should return 404 when passed a valid username type that does not exist", () => {
       return request(app)
-        .post("/api/auth")
+        .post("/api/verify")
         .send({ username: "noYOURNOTREAL", password: "shhhhissasecret" })
         .expect(404)
         .then(({ body: { error } }: ErrorResponse) => {
@@ -330,7 +330,7 @@ describe("/auth", () => {
     });
     test("should return 400 when passed a valid username and no password", () => {
       return request(app)
-        .post("/api/auth")
+        .post("/api/verify")
         .send({ username: "Hayley41" })
         .expect(400)
         .then(({ body: { error } }: ErrorResponse) => {
