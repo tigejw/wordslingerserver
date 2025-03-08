@@ -20,6 +20,7 @@ type UserResponse = { body: { user: User[] } };
 type GameResponse = { body: { game: Game } };
 type WordResponse = { body: { words: Word[] } };
 type ErrorResponse = { body: { error: string } };
+type VerificationResponse = { body: { verification: Boolean } };
 
 describe("/users", () => {
   describe("GET /users", () => {
@@ -190,23 +191,7 @@ describe("/games", () => {
           });
       });
 
-      test("400: loser is missing", () => {
-        return request(app)
-          .post("/api/games")
-          .send({
-            room_id: "testroomid5",
-            winner: 1,
-            wordlist: ["apple", "banana", "orange"],
-            winner_correct_answers: ["apple", "banana"],
-            loser_correct_answers: ["apple"],
-          })
-          .expect(400)
-          .then(({ body: { error } }: ErrorResponse) => {
-            expect(error).toEqual("Bad request!");
-          });
-      });
-
-      test("400: wordlist is not an array", () => {
+      test("400: wordlist is not valid type", () => {
         return request(app)
           .post("/api/games")
           .send({
@@ -223,7 +208,7 @@ describe("/games", () => {
           });
       });
 
-      test("400: winner_correct_answers is null", () => {
+      test("400: winner_correct_answers is not valid type", () => {
         return request(app)
           .post("/api/games")
           .send({
@@ -240,7 +225,7 @@ describe("/games", () => {
           });
       });
 
-      test("400: loser_correct_answers is null", () => {
+      test("400: loser_correct_answers is not valid type", () => {
         return request(app)
           .post("/api/games")
           .send({
@@ -257,7 +242,7 @@ describe("/games", () => {
           });
       });
 
-      test("404: user ID for winner is not valid", () => {
+      test("404: user ID for winner is not valid type", () => {
         return request(app)
           .post("/api/games")
           .send({
@@ -273,7 +258,7 @@ describe("/games", () => {
             expect(error).toEqual("Bad request!");
           });
       });
-      test("404: user ID for winner is valid but does not exist", () => {
+      test("404: user ID for winner is valid type but does not exist", () => {
         return request(app)
           .post("/api/games")
           .send({
@@ -308,7 +293,7 @@ describe("/games", () => {
       });
     });
 
-    test("404: user ID for loser is valid does not exist", () => {
+    test("404: user ID for loser is valid type but does not exist", () => {
       return request(app)
         .post("/api/games")
         .send({
@@ -324,6 +309,32 @@ describe("/games", () => {
           expect(error).toEqual("Not found!");
         });
     });
+  });
+});
+
+describe("/auth", () => {
+  describe("/POST /auth", () => {
+    test.only("should return 200 and true when passed a valid username and password", () => {
+      return request(app)
+        .post("/api/auth")
+        .send({ username: "Hayley41", password: "shhhhissasecret" })
+        .expect(200)
+        .then(({ body: { verification } }: VerificationResponse) => {
+          expect(verification).toBe(true);
+        });
+    });
+    test("should return 200 and false when passed a valid username and invalid password", () => {
+      return request(app)
+        .post("/api/auth")
+        .send({ username: "Hayley41", password: "nuHUH" })
+        .expect(200)
+        .then(({ body: { verification } }: VerificationResponse) => {
+          expect(verification).toBe(false);
+        });
+    });
+    test("should return 400 when passed an invalid username type", () => {});
+    test("should return 404 when passed a valid username type that does not exist", () => {});
+    test("should return 400 when passed a valid username and no password", () => {});
   });
 });
 

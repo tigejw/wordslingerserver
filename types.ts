@@ -2,6 +2,7 @@ export type User = {
   user_id?: number;
   username: string;
   name: string;
+  password: string;
   language: string;
   avatar_url: string;
   role: "user" | "admin";
@@ -38,8 +39,8 @@ export type Game = {
   winner: number;
   loser: number;
   wordlist: string;
-  winner_correct_answers: Array<string> 
-  loser_correct_answers: Array<string> 
+  winner_correct_answers: Array<string>;
+  loser_correct_answers: Array<string>;
 };
 
 export type Achievement = {

@@ -36,10 +36,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
 app.use(errorHandler);
 
-// app.all("*", () => {
-//   throw new Error("400: Not Found");
-// });
-
 //listening
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
