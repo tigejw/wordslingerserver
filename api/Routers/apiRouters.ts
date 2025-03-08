@@ -7,7 +7,8 @@ import verifyRouter from "./verifyRouter";
 apiRouter.use("/users", usersRouter);
 apiRouter.use("/languages", languageRouter);
 apiRouter.use("/games", gameRouter);
-apiRouter.use("/word-list", wordsRouter);
+apiRouter.use("/word-list", wordsRouter)
+console.log("in apirouter")
 apiRouter.use("/verify", verifyRouter);
 
 export default apiRouter;

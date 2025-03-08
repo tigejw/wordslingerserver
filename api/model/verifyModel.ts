@@ -18,6 +18,7 @@ exports.verifyUsernameAndPassword = ({
       msg: "Bad request!",
     });
   }
+  console.log("in verifymodel")
   return checkExists("users", "username", username)
     .then(() => {
       return db.query(
@@ -26,6 +27,7 @@ exports.verifyUsernameAndPassword = ({
       );
     })
     .then(({ rows }: { rows: any }) => {
+      console.log("in verifymodel after db req")
       return rows.length > 0;
     });
 };
