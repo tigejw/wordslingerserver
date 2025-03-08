@@ -106,6 +106,7 @@ function createUsersTable() {
   return db.query(`CREATE TABLE users(
         user_id SERIAL PRIMARY KEY,
         username VARCHAR NOT NULL,
+        password TEXT NOT NULL,
         name VARCHAR NOT NULL,
         avatar_url VARCHAR,
         role VARCHAR NOT NULL,
@@ -204,17 +205,18 @@ function createWordMasteryTable() {
 }
 
 function insertUserData(usersData: Array<User>) {
-  const formattedData = usersData.map((user) => {
-    const { username, name, avatar_url, role, bio } = user;
-    return [username, name, avatar_url, role, bio];
-  });
-  const queryString = format(
-    `INSERT INTO users (username, name, avatar_url, role, bio)
-    VALUES %L RETURNING *`,
-    formattedData
-  );
+  const queryString = `
+    INSERT INTO users (username, name, password, avatar_url, role, bio)
+    VALUES ($1, $2, crypt($3, gen_salt('bf')), $4, $5, $6)
+    RETURNING *`;
 
-  return db.query(queryString);
+  const userPromises = usersData.map((user) => {
+    const { username, name, password, avatar_url, role, bio } = user;
+    const params = [username, name, password, avatar_url, role, bio];
+    return db.query(queryString, params);
+  });
+
+  return Promise.all(userPromises);
 }
 
 function insertAvaliableLanguages() {

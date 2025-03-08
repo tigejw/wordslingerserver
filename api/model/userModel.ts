@@ -10,11 +10,13 @@ exports.selectUsers = () => {
 };
 
 exports.insertUser = (user: User) => {
-  const sqlString = format(
-    "INSERT INTO users (username, name, avatar_url, role, bio) VALUES %L RETURNING *;",
-    [[user.username, user.name, user.avatar_url, user.role, user.bio]]
-  );
-  return db.query(sqlString).then((result: QueryResult<User>) => {
+  const queryString = `
+    INSERT INTO users (username, name, password, avatar_url, role, bio)
+    VALUES ($1, $2, crypt($3, gen_salt('bf')), $4, $5, $6)
+    RETURNING *`;
+  const { username, name, password, avatar_url, role, bio } = user;
+  const params = [username, name, password, avatar_url, role, bio];
+  return db.query(queryString, params).then((result: QueryResult<User>) => {
     return result.rows;
   });
 };
