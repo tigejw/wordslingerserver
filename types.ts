@@ -21,6 +21,7 @@ export type Word = {
   german: string;
   spanish: string;
   word_level: number;
+  image_url: string;
 };
 
 export type Data = {

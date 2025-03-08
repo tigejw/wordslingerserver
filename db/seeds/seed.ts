@@ -180,6 +180,7 @@ function createWordsTable() {
         german VARCHAR,
         spanish VARCHAR,
         french VARCHAR,
+        image_url VARCHAR,
         word_level INT
         )`);
 }
@@ -315,12 +316,13 @@ function insertFriendsData(friendsData: Array<Friend>) {
 
 function insertWordsData(wordsData: Array<Word>) {
   const formattedData = wordsData.map((wordData) => {
-    const { english, french, german, spanish, word_level } = wordData;
-    return [english, french, german, spanish, word_level];
+    const { english, french, german, spanish, word_level, image_url } =
+      wordData;
+    return [english, french, german, spanish, word_level, image_url];
   });
   const queryString = format(
     `
-    INSERT INTO words (english, french, german, spanish, word_level)
+    INSERT INTO words (english, french, german, spanish, word_level, image_url)
     VALUES %L RETURNING *
     `,
     formattedData
