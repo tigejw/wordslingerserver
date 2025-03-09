@@ -291,7 +291,7 @@ describe("/games", () => {
 });
 
 describe("/verify", () => {
-  describe("/POST /verify", () => {
+  describe.only("/POST /verify", () => {
     test("should return 200 and true when passed a valid username and password", () => {
       return request(app)
         .post("/api/verify")
