@@ -13,7 +13,6 @@ import {
 } from "../../types";
 
 function seed(data: Data) {
-  //look up destructing objects in TS
   return db
     .query("DROP TABLE IF EXISTS users CASCADE;")
     .then(() => {
