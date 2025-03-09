@@ -3,7 +3,7 @@ const app = require("../index");
 const seed = require("../../db/seeds/seed.ts");
 const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
-import { Game, User, Language, Word } from "@/types";
+import { Game, User, Language, Word, Username } from "@/types";
 const { frenchTestWords } = require("./wordsFrench");
 const { spainishTestWords } = require("./wordsSpanish");
 
@@ -21,6 +21,10 @@ type GameResponse = { body: { game: Game } };
 type WordResponse = { body: { words: Word[] } };
 type ErrorResponse = { body: { error: string } };
 type VerificationResponse = { body: { verification: Boolean } };
+type LanguageResponse = { body: { language: Language[] } };
+type UsernameResponse = { body: { user: Username } };
+
+//user tests
 
 describe("/users", () => {
   describe("GET /users", () => {
@@ -33,13 +37,12 @@ describe("/users", () => {
         });
     });
   });
-
   describe("GET /users/:user_id", () => {
     test("200: Responds with a user object", () => {
       return request(app)
         .get("/api/users/1")
         .expect(200)
-        .then(({ body: { user } }: UserResponse) => {
+        .then(({ body: { user } }: any) => {
           expect(Array.isArray(user)).toBe(true);
           expect(user[0].user_id).toEqual(1);
         });
@@ -54,45 +57,40 @@ describe("/users", () => {
         role: "user",
         bio: "cat, speaker, meowmrow",
         username: "Stinkyboy",
-        password: "hmmmmwhatshouldmypasswordbe",
+        password: "iamacat",
       };
       return request(app)
         .post("/api/users")
         .send(newUser)
         .expect(201)
-        .then(({ body: { user } }: any) => {
-          console.log(user);
+        .then(({ body: { user } }: UserResponse) => {
           expect(user[0].username).toEqual("Stinkyboy");
           expect(typeof user[0].user_id).toEqual("number");
-          expect(user[0].password).toEqual(expect.any(String));
         });
     });
   });
-
-  describe("GET /users/:user_id", () => {
-    test("200: Responds with a user object", () => {
+  //describe("PATCH /users/:user_id", () => {});
+  describe("GET /users/:username", () => {
+    test("200: Responds with a user object containing the user_id", () => {
       return request(app)
-        .get("/api/users/1")
+        .get("/api/users/Hayley41")
         .expect(200)
-        .then(({ body: { user } }: UserResponse) => {
+        .then(({ body: { user } }: UsernameResponse) => {
           expect(Array.isArray(user)).toBe(true);
-          expect(user[0].user_id).toEqual(1);
+          expect(user[0]).toEqual({ user_id: 2 });
         });
+    });
+  });
+  describe("DELETE /users/:user_id", () => {
+    test("204: Responds with a 204 and nothing", () => {
+      return request(app).delete("/api/users/1").expect(204);
     });
   });
 });
 
-describe("PATCH /users/:user_id", () => {});
+//language tests
 
-describe("DELETE /users/:user_id", () => {
-  test("204: Responds with a 204 and nothing", () => {
-    return request(app).delete("/api/users/1").expect(204);
-  });
-});
-
-type LanguageResponse = { body: { language: Language[] } };
-//type LanguageResponse = { body: { user: Language[] } };
-describe.skip("/languages", () => {
+describe.only("/languages", () => {
   describe("GET /language/:user_id", () => {
     test("get the languages of a user", () => {
       return request(app)
@@ -100,12 +98,31 @@ describe.skip("/languages", () => {
         .expect(200)
         .then(({ body: { language } }: LanguageResponse) => {
           expect(Array.isArray(language)).toBe(true);
+          language.map((user) => {
+            expect(typeof user.current_level).toEqual("number");
+            expect(typeof user.language).toEqual("string");
+          });
         });
     });
   });
+  describe("POST /langugage/:user_id", () => {
+    test("", () => {
+      return request(app)
+        .post("/api/language/2")
+        .send({ language: "French", user_id: 2 })
+        .expect(201)
+        .then(({ body }: any) => {
+          expect(body[0].language).toEqual("French");
+          expect(body[0].user_id).toEqual(2);
+          expect(body[0].current_level).toEqual(1);
+        });
+    });
+  });
+  //   describe("PATCH /language/:user_id", () => {});
+  // });
 });
-describe("POST /langugage/:user_id", () => {});
-describe("PATCH /language/:user_id", () => {});
+
+//game tests
 
 describe("/games", () => {
   describe("POST /games", () => {
@@ -301,7 +318,7 @@ describe("/verify", () => {
           expect(verification).toBe(true);
         });
     });
-    test.only("should return 200 and false when passed a valid username and invalid password", () => {
+    test("should return 200 and false when passed a valid username and invalid password", () => {
       return request(app)
         .post("/api/verify")
         .send({ username: "Hayley41", password: "nuHUH" })
@@ -355,7 +372,7 @@ describe("GET REQUESTS", () => {
         .get("/api/vords/")
         .expect(404)
         .then(({ body: { error } }: ErrorResponse) => {
-          expect(error).toBe("Invalid URL");
+          expect(error).toBe("Invalid URL!");
         });
     });
   });

@@ -1,6 +1,6 @@
 export type User = {
-  user_id?: number;
-  username: string;
+  user_id?: Userid;
+  username: Username;
   name: string;
   password: string;
   language: string;
@@ -9,10 +9,14 @@ export type User = {
   bio: string;
 };
 
+export type Username = string;
+export type Userid = number;
+
 export type Language = {
   user_id: number;
   language: "German" | "Spanish" | "French";
   current_level: number;
+  language_id: number;
 };
 
 export type Word = {
@@ -21,6 +25,7 @@ export type Word = {
   german: string;
   spanish: string;
   word_level: number;
+  image_url: string;
 };
 
 export type Data = {

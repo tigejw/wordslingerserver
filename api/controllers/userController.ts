@@ -6,6 +6,7 @@ const {
   selectUserByUserId,
   updateUserByUserId,
   deleteFromUsersByUserId,
+  selectUserIdByUsername,
 } = require("../model/userModel");
 
 //change err: any
@@ -31,16 +32,45 @@ exports.postUser = (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-exports.getUserByUserId = (req: Request, res: Response, next: NextFunction) => {
-  const { user_id } = req.params;
-  selectUserByUserId(user_id)
+exports.getUser = (req: Request, res: Response, next: NextFunction) => {
+  const { user } = req.params;
+
+  if (isNaN(Number(req.params.user))) {
+    selectUserIdByUsername(user)
+      .then((user: User) => {
+        res.status(200).send({ user: user });
+      })
+      .catch((err: any) => {
+        next(err);
+      });
+  } else {
+    console.log(user);
+    selectUserByUserId(user)
+      .then((user: User) => {
+        res.status(200).send({ user: user });
+      })
+      .catch((err: any) => {
+        next(err);
+      });
+  }
+};
+
+//Incorporated into getUser Function if statements
+/*exports.getUserIdByUserName = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { username } = req.params;
+  console.log(username);
+  selectUserIdByUsername(username)
     .then((user: User) => {
       res.status(200).send({ user: user });
     })
     .catch((err: any) => {
       next(err);
     });
-};
+}; */
 
 //what do we want to update?
 
@@ -59,8 +89,8 @@ exports.deleteUserByUserId = (
   res: Response,
   next: NextFunction
 ) => {
-  const { user_id } = req.params;
-  deleteFromUsersByUserId(user_id)
+  const { user } = req.params;
+  deleteFromUsersByUserId(user)
     .then(() => {
       res.status(204).send();
     })

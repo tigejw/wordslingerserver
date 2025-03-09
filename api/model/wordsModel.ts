@@ -13,7 +13,7 @@ exports.selectByTargetLanguage = (
   targetLanguage: "german" | "spanish" | "french"
 ) => {
   const queryString = format(
-    `SELECT %I, word_level FROM words`,
+    `SELECT %I, image_url, word_level FROM words`,
     targetLanguage
   );
   return db.query(queryString).then((result: QueryResult<Word>) => {
@@ -35,7 +35,3 @@ exports.selectWordByLevel = (
     return result.rows;
   });
 };
-
-// let query = db.selectFrom("words").selectAll();
-// if (language) query = query.where("language", "like", language);
-// if (english) query = query.where("english", "like", english);
