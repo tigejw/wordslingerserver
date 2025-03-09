@@ -3,10 +3,12 @@ import express from "express";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import apiRouter from "./Routers/apiRouters";
 const PORT = process.env.PORT || 3000;
+import cors from "cors";
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
+
 
 console.log("index before /api router");
 //endpoint routing
