@@ -7,6 +7,11 @@ const express_1 = __importDefault(require("express"));
 const apiRouters_1 = __importDefault(require("./Routers/apiRouters"));
 const PORT = process.env.PORT || 3000;
 const app = (0, express_1.default)();
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 app.use(express_1.default.json());
 console.log("index before /api router");
 //endpoint routing

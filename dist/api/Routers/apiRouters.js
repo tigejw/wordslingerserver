@@ -10,7 +10,7 @@ const wordsRouter_1 = __importDefault(require("./wordsRouter"));
 const gameRouters_1 = __importDefault(require("./gameRouters"));
 const verifyRouter_1 = __importDefault(require("./verifyRouter"));
 apiRouter.use("/users", userRoutes_1.default);
-apiRouter.use("/languages", languageRouters_1.default);
+apiRouter.use("/language", languageRouters_1.default);
 apiRouter.use("/games", gameRouters_1.default);
 apiRouter.use("/word-list", wordsRouter_1.default);
 console.log("in apirouter");

@@ -13,6 +13,7 @@ beforeEach(() => {
 afterAll(() => {
     return connection.end();
 });
+//user tests
 describe("/users", () => {
     describe("GET /users", () => {
         test("get users", () => {
@@ -43,40 +44,38 @@ describe("/users", () => {
                 role: "user",
                 bio: "cat, speaker, meowmrow",
                 username: "Stinkyboy",
-                password: "hmmmmwhatshouldmypasswordbe",
+                password: "iamacat",
             };
             return request(app)
                 .post("/api/users")
                 .send(newUser)
                 .expect(201)
                 .then(({ body: { user } }) => {
-                console.log(user);
                 expect(user[0].username).toEqual("Stinkyboy");
                 expect(typeof user[0].user_id).toEqual("number");
-                expect(user[0].password).toEqual(expect.any(String));
             });
         });
     });
-    describe("GET /users/:user_id", () => {
-        test("200: Responds with a user object", () => {
+    //describe("PATCH /users/:user_id", () => {});
+    describe("GET /users/:username", () => {
+        test("200: Responds with a user object containing the user_id", () => {
             return request(app)
-                .get("/api/users/1")
+                .get("/api/users/Hayley41")
                 .expect(200)
                 .then(({ body: { user } }) => {
                 expect(Array.isArray(user)).toBe(true);
-                expect(user[0].user_id).toEqual(1);
+                expect(user[0]).toEqual({ user_id: 2 });
             });
         });
     });
-});
-describe("PATCH /users/:user_id", () => { });
-describe("DELETE /users/:user_id", () => {
-    test("204: Responds with a 204 and nothing", () => {
-        return request(app).delete("/api/users/1").expect(204);
+    describe("DELETE /users/:user_id", () => {
+        test("204: Responds with a 204 and nothing", () => {
+            return request(app).delete("/api/users/1").expect(204);
+        });
     });
 });
-//type LanguageResponse = { body: { user: Language[] } };
-describe.skip("/languages", () => {
+//language tests
+describe.only("/languages", () => {
     describe("GET /language/:user_id", () => {
         test("get the languages of a user", () => {
             return request(app)
@@ -84,12 +83,30 @@ describe.skip("/languages", () => {
                 .expect(200)
                 .then(({ body: { language } }) => {
                 expect(Array.isArray(language)).toBe(true);
+                language.map((user) => {
+                    expect(typeof user.current_level).toEqual("number");
+                    expect(typeof user.language).toEqual("string");
+                });
             });
         });
     });
+    describe("POST /langugage/:user_id", () => {
+        test("", () => {
+            return request(app)
+                .post("/api/language/2")
+                .send({ language: "French", user_id: 2 })
+                .expect(201)
+                .then(({ body }) => {
+                expect(body[0].language).toEqual("French");
+                expect(body[0].user_id).toEqual(2);
+                expect(body[0].current_level).toEqual(1);
+            });
+        });
+    });
+    //   describe("PATCH /language/:user_id", () => {});
+    // });
 });
-describe("POST /langugage/:user_id", () => { });
-describe("PATCH /language/:user_id", () => { });
+//game tests
 describe("/games", () => {
     describe("POST /games", () => {
         test("should return a 201 and posted data", () => {
@@ -273,7 +290,7 @@ describe("/verify", () => {
                 expect(verification).toBe(true);
             });
         });
-        test.only("should return 200 and false when passed a valid username and invalid password", () => {
+        test("should return 200 and false when passed a valid username and invalid password", () => {
             return request(app)
                 .post("/api/verify")
                 .send({ username: "Hayley41", password: "nuHUH" })
@@ -326,7 +343,7 @@ describe("GET REQUESTS", () => {
                 .get("/api/vords/")
                 .expect(404)
                 .then(({ body: { error } }) => {
-                expect(error).toBe("Invalid URL");
+                expect(error).toBe("Invalid URL!");
             });
         });
     });

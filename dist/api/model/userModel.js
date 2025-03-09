@@ -26,6 +26,12 @@ exports.selectUserByUserId = (user_id) => {
     });
 };
 // exports.updateUserByUserId = () => {};
+exports.selectUserIdByUsername = (username) => {
+    const sqlString = format("SELECT user_id FROM users WHERE username = %L", username);
+    return db.query(sqlString).then((result) => {
+        return result.rows;
+    });
+};
 exports.deleteFromUsersByUserId = (user_id) => {
     const sqlString = format(`DELETE FROM users WHERE user_id = %s`, [user_id]);
     return db.query(sqlString).then((result) => {

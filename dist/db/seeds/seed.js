@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db = require("../connection.ts");
 const format = require("pg-format");
 function seed(data) {
-    //look up destructing objects in TS
     return db
         .query("DROP TABLE IF EXISTS users CASCADE;")
         .then(() => {
@@ -161,6 +160,7 @@ function createWordsTable() {
         german VARCHAR,
         spanish VARCHAR,
         french VARCHAR,
+        image_url VARCHAR,
         word_level INT
         )`);
 }
@@ -257,11 +257,11 @@ function insertFriendsData(friendsData) {
 }
 function insertWordsData(wordsData) {
     const formattedData = wordsData.map((wordData) => {
-        const { english, french, german, spanish, word_level } = wordData;
-        return [english, french, german, spanish, word_level];
+        const { english, french, german, spanish, word_level, image_url } = wordData;
+        return [english, french, german, spanish, word_level, image_url];
     });
     const queryString = format(`
-    INSERT INTO words (english, french, german, spanish, word_level)
+    INSERT INTO words (english, french, german, spanish, word_level, image_url)
     VALUES %L RETURNING *
     `, formattedData);
     return db.query(queryString);
