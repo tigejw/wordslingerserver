@@ -6,9 +6,8 @@ const PORT = process.env.PORT || 3000;
 import cors from "cors";
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true }));
 app.use(express.json());
-
 
 console.log("index before /api router");
 //endpoint routing
