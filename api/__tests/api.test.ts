@@ -391,6 +391,8 @@ describe("/games", () => {
   });
 });
 
+//verify tests
+
 describe("/verify", () => {
   describe("/POST /verify", () => {
     test("should return 200 and true when passed a valid username and password", () => {
@@ -440,28 +442,7 @@ describe("/verify", () => {
     });
   });
 
-  describe("GET games", () => {
-    test("200: get games returns an array of all of the users games", () => {
-      return request(app)
-        .get("/api/games/1")
-        .expect(200)
-        .then(({ body: { game } }: any) => {
-          expect(Array.isArray(game)).toBe(true);
-          expect(game.length).toEqual(4);
-        });
-    });
-    describe("GET games Error Handling", () => {
-      test("404: get games returns an error if the user does not exist", () => {
-        return request(app)
-          .get("/api/games/10000")
-          .expect(404)
-          .then(({ body: { error } }: ErrorResponse) => {
-            expect(error).toBe("Not found!");
-          });
-      });
-    });
-  });
-});
+  //word tests
 
 describe("GET REQUESTS", () => {
   describe("GET - /word-list", () => {
