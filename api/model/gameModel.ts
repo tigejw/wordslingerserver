@@ -2,6 +2,8 @@ const db = require("../../db/connection");
 import { Game } from "@/types";
 import { QueryResult } from "pg";
 const { checkExists } = require("../../db/seeds/utils");
+const format = require("pg-format");
+
 exports.insertGame = ({
   room_id,
   winner,
@@ -41,5 +43,20 @@ exports.insertGame = ({
     })
     .then((result: QueryResult<Game>) => {
       return result.rows[0];
+    });
+};
+
+exports.selectGames = (user_id: Game) => {
+  const psqlString = format(
+    `SELECT * FROM games WHERE winner = %L OR loser = %L`,
+    user_id,
+    user_id
+  );
+  return checkExists("users", "user_id", user_id)
+    .then(() => {
+      return db.query(psqlString);
+    })
+    .then((result: QueryResult<Game>) => {
+      return result.rows;
     });
 };
