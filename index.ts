@@ -5,6 +5,7 @@ import cors from "cors";
 import axios from "axios";
 // Create an Express app and HTTP server
 const app = express();
+app.use(cors({ origin: "*" }));
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -14,7 +15,7 @@ const io = new Server(server, {
   },
 });
 
-app.use(cors());
+type Language = "German" | "Spanish" | "French" | null;
 
 // Define types for the players
 interface Player {
@@ -32,22 +33,36 @@ interface GameInstance {
   players: Players;
   timer: number;
   wordList: string[];
+  language: Language;
 }
 
 //Define WaitingPlayer type
-interface WaitingPlayer {
+interface WaitingRoom {
   user: string;
   socketId: string;
+  language: Language;
 }
 //Storage for all games, connect to api!!!
 let games: { [roomId: string]: GameInstance } = {};
 
 //Const waiting room
-let waitingPlayer: WaitingPlayer = { user: "", socketId: "" };
+let waitingRooms: WaitingRoom[] = [
+  { user: "", socketId: "", language: "German" },
+  { user: "", socketId: "", language: "Spanish" },
+  { user: "", socketId: "", language: "French" },
+];
 
 let players: Players = {};
 
 //Const testWordList > connect to api function that gets words
+//
+//language selector + functionality w api endpoint!
+//
+//waiting room language based!!!
+//
+//refactor!!!!!!!
+//
+//
 let testWordList: string[] = [
   "apple",
   "banana",
@@ -59,65 +74,75 @@ let testWordList: string[] = [
 io.on("connection", (socket: Socket) => {
   console.log(`User connected: ${socket.id}`);
   // Handle when a player signals they're ready to start
-  socket.on("playerReady", ({ user }: { user: string }) => {
-    console.log(user + "is ready");
+  socket.on(
+    "playerReady",
+    ({ user, language }: { user: string; language: Language }) => {
+      console.log(user + "is ready");
+      const waitingRoom: WaitingRoom = waitingRooms.filter((waitingRoom) => {
+        return waitingRoom.language === language;
+      })[0];
 
-    //check if user in waiting room
-    if (!waitingPlayer.user) {
-      //noone waiting - assign user to waiting room
-      waitingPlayer.socketId = socket.id;
-      waitingPlayer.user = user;
-      console.log(waitingPlayer.user + "is waiting");
-    } else {
-      //someone waiting to play - start game
+      if (!waitingRoom.user) {
+        //check if user in waiting room
+        //noone waiting - assign user to waiting room
+        waitingRoom.socketId = socket.id;
+        waitingRoom.user = user;
+        console.log(
+          waitingRoom.user + "is waiting in " + waitingRoom.language + " room"
+        );
+      } else {
+        //someone waiting to play - start game
 
-      //create unique room id + assign players to room
-      const roomId = `${socket.id}${waitingPlayer.socketId}`;
-      socket.join(roomId);
-      io.sockets.sockets.get(waitingPlayer.socketId)?.join(roomId);
-      console.log(
-        "users joined the room" +
-          user +
-          "and" +
-          waitingPlayer.user +
-          "joined from the waiting room"
-      );
+        //create unique room id + assign players to room
+        const roomId = `${socket.id}${waitingRoom.socketId}`;
+        socket.join(roomId);
+        io.sockets.sockets.get(waitingRoom.socketId)?.join(roomId);
+        console.log(
+          "users joined the " +
+            waitingRoom.language +
+            " room: " +
+            user +
+            "and" +
+            waitingRoom.user
+        );
 
-      //store unique gameInstance in the games object with info on players, answers, wordpool + timer
+        //store unique gameInstance in the games object with info on players, answers, wordpool + timer
 
-      games[roomId] = {
-        players: {},
-        wordList: testWordList,
-        timer: 30,
-      };
-      games[roomId].players[socket.id] = {
-        user: user,
-        currentWordIndex: 0,
-        correctAnswers: [],
-        ready: true,
-      };
-      games[roomId].players[waitingPlayer.socketId] = {
-        user: waitingPlayer.user,
-        currentWordIndex: 0,
-        correctAnswers: [],
-        ready: true,
-      };
+        games[roomId] = {
+          players: {},
+          wordList: testWordList,
+          timer: 30,
+          language: waitingRoom.language,
+        };
+        games[roomId].players[socket.id] = {
+          user: user,
+          currentWordIndex: 0,
+          correctAnswers: [],
+          ready: true,
+        };
+        games[roomId].players[waitingRoom.socketId] = {
+          user: waitingRoom.user,
+          currentWordIndex: 0,
+          correctAnswers: [],
+          ready: true,
+        };
 
-      //start game sending roomid + wordlist to clients
-      io.emit("gameStart", {
-        wordList: games[roomId].wordList,
-        roomId: roomId,
-      });
+        //start game sending roomid + wordlist to clients
+        io.emit("gameStart", {
+          wordList: games[roomId].wordList,
+          roomId: roomId,
+        });
 
-      //start server side timer !!!needs syncing is one second ahead of client
-      startTimer(roomId);
-      console.log("game is starting" + roomId);
+        //start server side timer !!!needs syncing is one second ahead of client
+        startTimer(roomId);
+        console.log("game is starting" + roomId);
 
-      //reset waiting room
-      waitingPlayer.user = "";
-      waitingPlayer.socketId = "";
+        //reset waiting room
+        waitingRoom.user = "";
+        waitingRoom.socketId = "";
+      }
     }
-  });
+  );
 
   // Handle player answer submission
   socket.on(
@@ -175,7 +200,7 @@ io.on("connection", (socket: Socket) => {
     ) {
       winner = gameInstance.players[playerIds[0]].user;
     } else {
-      winner = gameInstance.players[playerIds[1]].user; 
+      winner = gameInstance.players[playerIds[1]].user;
     }
     //emit game over to client + send winner and game data
     io.to(roomId).emit("gameOver", {

@@ -3,9 +3,10 @@ import express from "express";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import apiRouter from "./Routers/apiRouters";
 const PORT = process.env.PORT || 3000;
+import cors from "cors";
 
 const app = express();
-
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 console.log("index before /api router");
@@ -41,8 +42,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 // app.use(errorHandler);
 
 //listening
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}`);
+// });
 
 module.exports = app;

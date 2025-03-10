@@ -9,6 +9,7 @@ const socket_io_1 = require("socket.io");
 const cors_1 = __importDefault(require("cors"));
 // Create an Express app and HTTP server
 const app = (0, express_1.default)();
+app.use((0, cors_1.default)({ origin: "*" }));
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, {
     cors: {
@@ -16,13 +17,24 @@ const io = new socket_io_1.Server(server, {
         methods: ["GET", "POST"],
     },
 });
-app.use((0, cors_1.default)());
 //Storage for all games, connect to api!!!
 let games = {};
 //Const waiting room
-let waitingPlayer = { user: "", socketId: "" };
+let waitingRooms = [
+    { user: "", socketId: "", language: "German" },
+    { user: "", socketId: "", language: "Spanish" },
+    { user: "", socketId: "", language: "French" },
+];
 let players = {};
 //Const testWordList > connect to api function that gets words
+//
+//language selector + functionality w api endpoint!
+//
+//waiting room language based!!!
+//
+//refactor!!!!!!!
+//
+//
 let testWordList = [
     "apple",
     "banana",
@@ -33,32 +45,37 @@ let testWordList = [
 io.on("connection", (socket) => {
     console.log(`User connected: ${socket.id}`);
     // Handle when a player signals they're ready to start
-    socket.on("playerReady", ({ user }) => {
+    socket.on("playerReady", ({ user, language }) => {
         var _a;
         console.log(user + "is ready");
-        //check if user in waiting room
-        if (!waitingPlayer.user) {
+        const waitingRoom = waitingRooms.filter((waitingRoom) => {
+            return waitingRoom.language === language;
+        })[0];
+        if (!waitingRoom.user) {
+            //check if user in waiting room
             //noone waiting - assign user to waiting room
-            waitingPlayer.socketId = socket.id;
-            waitingPlayer.user = user;
-            console.log(waitingPlayer.user + "is waiting");
+            waitingRoom.socketId = socket.id;
+            waitingRoom.user = user;
+            console.log(waitingRoom.user + "is waiting in " + waitingRoom.language + " room");
         }
         else {
             //someone waiting to play - start game
             //create unique room id + assign players to room
-            const roomId = `${socket.id}${waitingPlayer.socketId}`;
+            const roomId = `${socket.id}${waitingRoom.socketId}`;
             socket.join(roomId);
-            (_a = io.sockets.sockets.get(waitingPlayer.socketId)) === null || _a === void 0 ? void 0 : _a.join(roomId);
-            console.log("users joined the room" +
+            (_a = io.sockets.sockets.get(waitingRoom.socketId)) === null || _a === void 0 ? void 0 : _a.join(roomId);
+            console.log("users joined the " +
+                waitingRoom.language +
+                " room: " +
                 user +
                 "and" +
-                waitingPlayer.user +
-                "joined from the waiting room");
+                waitingRoom.user);
             //store unique gameInstance in the games object with info on players, answers, wordpool + timer
             games[roomId] = {
                 players: {},
                 wordList: testWordList,
                 timer: 30,
+                language: waitingRoom.language,
             };
             games[roomId].players[socket.id] = {
                 user: user,
@@ -66,8 +83,8 @@ io.on("connection", (socket) => {
                 correctAnswers: [],
                 ready: true,
             };
-            games[roomId].players[waitingPlayer.socketId] = {
-                user: waitingPlayer.user,
+            games[roomId].players[waitingRoom.socketId] = {
+                user: waitingRoom.user,
                 currentWordIndex: 0,
                 correctAnswers: [],
                 ready: true,
@@ -81,8 +98,8 @@ io.on("connection", (socket) => {
             startTimer(roomId);
             console.log("game is starting" + roomId);
             //reset waiting room
-            waitingPlayer.user = "";
-            waitingPlayer.socketId = "";
+            waitingRoom.user = "";
+            waitingRoom.socketId = "";
         }
     });
     // Handle player answer submission

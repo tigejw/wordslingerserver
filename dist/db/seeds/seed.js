@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db = require("../connection.ts");
 const format = require("pg-format");
 function seed(data) {
-    //look up destructing objects in TS
     return db
         .query("DROP TABLE IF EXISTS users CASCADE;")
         .then(() => {
@@ -95,6 +94,7 @@ function createUsersTable() {
     return db.query(`CREATE TABLE users(
         user_id SERIAL PRIMARY KEY,
         username VARCHAR NOT NULL,
+        password TEXT NOT NULL,
         name VARCHAR NOT NULL,
         avatar_url VARCHAR,
         role VARCHAR NOT NULL,
@@ -160,6 +160,7 @@ function createWordsTable() {
         german VARCHAR,
         spanish VARCHAR,
         french VARCHAR,
+        image_url VARCHAR,
         word_level INT
         )`);
 }
@@ -181,13 +182,16 @@ function createWordMasteryTable() {
     });
 }
 function insertUserData(usersData) {
-    const formattedData = usersData.map((user) => {
-        const { username, name, avatar_url, role, bio } = user;
-        return [username, name, avatar_url, role, bio];
+    const queryString = `
+    INSERT INTO users (username, name, password, avatar_url, role, bio)
+    VALUES ($1, $2, crypt($3, gen_salt('bf')), $4, $5, $6)
+    RETURNING *`;
+    const userPromises = usersData.map((user) => {
+        const { username, name, password, avatar_url, role, bio } = user;
+        const params = [username, name, password, avatar_url, role, bio];
+        return db.query(queryString, params);
     });
-    const queryString = format(`INSERT INTO users (username, name, avatar_url, role, bio)
-    VALUES %L RETURNING *`, formattedData);
-    return db.query(queryString);
+    return Promise.all(userPromises);
 }
 function insertAvaliableLanguages() {
     const languages = ["French", "German", "Spanish"];
@@ -253,11 +257,11 @@ function insertFriendsData(friendsData) {
 }
 function insertWordsData(wordsData) {
     const formattedData = wordsData.map((wordData) => {
-        const { english, french, german, spanish, word_level } = wordData;
-        return [english, french, german, spanish, word_level];
+        const { english, french, german, spanish, word_level, image_url } = wordData;
+        return [english, french, german, spanish, word_level, image_url];
     });
     const queryString = format(`
-    INSERT INTO words (english, french, german, spanish, word_level)
+    INSERT INTO words (english, french, german, spanish, word_level, image_url)
     VALUES %L RETURNING *
     `, formattedData);
     return db.query(queryString);

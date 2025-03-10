@@ -8,8 +8,13 @@ exports.selectUsers = () => {
     });
 };
 exports.insertUser = (user) => {
-    const sqlString = format("INSERT INTO users (username, name, avatar_url, role, bio) VALUES %L RETURNING *;", [[user.username, user.name, user.avatar_url, user.role, user.bio]]);
-    return db.query(sqlString).then((result) => {
+    const queryString = `
+    INSERT INTO users (username, name, password, avatar_url, role, bio)
+    VALUES ($1, $2, crypt($3, gen_salt('bf')), $4, $5, $6)
+    RETURNING *`;
+    const { username, name, password, avatar_url, role, bio } = user;
+    const params = [username, name, password, avatar_url, role, bio];
+    return db.query(queryString, params).then((result) => {
         return result.rows;
     });
 };
@@ -21,6 +26,12 @@ exports.selectUserByUserId = (user_id) => {
     });
 };
 // exports.updateUserByUserId = () => {};
+exports.selectUserIdByUsername = (username) => {
+    const sqlString = format("SELECT user_id FROM users WHERE username = %L", username);
+    return db.query(sqlString).then((result) => {
+        return result.rows;
+    });
+};
 exports.deleteFromUsersByUserId = (user_id) => {
     const sqlString = format(`DELETE FROM users WHERE user_id = %s`, [user_id]);
     return db.query(sqlString).then((result) => {

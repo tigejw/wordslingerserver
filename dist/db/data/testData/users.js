@@ -7,6 +7,7 @@ module.exports = [
         role: "admin",
         bio: "nerd, founder, student 🇬🇷",
         username: "Katharina_Lehner92",
+        password: "shhhhissasecret",
     },
     {
         name: "Hayley",
@@ -14,6 +15,7 @@ module.exports = [
         role: "user",
         bio: "blogger, designer",
         username: "Hayley41",
+        password: "shhhhissasecret",
     },
     {
         name: "Hudson",
@@ -21,6 +23,7 @@ module.exports = [
         role: "user",
         bio: "developer, musician, entrepreneur",
         username: "Hudson_Mraz",
+        password: "shhhhissasecret",
     },
     {
         name: "Kathryne",
@@ -28,6 +31,7 @@ module.exports = [
         role: "admin",
         bio: "castanet devotee, author 🍊",
         username: "Kathryne.OHara",
+        password: "shhhhissasecret",
     },
     {
         name: "Vito",
@@ -35,6 +39,7 @@ module.exports = [
         role: "admin",
         bio: "wallaby advocate  👰🏽‍♂️",
         username: "Vito_Donnelly98",
+        password: "shhhhissasecret",
     },
     {
         name: "Dalton",
@@ -42,6 +47,7 @@ module.exports = [
         role: "admin",
         bio: "musician, photographer, grad 🤷🏼‍♂️",
         username: "Dalton15",
+        password: "shhhhissasecret",
     },
     {
         name: "Sister",
@@ -49,6 +55,7 @@ module.exports = [
         role: "user",
         bio: "hello enthusiast",
         username: "Sister_Kessler",
+        password: "shhhhissasecret",
     },
     {
         name: "Arden",
@@ -56,6 +63,7 @@ module.exports = [
         role: "admin",
         bio: "knight advocate, engineer 🦐",
         username: "Arden28",
+        password: "shhhhissasecret",
     },
     {
         name: "Schuyler",
@@ -63,6 +71,7 @@ module.exports = [
         role: "admin",
         bio: "activist, founder",
         username: "Schuyler.Ledner",
+        password: "shhhhissasecret",
     },
     {
         name: "Adell",
@@ -70,6 +79,7 @@ module.exports = [
         role: "user",
         bio: "developer, founder",
         username: "Adell16",
+        password: "shhhhissasecret",
     },
     {
         name: "Olen",
@@ -77,6 +87,7 @@ module.exports = [
         role: "user",
         bio: "developer, photographer",
         username: "Olen_Bogisich95",
+        password: "shhhhissasecret",
     },
     {
         name: "Chelsie",
@@ -84,6 +95,7 @@ module.exports = [
         role: "user",
         bio: "activist, gamer, traveler Ⓜ️",
         username: "Chelsie_Trantow",
+        password: "shhhhissasecret",
     },
     {
         name: "Cara",
@@ -91,6 +103,7 @@ module.exports = [
         role: "admin",
         bio: "teacher",
         username: "Cara_Bartoletti13",
+        password: "shhhhissasecret",
     },
     {
         name: "Orion",
@@ -98,6 +111,7 @@ module.exports = [
         role: "admin",
         bio: "model, photographer, nerd 🧣",
         username: "Orion37",
+        password: "shhhhissasecret",
     },
     {
         name: "Jordan",
@@ -105,6 +119,7 @@ module.exports = [
         role: "user",
         bio: "veteran, grad, environmentalist",
         username: "Jordan_Ernser",
+        password: "shhhhissasecret",
     },
     {
         name: "Rosie",
@@ -112,6 +127,7 @@ module.exports = [
         role: "user",
         bio: "exasperation advocate",
         username: "Rosie71",
+        password: "shhhhissasecret",
     },
     {
         name: "Damian",
@@ -119,6 +135,7 @@ module.exports = [
         role: "user",
         bio: "dreamer, patriot, creator",
         username: "Damian7",
+        password: "shhhhissasecret",
     },
     {
         name: "Eleanora",
@@ -126,6 +143,7 @@ module.exports = [
         role: "user",
         bio: "pacemaker junkie, artist",
         username: "Eleanora86",
+        password: "shhhhissasecret",
     },
     {
         name: "Mable",
@@ -133,6 +151,7 @@ module.exports = [
         role: "user",
         bio: "piglet supporter, educator",
         username: "Mable_Nicolas73",
+        password: "shhhhissasecret",
     },
     {
         name: "Axel",
@@ -140,6 +159,7 @@ module.exports = [
         role: "user",
         bio: "blogger, parent, scientist",
         username: "Axel_Nicolas-Emmerich54",
+        password: "shhhhissasecret",
     },
     {
         name: "Ladarius",
@@ -147,6 +167,7 @@ module.exports = [
         role: "admin",
         bio: "patriot",
         username: "Ladarius_Leannon19",
+        password: "shhhhissasecret",
     },
     {
         name: "Vito",
@@ -154,6 +175,7 @@ module.exports = [
         role: "admin",
         bio: "wallaby advocate  👰🏽‍♂️",
         username: "Vito_Donnelly98",
+        password: "shhhhissasecret",
     },
     {
         name: "Dalton",
@@ -161,6 +183,7 @@ module.exports = [
         role: "admin",
         bio: "musician, photographer, grad 🤷🏼‍♂️",
         username: "Dalton15",
+        password: "shhhhissasecret",
     },
     {
         name: "Sister",
@@ -168,6 +191,7 @@ module.exports = [
         role: "user",
         bio: "hello enthusiast",
         username: "Sister_Kessler",
+        password: "shhhhissasecret",
     },
     {
         name: "Arden",
@@ -175,6 +199,7 @@ module.exports = [
         role: "admin",
         bio: "knight advocate, engineer 🦐",
         username: "Arden28",
+        password: "shhhhissasecret",
     },
     {
         name: "Schuyler",
@@ -182,6 +207,7 @@ module.exports = [
         role: "admin",
         bio: "activist, founder",
         username: "Schuyler.Ledner",
+        password: "shhhhissasecret",
     },
     {
         name: "Adell",
@@ -189,6 +215,7 @@ module.exports = [
         role: "user",
         bio: "developer, founder",
         username: "Adell16",
+        password: "shhhhissasecret",
     },
     {
         name: "Olen",
@@ -196,6 +223,7 @@ module.exports = [
         role: "user",
         bio: "developer, photographer",
         username: "Olen_Bogisich95",
+        password: "shhhhissasecret",
     },
     {
         name: "Chelsie",
@@ -203,6 +231,7 @@ module.exports = [
         role: "user",
         bio: "activist, gamer, traveler Ⓜ️",
         username: "Chelsie_Trantow",
+        password: "shhhhissasecret",
     },
     {
         name: "Cara",
@@ -210,6 +239,7 @@ module.exports = [
         role: "admin",
         bio: "teacher",
         username: "Cara_Bartoletti13",
+        password: "shhhhissasecret",
     },
     {
         name: "Orion",
@@ -217,6 +247,7 @@ module.exports = [
         role: "admin",
         bio: "model, photographer, nerd 🧣",
         username: "Orion37",
+        password: "shhhhissasecret",
     },
     {
         name: "Jordan",
@@ -224,6 +255,7 @@ module.exports = [
         role: "user",
         bio: "veteran, grad, environmentalist",
         username: "Jordan_Ernser",
+        password: "shhhhissasecret",
     },
     {
         name: "Rosie",
@@ -231,6 +263,7 @@ module.exports = [
         role: "user",
         bio: "exasperation advocate",
         username: "Rosie71",
+        password: "shhhhissasecret",
     },
     {
         name: "Damian",
@@ -238,6 +271,7 @@ module.exports = [
         role: "user",
         bio: "dreamer, patriot, creator",
         username: "Damian7",
+        password: "shhhhissasecret",
     },
     {
         name: "Eleanora",
@@ -245,6 +279,7 @@ module.exports = [
         role: "user",
         bio: "pacemaker junkie, artist",
         username: "Eleanora86",
+        password: "shhhhissasecret",
     },
     {
         name: "Mable",
@@ -252,6 +287,7 @@ module.exports = [
         role: "user",
         bio: "piglet supporter, educator",
         username: "Mable_Nicolas73",
+        password: "shhhhissasecret",
     },
     {
         name: "Axel",
@@ -259,6 +295,7 @@ module.exports = [
         role: "user",
         bio: "blogger, parent, scientist",
         username: "Axel_Nicolas-Emmerich54",
+        password: "shhhhissasecret",
     },
     {
         name: "Ladarius",
@@ -266,5 +303,6 @@ module.exports = [
         role: "admin",
         bio: "patriot",
         username: "Ladarius_Leannon19",
+        password: "shhhhissasecret",
     },
 ];

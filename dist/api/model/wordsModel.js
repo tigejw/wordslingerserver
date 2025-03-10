@@ -8,7 +8,7 @@ exports.selectWordsIndex = () => {
     });
 };
 exports.selectByTargetLanguage = (targetLanguage) => {
-    const queryString = format(`SELECT %I, word_level FROM words`, targetLanguage);
+    const queryString = format(`SELECT %I, image_url, word_level FROM words`, targetLanguage);
     return db.query(queryString).then((result) => {
         return result.rows;
     });
@@ -19,6 +19,3 @@ exports.selectWordByLevel = (targetLanguage, level) => {
         return result.rows;
     });
 };
-// let query = db.selectFrom("words").selectAll();
-// if (language) query = query.where("language", "like", language);
-// if (english) query = query.where("english", "like", english);

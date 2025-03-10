@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const { selectUsers, insertUser, selectUserByUserId, updateUserByUserId, deleteFromUsersByUserId, } = require("../model/userModel");
+const { selectUsers, insertUser, selectUserByUserId, updateUserByUserId, deleteFromUsersByUserId, selectUserIdByUsername, } = require("../model/userModel");
 //change err: any
 exports.getUsers = (req, res, next) => {
     selectUsers()
@@ -21,16 +21,44 @@ exports.postUser = (req, res, next) => {
         next(err);
     });
 };
-exports.getUserByUserId = (req, res, next) => {
-    const { user_id } = req.params;
-    selectUserByUserId(user_id)
-        .then((user) => {
-        res.status(200).send({ user: user });
-    })
-        .catch((err) => {
-        next(err);
-    });
+exports.getUser = (req, res, next) => {
+    const { user } = req.params;
+    if (isNaN(Number(req.params.user))) {
+        selectUserIdByUsername(user)
+            .then((user) => {
+            res.status(200).send({ user: user });
+        })
+            .catch((err) => {
+            next(err);
+        });
+    }
+    else {
+        console.log(user);
+        selectUserByUserId(user)
+            .then((user) => {
+            res.status(200).send({ user: user });
+        })
+            .catch((err) => {
+            next(err);
+        });
+    }
 };
+//Incorporated into getUser Function if statements
+/*exports.getUserIdByUserName = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { username } = req.params;
+  console.log(username);
+  selectUserIdByUsername(username)
+    .then((user: User) => {
+      res.status(200).send({ user: user });
+    })
+    .catch((err: any) => {
+      next(err);
+    });
+}; */
 //what do we want to update?
 // exports.patchUserByUserId = (
 //   req: Request,
@@ -42,8 +70,8 @@ exports.getUserByUserId = (req, res, next) => {
 //   updateUserByUserId(user_id, updateUser);
 // };
 exports.deleteUserByUserId = (req, res, next) => {
-    const { user_id } = req.params;
-    deleteFromUsersByUserId(user_id)
+    const { user } = req.params;
+    deleteFromUsersByUserId(user)
         .then(() => {
         res.status(204).send();
     })
