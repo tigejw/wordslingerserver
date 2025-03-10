@@ -22,7 +22,7 @@ type WordResponse = { body: { words: Word[] } };
 type ErrorResponse = { body: { error: string } };
 type VerificationResponse = { body: { verification: Boolean } };
 type LanguageResponse = { body: { language: Language[] } };
-type UsernameResponse = { body: { user: Username } };
+type UsernameResponse = { body: { user: String } };
 
 //user tests
 

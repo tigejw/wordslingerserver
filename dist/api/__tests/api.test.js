@@ -1,12 +1,15 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const request = require("supertest");
 const app = require("../index");
 const seed = require("../../db/seeds/seed.ts");
 const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
-const { frenchTestWords } = require("./wordsFrench");
-const { spainishTestWords } = require("./wordsSpanish");
+const wordsFrench_1 = __importDefault(require("./wordsFrench"));
+const wordsSpanish_1 = __importDefault(require("./wordsSpanish"));
 beforeEach(() => {
     return seed(data);
 });
@@ -362,7 +365,7 @@ describe("GET REQUESTS", () => {
                 .send(user)
                 .expect(200)
                 .then(({ body: { words } }) => {
-                expect(words).toEqual(frenchTestWords);
+                expect(words).toEqual(wordsFrench_1.default);
             });
         });
         describe("GET - /word-list/french", () => {
@@ -380,7 +383,7 @@ describe("GET REQUESTS", () => {
                     .send(user)
                     .expect(200)
                     .then(({ body: { words } }) => {
-                    expect(words).toEqual(spainishTestWords);
+                    expect(words).toEqual(wordsSpanish_1.default);
                 });
             });
         });
@@ -394,26 +397,31 @@ describe("GET REQUESTS", () => {
                     role: "user",
                     bio: "Bort",
                 };
-                const selectedLevel = 7;
+                const selectedLevel = 4;
                 const wordsLevelSeven = [
                     {
-                        german: "tanzen",
+                        english: "sit up",
+                        german: "aufstehen",
                     },
                     {
-                        german: "zeichnen",
+                        english: "chair",
+                        german: "stuhl",
                     },
                     {
-                        german: "spielen",
+                        english: "table",
+                        german: "tabelle",
                     },
                     {
-                        german: "laufen",
+                        english: "see",
+                        german: "sehen",
                     },
                     {
-                        german: "singen",
+                        english: "glass",
+                        german: "glas",
                     },
                 ];
                 return request(app)
-                    .get("/api/word-list/german/level-7")
+                    .get("/api/word-list/german/level-4")
                     .send({ user, selectedLevel })
                     .expect(200)
                     .then(({ body: { words } }) => {
