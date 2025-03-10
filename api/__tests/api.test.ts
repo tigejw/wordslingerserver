@@ -3,9 +3,9 @@ const app = require("../index");
 const seed = require("../../db/seeds/seed.ts");
 const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
-import { Game, User, Language, Word } from "@/types";
-import frenchTestWords from "./wordsFrench";
-import spainishTestWords from "./wordsSpanish";
+import { Game, User, Language, Word, Username } from "@/types";
+const { frenchTestWords } = require("./wordsFrench");
+const { spainishTestWords } = require("./wordsSpanish");
 
 beforeEach(() => {
   return seed(data);
@@ -22,7 +22,7 @@ type WordResponse = { body: { words: Word[] } };
 type ErrorResponse = { body: { error: string } };
 type VerificationResponse = { body: { verification: Boolean } };
 type LanguageResponse = { body: { language: Language[] } };
-type UsernameResponse = { body: { user: String } };
+type UsernameResponse = { body: { user: Username } };
 
 //user tests
 
@@ -107,9 +107,10 @@ describe("/users", () => {
       return request(app)
         .get("/api/users/Hayley41")
         .expect(200)
-        .then(({ body: { user } }: UsernameResponse) => {
+        .then(({ body: { user } }: any) => {
           expect(Array.isArray(user)).toBe(true);
-          expect(typeof user[0]).toEqual("number");
+          expect(typeof user[0]).toEqual("object");
+          expect(typeof user[0].user_id).toBe("number");
         });
     });
     test("404: Responds with an error when a username is not found", () => {
@@ -198,7 +199,6 @@ describe("/games", () => {
           wordlist: ["apple", "banana", "orange"],
           winner_correct_answers: ["apple", "banana"],
           loser_correct_answers: ["apple"],
-          
         })
         .expect(201)
         .then(({ body: { game } }: GameResponse) => {
@@ -368,7 +368,30 @@ describe("/games", () => {
         });
     });
   });
+  describe("GET games", () => {
+    test("200: get games returns an array of all of the users games", () => {
+      return request(app)
+        .get("/api/games/1")
+        .expect(200)
+        .then(({ body: { game } }: any) => {
+          expect(Array.isArray(game)).toBe(true);
+          expect(game.length).toEqual(4);
+        });
+    });
+    describe("GET games Error Handling", () => {
+      test("404: get games returns an error if the user does not exist", () => {
+        return request(app)
+          .get("/api/games/10000")
+          .expect(404)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toBe("Not found!");
+          });
+      });
+    });
+  });
 });
+
+//verify tests
 
 describe("/verify", () => {
   describe("/POST /verify", () => {
@@ -418,7 +441,8 @@ describe("/verify", () => {
         });
     });
   });
-});
+
+  //word tests
 
 describe("GET REQUESTS", () => {
   describe("GET - /word-list", () => {
@@ -477,6 +501,7 @@ describe("GET REQUESTS", () => {
           });
       });
     });
+
     describe("GET - select words in the users target langaugae from the speicifed level", () => {
       test("200: Responds with all available Spanish words with their corresponding level  ", () => {
         const user = {
@@ -488,33 +513,28 @@ describe("GET REQUESTS", () => {
           bio: "Bort",
         };
 
-        const selectedLevel = 4;
+        const selectedLevel = 7;
 
         const wordsLevelSeven = [
           {
-            english: "sit up",
-            german: "aufstehen",
+            german: "tanzen",
           },
           {
-            english: "chair",
-            german: "stuhl",
+            german: "zeichnen",
           },
           {
-            english: "table",
-            german: "tabelle",
+            german: "spielen",
           },
           {
-            english: "see",
-            german: "sehen",
+            german: "laufen",
           },
           {
-            english: "glass",
-            german: "glas",
+            german: "singen",
           },
         ];
 
         return request(app)
-          .get("/api/word-list/german/level-4")
+          .get("/api/word-list/german/level-7")
           .send({ user, selectedLevel })
           .expect(200)
           .then(({ body: { words } }: WordResponse) => {
