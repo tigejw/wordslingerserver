@@ -9,6 +9,7 @@ const socket_io_1 = require("socket.io");
 const cors_1 = __importDefault(require("cors"));
 // Create an Express app and HTTP server
 const app = (0, express_1.default)();
+app.use((0, cors_1.default)({ origin: "*" }));
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, {
     cors: {
@@ -16,7 +17,6 @@ const io = new socket_io_1.Server(server, {
         methods: ["GET", "POST"],
     },
 });
-app.use((0, cors_1.default)({ origin: "*" }));
 //Storage for all games, connect to api!!!
 let games = {};
 //Const waiting room
