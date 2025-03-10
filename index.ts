@@ -17,7 +17,7 @@ const io = new Server(server, {
 app.use(cors({ origin: "*" }));
 
 type Language = "German" | "Spanish" | "French" | null;
-
+type validLanguage = "German" | "Spanish" | "French";
 // Define types for the players
 interface Player {
   correctAnswers: Array<string>;
@@ -33,7 +33,8 @@ interface Players {
 interface GameInstance {
   players: Players;
   timer: number;
-  wordList: string[];
+  englishTranslations: string[];
+  nonEnglishTranslations: string[];
   language: Language;
 }
 
@@ -42,6 +43,15 @@ interface WaitingRoom {
   user: string;
   socketId: string;
   language: Language;
+}
+
+interface Word {
+  english: string;
+  french?: string;
+  german?: string;
+  spanish?: string;
+  image_url: string;
+  word_level: number;
 }
 //Storage for all games, connect to api!!!
 let games: { [roomId: string]: GameInstance } = {};
@@ -108,39 +118,61 @@ io.on("connection", (socket: Socket) => {
         );
 
         //store unique gameInstance in the games object with info on players, answers, wordpool + timer
+        return axios
+          .get(
+            `https://wordslingerserver.onrender.com/api/word-list/${waitingRoom.language?.toLowerCase()}`
+          )
+          .then(({ data: { words } }) => {
+            const englishTranslations = words.map((word: Word) => {
+              return word.english;
+            });
+            const nonEnglishTranslations = words.map((word: Word) => {
+              const language = waitingRoom.language;
+              return language === "German"
+                ? word.german
+                : language === "French"
+                ? word.french
+                : word.spanish;
+            });
+            console.log(words);
 
-        games[roomId] = {
-          players: {},
-          wordList: testWordList,
-          timer: 30,
-          language: waitingRoom.language,
-        };
-        games[roomId].players[socket.id] = {
-          user: user,
-          currentWordIndex: 0,
-          correctAnswers: [],
-          ready: true,
-        };
-        games[roomId].players[waitingRoom.socketId] = {
-          user: waitingRoom.user,
-          currentWordIndex: 0,
-          correctAnswers: [],
-          ready: true,
-        };
+            console.log(englishTranslations, "<<<<  eng translkations");
+            games[roomId] = {
+              players: {},
+              englishTranslations: englishTranslations,
+              nonEnglishTranslations: nonEnglishTranslations,
+              timer: 30,
+              language: waitingRoom.language,
+            };
+            games[roomId].players[socket.id] = {
+              user: user,
+              currentWordIndex: 0,
+              correctAnswers: [],
+              ready: true,
+            };
+            games[roomId].players[waitingRoom.socketId] = {
+              user: waitingRoom.user,
+              currentWordIndex: 0,
+              correctAnswers: [],
+              ready: true,
+            };
+            //start game sending roomid + wordlist to clients
+            io.to(roomId).emit("gameStart", {
+              wordList: games[roomId].nonEnglishTranslations,
+              roomId: roomId,
+            });
+            //start server side timer !!!needs syncing is one second ahead of client
+            startTimer(roomId);
+            console.log("game is starting" + roomId);
 
-        //start game sending roomid + wordlist to clients
-        io.emit("gameStart", {
-          wordList: games[roomId].wordList,
-          roomId: roomId,
-        });
-
-        //start server side timer !!!needs syncing is one second ahead of client
-        startTimer(roomId);
-        console.log("game is starting" + roomId);
-
-        //reset waiting room
-        waitingRoom.user = "";
-        waitingRoom.socketId = "";
+            //reset waiting room
+            waitingRoom.user = "";
+            waitingRoom.socketId = "";
+            console.log(waitingRooms);
+          })
+          .catch((err) => {
+            console.log(err, ">><<<<<< api res error");
+          });
       }
     }
   );
@@ -154,7 +186,7 @@ io.on("connection", (socket: Socket) => {
 
       //find the currentword the user is answering
       const currentWordIndex = gameInstance.players[socket.id].currentWordIndex;
-      const currentWord = gameInstance.wordList[currentWordIndex];
+      const currentWord = gameInstance.englishTranslations[currentWordIndex];
 
       //check if inputted answer is correct
       if (answer.toLowerCase() === currentWord.toLowerCase()) {
@@ -165,7 +197,7 @@ io.on("connection", (socket: Socket) => {
         socket.emit("correctAnswer", { message: "Correct!" });
         //signal next word to client sending next word
         socket.emit("nextWord", {
-          word: gameInstance.wordList[
+          word: gameInstance.nonEnglishTranslations[
             gameInstance.players[socket.id].currentWordIndex
           ],
         });
@@ -181,27 +213,27 @@ io.on("connection", (socket: Socket) => {
     //access specific game instance, players + playerIds
     const gameInstance = games[roomId];
     const gamePlayers = gameInstance.players;
-    const playerIds = Object.keys(gamePlayers);
+    const playersocketIds = Object.keys(gamePlayers);
     //create winner string
     let winner: string | null = null;
     //check who got most answers + assign winner to that person
     if (
-      gameInstance.players[playerIds[0]].correctAnswers.length ===
-      gameInstance.players[playerIds[1]].correctAnswers.length
+      gameInstance.players[playersocketIds[0]].correctAnswers.length ===
+      gameInstance.players[playersocketIds[1]].correctAnswers.length
     ) {
       const users = [
-        gameInstance.players[playerIds[0]].user,
-        gameInstance.players[playerIds[1]].user,
+        gameInstance.players[playersocketIds[0]].user,
+        gameInstance.players[playersocketIds[1]].user,
       ];
       const coinflip = Math.floor(Math.random() * 2);
       winner = users[coinflip];
     } else if (
-      gameInstance.players[playerIds[0]].correctAnswers.length >
-      gameInstance.players[playerIds[1]].correctAnswers.length
+      gameInstance.players[playersocketIds[0]].correctAnswers.length >
+      gameInstance.players[playersocketIds[1]].correctAnswers.length
     ) {
-      winner = gameInstance.players[playerIds[0]].user;
+      winner = gameInstance.players[playersocketIds[0]].user;
     } else {
-      winner = gameInstance.players[playerIds[1]].user;
+      winner = gameInstance.players[playersocketIds[1]].user;
     }
     //emit game over to client + send winner and game data
     io.to(roomId).emit("gameOver", {
