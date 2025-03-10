@@ -4,8 +4,8 @@ const seed = require("../../db/seeds/seed.ts");
 const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
 import { Game, User, Language, Word } from "@/types";
-const { frenchTestWords } = require("./wordsFrench");
-const { spainishTestWords } = require("./wordsSpanish");
+import frenchTestWords from "./wordsFrench";
+import spainishTestWords from "./wordsSpanish";
 
 beforeEach(() => {
   return seed(data);
@@ -301,7 +301,7 @@ describe("/verify", () => {
           expect(verification).toBe(true);
         });
     });
-    test.only("should return 200 and false when passed a valid username and invalid password", () => {
+    test("should return 200 and false when passed a valid username and invalid password", () => {
       return request(app)
         .post("/api/verify")
         .send({ username: "Hayley41", password: "nuHUH" })
@@ -355,7 +355,7 @@ describe("GET REQUESTS", () => {
         .get("/api/vords/")
         .expect(404)
         .then(({ body: { error } }: ErrorResponse) => {
-          expect(error).toBe("Invalid URL");
+          expect(error).toBe("Invalid URL!");
         });
     });
   });
@@ -408,28 +408,33 @@ describe("GET REQUESTS", () => {
           bio: "Bort",
         };
 
-        const selectedLevel = 7;
+        const selectedLevel = 4;
 
         const wordsLevelSeven = [
           {
-            german: "tanzen",
+            english: "sit up",
+            german: "aufstehen",
           },
           {
-            german: "zeichnen",
+            english: "chair",
+            german: "stuhl",
           },
           {
-            german: "spielen",
+            english: "table",
+            german: "tabelle",
           },
           {
-            german: "laufen",
+            english: "see",
+            german: "sehen",
           },
           {
-            german: "singen",
+            english: "glass",
+            german: "glas",
           },
         ];
 
         return request(app)
-          .get("/api/word-list/german/level-7")
+          .get("/api/word-list/german/level-4")
           .send({ user, selectedLevel })
           .expect(200)
           .then(({ body: { words } }: WordResponse) => {
