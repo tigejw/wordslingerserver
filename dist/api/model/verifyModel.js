@@ -13,10 +13,8 @@ exports.verifyUsernameAndPassword = ({ username, password, }) => {
         });
     }
     console.log("in verifymodel");
-    return checkExists("users", "username", username)
-        .then(() => {
-        return db.query(`SELECT username FROM users WHERE username = $1 AND password = crypt($2, password)`, [username, password]);
-    })
+    return db
+        .query(`SELECT username FROM users WHERE username = $1 AND password = crypt($2, password)`, [username, password])
         .then(({ rows }) => {
         console.log("in verifymodel after db req");
         return rows.length > 0;
