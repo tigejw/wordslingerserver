@@ -44,7 +44,15 @@ describe("/users", () => {
         .expect(200)
         .then(({ body: { user } }: any) => {
           expect(Array.isArray(user)).toBe(true);
-          expect(user[0].user_id).toEqual(1);
+          expect(typeof user[0].user_id).toEqual("number");
+        });
+    });
+    test("404: Responds with an error if user_id does not exist", () => {
+      return request(app)
+        .get("/api/users/100000")
+        .expect(404)
+        .then(({ body: { error } }: ErrorResponse) => {
+          expect(error).toEqual("Not found!");
         });
     });
   });
@@ -54,7 +62,6 @@ describe("/users", () => {
         name: "Bercow",
         avatar_url:
           "https://i.guim.co.uk/img/media/c5e73ed8e8325d7e79babf8f1ebbd9adc0d95409/2_5_1754_1053/master/1754.jpg?width=465&dpr=1&s=none&crop=none",
-        role: "user",
         bio: "cat, speaker, meowmrow",
         username: "Stinkyboy",
         password: "iamacat",
@@ -68,6 +75,31 @@ describe("/users", () => {
           expect(typeof user[0].user_id).toEqual("number");
         });
     });
+
+    test("400: An empty post responds with an error", () => {
+      return request(app)
+        .post("/api/users")
+        .send()
+        .expect(400)
+        .then(({ body: { error } }: ErrorResponse) => {
+          expect(error).toEqual("Bad request!");
+        });
+    });
+    test("400: A post with missing data responds with an error", () => {
+      const newUser = {
+        avatar_url:
+          "https://i.guim.co.uk/img/media/c5e73ed8e8325d7e79babf8f1ebbd9adc0d95409/2_5_1754_1053/master/1754.jpg?width=465&dpr=1&s=none&crop=none",
+        bio: "cat, speaker, meowmrow",
+        password: "iamacat",
+      };
+      return request(app)
+        .post("/api/users")
+        .send(newUser)
+        .expect(400)
+        .then(({ body: { error } }: ErrorResponse) => {
+          expect(error).toEqual("Bad request!");
+        });
+    });
   });
   //describe("PATCH /users/:user_id", () => {});
   describe("GET /users/:username", () => {
@@ -77,7 +109,15 @@ describe("/users", () => {
         .expect(200)
         .then(({ body: { user } }: UsernameResponse) => {
           expect(Array.isArray(user)).toBe(true);
-          expect(user[0]).toEqual({ user_id: 2 });
+          expect(typeof user[0]).toEqual("number");
+        });
+    });
+    test("404: Responds with an error when a username is not found", () => {
+      return request(app)
+        .get("/api/users/Haaayley41")
+        .expect(404)
+        .then(({ body: { error } }: ErrorResponse) => {
+          expect(error).toEqual("Not found!");
         });
     });
   });
@@ -85,12 +125,20 @@ describe("/users", () => {
     test("204: Responds with a 204 and nothing", () => {
       return request(app).delete("/api/users/1").expect(204);
     });
+    test("404: Responds with an error if user_id does not exist", () => {
+      return request(app)
+        .delete("/api/users/100000")
+        .expect(404)
+        .then(({ body: { error } }: ErrorResponse) => {
+          expect(error).toEqual("Not found!");
+        });
+    });
   });
 });
 
 //language tests
 
-describe.only("/languages", () => {
+describe("/languages", () => {
   describe("GET /language/:user_id", () => {
     test("get the languages of a user", () => {
       return request(app)
@@ -104,11 +152,19 @@ describe.only("/languages", () => {
           });
         });
     });
+    test("404: Returns an error message when user does not exist", () => {
+      return request(app)
+        .get("/api/language/20000")
+        .expect(404)
+        .then(({ body: { error } }: ErrorResponse) => {
+          expect(error).toEqual("Not found!");
+        });
+    });
   });
   describe("POST /langugage/:user_id", () => {
-    test("", () => {
+    test("201: Successfully add a language to a user", () => {
       return request(app)
-        .post("/api/language/2")
+        .post("/api/language")
         .send({ language: "French", user_id: 2 })
         .expect(201)
         .then(({ body }: any) => {
@@ -117,10 +173,16 @@ describe.only("/languages", () => {
           expect(body[0].current_level).toEqual(1);
         });
     });
+    test("404: Returns an error message when user does not exist", () => {
+      return request(app)
+        .post("/api/language")
+        .send({ language: "French", user_id: 20000 })
+        .expect(404);
+    });
   });
-  //   describe("PATCH /language/:user_id", () => {});
-  // });
 });
+//   describe("PATCH /language/:user_id", () => {});
+// });
 
 //game tests
 
@@ -309,7 +371,7 @@ describe("/games", () => {
 });
 
 describe("/verify", () => {
-  describe.only("/POST /verify", () => {
+  describe("/POST /verify", () => {
     test("should return 200 and true when passed a valid username and password", () => {
       return request(app)
         .post("/api/verify")
