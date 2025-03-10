@@ -6,14 +6,7 @@ const PORT = process.env.PORT || 3000;
 import cors from "cors";
 
 const app = express();
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 console.log("index before /api router");

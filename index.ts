@@ -5,6 +5,7 @@ import cors from "cors";
 import axios from "axios";
 // Create an Express app and HTTP server
 const app = express();
+app.use(cors({ origin: "*" }));
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -13,8 +14,6 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
-
-app.use(cors({ origin: "*" }));
 
 type Language = "German" | "Spanish" | "French" | null;
 type validLanguage = "German" | "Spanish" | "French";

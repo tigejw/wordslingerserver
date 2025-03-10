@@ -1,230 +1,153 @@
-export const spainishTestWords = [
+const spainishTestWords = [
   {
-    spanish: "contester",
-    word_level: 18,
-  },
-  {
-    spanish: "preguntar",
-    word_level: 18,
-  },
-  {
-    spanish: "comprar",
-    word_level: 17,
-  },
-  {
-    spanish: "cerrar",
-    word_level: 21,
-  },
-  {
-    spanish: "ponerse",
-    word_level: 20,
-  },
-  {
-    spanish: "vestir",
-    word_level: 20,
-  },
-  {
-    spanish: "bailar",
-    word_level: 7,
-  },
-  {
-    spanish: "dibujar",
-    word_level: 7,
-  },
-  {
-    spanish: "beber",
-    word_level: 3,
-  },
-  {
-    spanish: "conducir",
-    word_level: 12,
-  },
-  {
-    spanish: "comer",
-    word_level: 3,
-  },
-  {
-    spanish: "volar",
-    word_level: 11,
-  },
-  {
-    spanish: "oír",
-    word_level: 15,
-  },
-  {
-    spanish: "gustar",
-    word_level: 11,
-  },
-  {
-    spanish: "escuchar",
-    word_level: 15,
-  },
-  {
-    spanish: "mirar",
-    word_level: 12,
-  },
-  {
-    spanish: "abrir",
-    word_level: 21,
-  },
-  {
-    spanish: "jugar",
-    word_level: 7,
-  },
-  {
-    spanish: "llover",
-    word_level: 19,
-  },
-  {
-    spanish: "leer",
-    word_level: 3,
-  },
-  {
-    spanish: "correr",
-    word_level: 7,
-  },
-  {
-    spanish: "ver",
-    word_level: 4,
-  },
-  {
-    spanish: "cantar",
-    word_level: 7,
-  },
-  {
-    spanish: "sentar",
-    word_level: 3,
-  },
-  {
-    spanish: "dormir",
-    word_level: 5,
-  },
-  {
-    spanish: "detener",
-    word_level: 21,
-  },
-  {
-    spanish: "estudiar",
-    word_level: 10,
-  },
-  {
-    spanish: "nadar",
-    word_level: 21,
-  },
-  {
-    spanish: "hablar",
-    word_level: 15,
-  },
-  {
-    spanish: "enseñar",
-    word_level: 11,
-  },
-  {
-    spanish: "decir",
-    word_level: 21,
-  },
-  {
-    spanish: "pensar",
-    word_level: 21,
-  },
-  {
-    spanish: "viajar",
-    word_level: 10,
-  },
-  {
-    spanish: "apagar",
-    word_level: 17,
-  },
-  {
-    spanish: "encender",
-    word_level: 17,
-  },
-  {
-    spanish: "despertarse",
-    word_level: 12,
-  },
-  {
-    spanish: "caminar",
-    word_level: 11,
-  },
-  {
-    spanish: "mirar",
-    word_level: 17,
-  },
-  {
-    spanish: "trabajar",
-    word_level: 18,
-  },
-  {
-    spanish: "escribir",
-    word_level: 18,
-  },
-  {
+    english: "dog",
     spanish: "perro",
     word_level: 1,
+    image_url:
+      "https://drive.google.com/file/d/1kDdIkIYhdIStTkvAOW4eqlqxp87Frz0c/view?usp=sharing",
   },
   {
+    english: "mother",
+    spanish: "madre",
+    word_level: 1,
+    image_url:
+      "https://drive.google.com/file/d/19beQ5NjylJTv7Zg0QoEWA9NTrr1Bl4a4/view?usp=sharing",
+  },
+  {
+    english: "father",
+    spanish: "padre",
+    word_level: 1,
+    image_url:
+      "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
+  },
+  {
+    english: "brother",
+    spanish: "hermano",
+    word_level: 2,
+    image_url:
+      "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
+  },
+  {
+    english: "sit up",
+    spanish: "levántate",
+    word_level: 4,
+    image_url:
+      "https://drive.google.com/file/d/1ucOGV9JYx5mZIyfgSQLjUZRW0AjYIbGY/view?usp=sharing",
+  },
+  {
+    english: "chair",
+    spanish: "silla",
+    word_level: 4,
+    image_url:
+      "https://drive.google.com/file/d/1GdE3IYBucgNpH1yguLUYcLQe5OJk1ahG/view?usp=sharing",
+  },
+  {
+    english: "table",
+    spanish: "mesa",
+    word_level: 4,
+    image_url:
+      "https://drive.google.com/file/d/1mAmzrFpHx3BUvBY80_RZ8-wbklLR-Lbz/view?usp=sharing",
+  },
+  {
+    english: "water",
+    spanish: "agua",
+    word_level: 2,
+    image_url:
+      "https://drive.google.com/file/d/1GdE3IYBucgNpH1yguLUYcLQe5OJk1ahG/view?usp=sharing",
+  },
+  {
+    english: "eat",
+    spanish: "comer",
+    word_level: 3,
+    image_url:
+      "https://drive.google.com/file/d/1RE0y1vQdYpvK4FkfyVxNF0UWGx9ZrkWx/view?usp=sharing",
+  },
+  {
+    english: "read",
+    spanish: "leer",
+    word_level: 3,
+    image_url:
+      "https://drive.google.com/file/d/12sXBkgDFV05DggW_envB7MsNGOETdgdr/view?usp=sharing",
+  },
+
+  {
+    english: "see",
+    spanish: "ver",
+    word_level: 4,
+    image_url:
+      "https://drive.google.com/file/d/1V4wnzIodzTAoVN1lbAJYtCWGuKyZWY4o/view?usp=sharing",
+  },
+
+  {
+    english: "sit down",
+    spanish: "sentar",
+    word_level: 3,
+    image_url:
+      "https://drive.google.com/file/d/1mAmzrFpHx3BUvBY80_RZ8-wbklLR-Lbz/view?usp=sharing",
+  },
+  {
+    english: "drink",
+    spanish: "beber",
+    word_level: 3,
+    image_url:
+      "https://drive.google.com/file/d/1EITijBh-RsRAKy37QQhXk5NCgWTQe5Nh/view?usp=sharing",
+  },
+  {
+    english: "fruit",
+    spanish: "fruta",
+    word_level: 2,
+    image_url:
+      "https://drive.google.com/file/d/1m9KGsihezBmnsb1tu0G448e5wvQD7Xbq/view?usp=sharing",
+  },
+  {
+    english: "book",
+    spanish: "libro",
+    word_level: 3,
+    image_url:
+      "https://drive.google.com/file/d/1_jvFMptrkW33NJoWwvyIETf1N3r28F0Q/view?usp=sharing",
+  },
+  {
+    english: "glass",
+    spanish: "vaso",
+    word_level: 4,
+    image_url:
+      "https://drive.google.com/file/d/1_jvFMptrkW33NJoWwvyIETf1N3r28F0Q/view?usp=sharing",
+  },
+  {
+    english: "meat",
+    spanish: "carne",
+    word_level: 2,
+    image_url:
+      "https://drive.google.com/file/d/1kzo2BhwpTMj-8m89ohCGkiKSms3YmxwO/view?usp=sharing",
+  },
+  {
+    english: "vegetable",
+    spanish: "vegetal",
+    word_level: 2,
+    image_url:
+      "https://drive.google.com/file/d/1utVAXTyVG3Kows7e7GodWLsISWLJe0XR/view?usp=sharing",
+  },
+  {
+    english: "sister",
+    spanish: "hermana",
+    word_level: 2,
+    image_url:
+      "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
+  },
+  {
+    english: "baby",
+    spanish: "bebé",
+    word_level: 1,
+    image_url:
+      "https://drive.google.com/file/d/1B5mP3pTvIphi_A3hJ1T1XZH-dJgSrTQR/view?usp=sharing",
+  },
+  {
+    english: "cat",
     spanish: "gato",
     word_level: 1,
-  },
-  {
-    spanish: "conejo",
-    word_level: 21,
-  },
-  {
-    spanish: "cerdo",
-    word_level: 21,
-  },
-  {
-    spanish: "caballo",
-    word_level: 12,
-  },
-  {
-    spanish: "vaca",
-    word_level: 12,
-  },
-  {
-    spanish: "pollo",
-    word_level: 12,
-  },
-  {
-    spanish: "oveja",
-    word_level: 21,
-  },
-  {
-    spanish: "cabra",
-    word_level: 13,
-  },
-  {
-    spanish: "zorro",
-    word_level: 13,
-  },
-  {
-    spanish: "oso",
-    word_level: 21,
-  },
-  {
-    spanish: "elefante",
-    word_level: 13,
-  },
-  {
-    spanish: "león",
-    word_level: 12,
-  },
-  {
-    spanish: "ballena",
-    word_level: 21,
-  },
-  {
-    spanish: "pingüino",
-    word_level: 19,
-  },
-  {
-    spanish: "pájaro",
-    word_level: 12,
-  },
-  {
-    spanish: "pez",
-    word_level: 12,
+    image_url:
+      "https://drive.google.com/file/d/1xG7qc7KfMrUZ1oWPXk8B8e7A3Muaj2tc/view?usp=sharing",
   },
 ];
+
+export default spainishTestWords;
