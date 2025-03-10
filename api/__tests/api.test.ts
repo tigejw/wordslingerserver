@@ -136,6 +136,7 @@ describe("/games", () => {
           wordlist: ["apple", "banana", "orange"],
           winner_correct_answers: ["apple", "banana"],
           loser_correct_answers: ["apple"],
+          
         })
         .expect(201)
         .then(({ body: { game } }: GameResponse) => {
