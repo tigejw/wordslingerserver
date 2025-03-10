@@ -3,9 +3,9 @@ const app = require("../index");
 const seed = require("../../db/seeds/seed.ts");
 const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
-import { Game, User, Language, Word, Username } from "@/types";
-const { frenchTestWords } = require("./wordsFrench");
-const { spainishTestWords } = require("./wordsSpanish");
+import { Game, User, Language, Word } from "@/types";
+import frenchTestWords from "./wordsFrench";
+import spainishTestWords from "./wordsSpanish";
 
 beforeEach(() => {
   return seed(data);
@@ -425,28 +425,33 @@ describe("GET REQUESTS", () => {
           bio: "Bort",
         };
 
-        const selectedLevel = 7;
+        const selectedLevel = 4;
 
         const wordsLevelSeven = [
           {
-            german: "tanzen",
+            english: "sit up",
+            german: "aufstehen",
           },
           {
-            german: "zeichnen",
+            english: "chair",
+            german: "stuhl",
           },
           {
-            german: "spielen",
+            english: "table",
+            german: "tabelle",
           },
           {
-            german: "laufen",
+            english: "see",
+            german: "sehen",
           },
           {
-            german: "singen",
+            english: "glass",
+            german: "glas",
           },
         ];
 
         return request(app)
-          .get("/api/word-list/german/level-7")
+          .get("/api/word-list/german/level-4")
           .send({ user, selectedLevel })
           .expect(200)
           .then(({ body: { words } }: WordResponse) => {
