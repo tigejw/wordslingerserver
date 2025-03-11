@@ -282,8 +282,8 @@ describe("/games", () => {
         });
     });
 });
-describe("/verify", () => {
-    describe.only("/POST /verify", () => {
+describe.only("/verify", () => {
+    describe("/POST /verify", () => {
         test("should return 200 and true when passed a valid username and password", () => {
             return request(app)
                 .post("/api/verify")
@@ -311,13 +311,13 @@ describe("/verify", () => {
                 expect(error).toBe("Bad request!");
             });
         });
-        test("should return 404 when passed a valid username type that does not exist", () => {
+        test.only("should return 200 and false when passed a valid username type that does not exist", () => {
             return request(app)
                 .post("/api/verify")
                 .send({ username: "noYOURNOTREAL", password: "shhhhissasecret" })
-                .expect(404)
-                .then(({ body: { error } }) => {
-                expect(error).toBe("Not found!");
+                .expect(200)
+                .then(({ body: { verification } }) => {
+                expect(verification).toBe(false);
             });
         });
         test("should return 400 when passed a valid username and no password", () => {

@@ -3,13 +3,16 @@ import { sql } from "kysely";
 import { QueryResult } from "pg";
 const db = require("../../db/connection");
 const format = require("pg-format");
+const { checkExists } = require("../../db/seeds/utils");
 
 exports.selectLanguageByUserId = (user_id: number) => {
-  return db
-    .query("SELECT * FROM languages WHERE user_id = $1", [user_id])
-    .then((result: QueryResult<Language>) => {
-      return result.rows;
-    });
+  return checkExists("languages", "user_id", user_id).then(() => {
+    return db
+      .query("SELECT * FROM languages WHERE user_id = $1", [user_id])
+      .then((result: QueryResult<Language>) => {
+        return result.rows;
+      });
+  });
 };
 
 exports.insertNewLanguageToUser = (language: string, user_id: number) => {
@@ -17,8 +20,10 @@ exports.insertNewLanguageToUser = (language: string, user_id: number) => {
     `INSERT INTO languages (language, user_id, current_level) VALUES (%L) RETURNING *;`,
     [language, user_id, 1]
   );
-  return db.query(sqlString).then((result: QueryResult<Language>) => {
-    return result.rows;
+  return checkExists("languages", "user_id", user_id).then(() => {
+    return db.query(sqlString).then((result: QueryResult<Language>) => {
+      return result.rows;
+    });
   });
 };
 

@@ -250,7 +250,6 @@ io.on("connection", (socket: Socket) => {
       winnerUsername,
       gameInstance,
     });
-
     let winnerUserId: string | null = null;
     let loserUserId: string | null = null;
     axios

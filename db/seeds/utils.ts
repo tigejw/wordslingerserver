@@ -2,6 +2,7 @@ const db = require("../connection");
 const format = require("pg-format");
 
 exports.checkExists = (table: any, column: any, value: any) => {
+  console.log(table, column, value);
   return db
     .query(format("SELECT * FROM %I WHERE %I = $1", table, column), [value])
     .then(({ rows }: any) => {
