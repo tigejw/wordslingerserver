@@ -104,7 +104,7 @@ function seed(data: Data) {
 function createUsersTable() {
   return db.query(`CREATE TABLE users(
         user_id SERIAL PRIMARY KEY,
-        username VARCHAR NOT NULL,
+        username VARCHAR NOT NULL UNIQUE,
         password TEXT NOT NULL,
         name VARCHAR NOT NULL,
         avatar_url VARCHAR,
