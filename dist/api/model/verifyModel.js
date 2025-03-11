@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const db = require("../../db/connection");
-const { checkExists } = require("../../db/seeds/utils");
 exports.verifyUsernameAndPassword = ({ username, password, }) => {
     if (!username ||
         !password ||
