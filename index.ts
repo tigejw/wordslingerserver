@@ -213,33 +213,87 @@ io.on("connection", (socket: Socket) => {
     const gameInstance = games[roomId];
     const gamePlayers = gameInstance.players;
     const playersocketIds = Object.keys(gamePlayers);
-    //create winner string
-    let winner: string | null = null;
+
+    //create winner socketid string
+    let winnerSocketId: string | null = null;
+
+    //create loser socket id string
+    let loserSocketId: string | null = null;
+
     //check who got most answers + assign winner to that person
     if (
       gameInstance.players[playersocketIds[0]].correctAnswers.length ===
       gameInstance.players[playersocketIds[1]].correctAnswers.length
     ) {
-      const users = [
-        gameInstance.players[playersocketIds[0]].user,
-        gameInstance.players[playersocketIds[1]].user,
-      ];
       const coinflip = Math.floor(Math.random() * 2);
-      winner = users[coinflip];
+
+      winnerSocketId = playersocketIds[coinflip];
+      loserSocketId = playersocketIds.filter((socketid) => {
+        return socketid !== winnerSocketId;
+      })[0];
     } else if (
       gameInstance.players[playersocketIds[0]].correctAnswers.length >
       gameInstance.players[playersocketIds[1]].correctAnswers.length
     ) {
-      winner = gameInstance.players[playersocketIds[0]].user;
+      winnerSocketId = playersocketIds[0];
+      loserSocketId = playersocketIds[1];
     } else {
-      winner = gameInstance.players[playersocketIds[1]].user;
+      winnerSocketId = playersocketIds[1];
+      loserSocketId = playersocketIds[0];
     }
+
+    const winnerUsername = gamePlayers[winnerSocketId].user;
+    const loserUsername = gamePlayers[loserSocketId].user;
+
     //emit game over to client + send winner and game data
     io.to(roomId).emit("gameOver", {
-      winner,
+      winnerUsername,
       gameInstance,
     });
-    return axios.post("https://wordslingerserver.onrender.com/api/word-list/");
+    let winnerUserId: string | null = null;
+    let loserUserId: string | null = null;
+    axios
+      .get(`https://wordslingerserver.onrender.com/api/users/${winnerUsername}`)
+      .then(({ data: { user } }) => {
+        console.log(user, "< res from first");
+        winnerUserId = user[0].user_id;
+        return;
+      })
+      .then(() => {
+        return axios.get(
+          `https://wordslingerserver.onrender.com/api/users/${loserUsername}`
+        );
+      })
+      .then(({ data: { user } }) => {
+        console.log(user, "<res from second");
+        loserUserId = user[0].user_id;
+        return;
+      })
+      .then(() => {
+        console.log(winnerSocketId, "<winner loser>", loserSocketId);
+        if (!winnerSocketId || !loserSocketId) {
+          console.log("hi");
+          return;
+        }
+        return axios.post("https://wordslingerserver.onrender.com/api/games", {
+          room_id: roomId,
+          winner: winnerUserId,
+          loser: loserUserId,
+          wordlist: gameInstance.nonEnglishTranslations,
+          winner_correct_answers:
+            gameInstance.players[winnerSocketId].correctAnswers,
+          loser_correct_answers:
+            gameInstance.players[loserSocketId].correctAnswers,
+        });
+      })
+      .then((res) => {
+        console.log(res);
+        console.log("success");
+      })
+      .catch((err) => {
+        console.log(err);
+        return;
+      });
   }
 
   //timer function server side
