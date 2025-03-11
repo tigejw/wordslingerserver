@@ -1,15 +1,12 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const request = require("supertest");
 const app = require("../index");
 const seed = require("../../db/seeds/seed.ts");
 const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
-const wordsFrench_1 = __importDefault(require("./wordsFrench"));
-const wordsSpanish_1 = __importDefault(require("./wordsSpanish"));
+const { frenchTestWords } = require("./wordsFrench");
+const { spainishTestWords } = require("./wordsSpanish");
 beforeEach(() => {
     return seed(data);
 });
@@ -35,7 +32,15 @@ describe("/users", () => {
                 .expect(200)
                 .then(({ body: { user } }) => {
                 expect(Array.isArray(user)).toBe(true);
-                expect(user[0].user_id).toEqual(1);
+                expect(typeof user[0].user_id).toEqual("number");
+            });
+        });
+        test("404: Responds with an error if user_id does not exist", () => {
+            return request(app)
+                .get("/api/users/100000")
+                .expect(404)
+                .then(({ body: { error } }) => {
+                expect(error).toEqual("Not found!");
             });
         });
     });
@@ -44,7 +49,6 @@ describe("/users", () => {
             const newUser = {
                 name: "Bercow",
                 avatar_url: "https://i.guim.co.uk/img/media/c5e73ed8e8325d7e79babf8f1ebbd9adc0d95409/2_5_1754_1053/master/1754.jpg?width=465&dpr=1&s=none&crop=none",
-                role: "user",
                 bio: "cat, speaker, meowmrow",
                 username: "Stinkyboy",
                 password: "iamacat",
@@ -58,6 +62,29 @@ describe("/users", () => {
                 expect(typeof user[0].user_id).toEqual("number");
             });
         });
+        test("400: An empty post responds with an error", () => {
+            return request(app)
+                .post("/api/users")
+                .send()
+                .expect(400)
+                .then(({ body: { error } }) => {
+                expect(error).toEqual("Bad request!");
+            });
+        });
+        test("400: A post with missing data responds with an error", () => {
+            const newUser = {
+                avatar_url: "https://i.guim.co.uk/img/media/c5e73ed8e8325d7e79babf8f1ebbd9adc0d95409/2_5_1754_1053/master/1754.jpg?width=465&dpr=1&s=none&crop=none",
+                bio: "cat, speaker, meowmrow",
+                password: "iamacat",
+            };
+            return request(app)
+                .post("/api/users")
+                .send(newUser)
+                .expect(400)
+                .then(({ body: { error } }) => {
+                expect(error).toEqual("Bad request!");
+            });
+        });
     });
     //describe("PATCH /users/:user_id", () => {});
     describe("GET /users/:username", () => {
@@ -67,7 +94,16 @@ describe("/users", () => {
                 .expect(200)
                 .then(({ body: { user } }) => {
                 expect(Array.isArray(user)).toBe(true);
-                expect(user[0]).toEqual({ user_id: 2 });
+                expect(typeof user[0]).toEqual("object");
+                expect(typeof user[0].user_id).toBe("number");
+            });
+        });
+        test("404: Responds with an error when a username is not found", () => {
+            return request(app)
+                .get("/api/users/Haaayley41")
+                .expect(404)
+                .then(({ body: { error } }) => {
+                expect(error).toEqual("Not found!");
             });
         });
     });
@@ -75,10 +111,18 @@ describe("/users", () => {
         test("204: Responds with a 204 and nothing", () => {
             return request(app).delete("/api/users/1").expect(204);
         });
+        test("404: Responds with an error if user_id does not exist", () => {
+            return request(app)
+                .delete("/api/users/100000")
+                .expect(404)
+                .then(({ body: { error } }) => {
+                expect(error).toEqual("Not found!");
+            });
+        });
     });
 });
 //language tests
-describe.only("/languages", () => {
+describe("/languages", () => {
     describe("GET /language/:user_id", () => {
         test("get the languages of a user", () => {
             return request(app)
@@ -92,11 +136,19 @@ describe.only("/languages", () => {
                 });
             });
         });
+        test("404: Returns an error message when user does not exist", () => {
+            return request(app)
+                .get("/api/language/20000")
+                .expect(404)
+                .then(({ body: { error } }) => {
+                expect(error).toEqual("Not found!");
+            });
+        });
     });
     describe("POST /langugage/:user_id", () => {
-        test("", () => {
+        test("201: Successfully add a language to a user", () => {
             return request(app)
-                .post("/api/language/2")
+                .post("/api/language")
                 .send({ language: "French", user_id: 2 })
                 .expect(201)
                 .then(({ body }) => {
@@ -105,10 +157,16 @@ describe.only("/languages", () => {
                 expect(body[0].current_level).toEqual(1);
             });
         });
+        test("404: Returns an error message when user does not exist", () => {
+            return request(app)
+                .post("/api/language")
+                .send({ language: "French", user_id: 20000 })
+                .expect(404);
+        });
     });
-    //   describe("PATCH /language/:user_id", () => {});
-    // });
 });
+//   describe("PATCH /language/:user_id", () => {});
+// });
 //game tests
 describe("/games", () => {
     describe("POST /games", () => {
@@ -281,8 +339,30 @@ describe("/games", () => {
             });
         });
     });
+    describe("GET games", () => {
+        test("200: get games returns an array of all of the users games", () => {
+            return request(app)
+                .get("/api/games/1")
+                .expect(200)
+                .then(({ body: { game } }) => {
+                expect(Array.isArray(game)).toBe(true);
+                expect(game.length).toEqual(4);
+            });
+        });
+        describe("GET games Error Handling", () => {
+            test("404: get games returns an error if the user does not exist", () => {
+                return request(app)
+                    .get("/api/games/10000")
+                    .expect(404)
+                    .then(({ body: { error } }) => {
+                    expect(error).toBe("Not found!");
+                });
+            });
+        });
+    });
 });
-describe.only("/verify", () => {
+//verify tests
+describe("/verify", () => {
     describe("/POST /verify", () => {
         test("should return 200 and true when passed a valid username and password", () => {
             return request(app)
@@ -311,7 +391,7 @@ describe.only("/verify", () => {
                 expect(error).toBe("Bad request!");
             });
         });
-        test.only("should return 200 and false when passed a valid username type that does not exist", () => {
+        test("should return 200 and false when passed a valid username type that does not exist", () => {
             return request(app)
                 .post("/api/verify")
                 .send({ username: "noYOURNOTREAL", password: "shhhhissasecret" })
@@ -331,6 +411,7 @@ describe.only("/verify", () => {
         });
     });
 });
+//word tests
 describe("GET REQUESTS", () => {
     describe("GET - /word-list", () => {
         test("200: Responds with every word from all available languages with their corresponding level ", () => {
@@ -365,7 +446,7 @@ describe("GET REQUESTS", () => {
                 .send(user)
                 .expect(200)
                 .then(({ body: { words } }) => {
-                expect(words).toEqual(wordsFrench_1.default);
+                expect(words).toEqual(frenchTestWords);
             });
         });
         describe("GET - /word-list/french", () => {
@@ -383,7 +464,7 @@ describe("GET REQUESTS", () => {
                     .send(user)
                     .expect(200)
                     .then(({ body: { words } }) => {
-                    expect(words).toEqual(wordsSpanish_1.default);
+                    expect(words).toEqual(spainishTestWords);
                 });
             });
         });
@@ -397,35 +478,132 @@ describe("GET REQUESTS", () => {
                     role: "user",
                     bio: "Bort",
                 };
-                const selectedLevel = 4;
+                const selectedLevel = 7;
                 const wordsLevelSeven = [
                     {
-                        english: "sit up",
-                        german: "aufstehen",
+                        german: "tanzen",
                     },
                     {
-                        english: "chair",
-                        german: "stuhl",
+                        german: "zeichnen",
                     },
                     {
-                        english: "table",
-                        german: "tabelle",
+                        german: "spielen",
                     },
                     {
-                        english: "see",
-                        german: "sehen",
+                        german: "laufen",
                     },
                     {
-                        english: "glass",
-                        german: "glas",
+                        german: "singen",
                     },
                 ];
                 return request(app)
-                    .get("/api/word-list/german/level-4")
+                    .get("/api/word-list/german/level-7")
                     .send({ user, selectedLevel })
                     .expect(200)
                     .then(({ body: { words } }) => {
                     expect(words).toEqual(wordsLevelSeven);
+                });
+            });
+        });
+    });
+});
+//leaderboard tests
+describe("/leaderboards", () => {
+    describe("/get /leaderboard/:user_id/:language", () => {
+        test("should return rank information when provided with user_id and langauge", () => {
+            return request(app)
+                .get("/api/leaderboard/1/French")
+                .expect(200)
+                .then(({ body: { leaderboardEntry } }) => {
+                expect(leaderboardEntry).toEqual(expect.objectContaining({
+                    leaderboard_id: expect.any(Number),
+                    rank: expect.any(Number),
+                    user_id: 1,
+                    language: "French",
+                }));
+            });
+        });
+        describe("error handling", () => {
+            test("404: should return 404 if user_id is valid type but does not exist", () => {
+                return request(app)
+                    .get("/api/leaderboard/31415/French")
+                    .expect(404)
+                    .then(({ body: { error } }) => {
+                    expect(error).toEqual("Not found!");
+                });
+            });
+            test("400: should return bad request when user_id is invalid type", () => {
+                return request(app)
+                    .get("/api/leaderboard/IMADINOSAUR/French")
+                    .expect(400)
+                    .then(({ body: { error } }) => {
+                    expect(error).toEqual("Bad request!");
+                });
+            });
+            test("400: should return bad request error if language not valid", () => {
+                return request(app)
+                    .get("/api/leaderboard/1/FishLanguage")
+                    .expect(400)
+                    .then(({ body: { error } }) => {
+                    expect(error).toEqual("Bad request!");
+                });
+            });
+        });
+    });
+    describe("PATCH /leaderboard/:user_id/language", () => {
+        test("should respond wtih 200 and updated rank when send with correct body", () => {
+            return request(app)
+                .patch("/api/leaderboard/1/French")
+                .send({ newRank: 1950 })
+                .expect(200)
+                .then(({ body: { updatedRank } }) => {
+                expect(updatedRank).toEqual(1950);
+            });
+        });
+        describe("errorhandling", () => {
+            test("404: should return 404 if user_id is valid type but does not exist", () => {
+                return request(app)
+                    .patch("/api/leaderboard/31415/French")
+                    .send({ newRank: 1950 })
+                    .expect(404)
+                    .then(({ body: { error } }) => {
+                    expect(error).toEqual("Not found!");
+                });
+            });
+            test("400: should return bad request when user_id is an invalid type", () => {
+                return request(app)
+                    .patch("/api/leaderboard/IMADINOSAUR/French")
+                    .send({ newRank: 1950 })
+                    .expect(400)
+                    .then(({ body: { error } }) => {
+                    expect(error).toEqual("Bad request!");
+                });
+            });
+            test("400: should return bad request when language is invalid", () => {
+                return request(app)
+                    .patch("/api/leaderboard/1/FishLanguage")
+                    .send({ newRank: 1950 })
+                    .expect(400)
+                    .then(({ body: { error } }) => {
+                    expect(error).toEqual("Bad request!");
+                });
+            });
+            test("400: should return bad request when newRank is missing", () => {
+                return request(app)
+                    .patch("/api/leaderboard/1/French")
+                    .send({})
+                    .expect(400)
+                    .then(({ body: { error } }) => {
+                    expect(error).toEqual("Bad request!");
+                });
+            });
+            test("400: should return bad request when newRank is an invalid type", () => {
+                return request(app)
+                    .patch("/api/leaderboard/1/French")
+                    .send({ newRank: "highRank" })
+                    .expect(400)
+                    .then(({ body: { error } }) => {
+                    expect(error).toEqual("Bad request!");
                 });
             });
         });

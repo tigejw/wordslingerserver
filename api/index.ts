@@ -18,7 +18,6 @@ app.all("/*", (req, res) => {
 
 //error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.log("in errorhandling ");
   if (err.code === "23502" || err.code === "22P02") {
     res.status(400).send({ error: "Bad request!" });
   } else {
