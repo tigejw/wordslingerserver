@@ -33,7 +33,6 @@ exports.getUser = (req, res, next) => {
         });
     }
     else {
-        console.log(user);
         selectUserByUserId(user)
             .then((user) => {
             res.status(200).send({ user: user });
@@ -43,32 +42,6 @@ exports.getUser = (req, res, next) => {
         });
     }
 };
-//Incorporated into getUser Function if statements
-/*exports.getUserIdByUserName = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { username } = req.params;
-  console.log(username);
-  selectUserIdByUsername(username)
-    .then((user: User) => {
-      res.status(200).send({ user: user });
-    })
-    .catch((err: any) => {
-      next(err);
-    });
-}; */
-//what do we want to update?
-// exports.patchUserByUserId = (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   const { user_id } = req.params;
-//   const updateUser = req.body;
-//   updateUserByUserId(user_id, updateUser);
-// };
 exports.deleteUserByUserId = (req, res, next) => {
     const { user } = req.params;
     deleteFromUsersByUserId(user)
@@ -79,3 +52,13 @@ exports.deleteUserByUserId = (req, res, next) => {
         next(err);
     });
 };
+//NICE TO HAVE - what do we want to update?
+// exports.patchUserByUserId = (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   const { user_id } = req.params;
+//   const updateUser = req.body;
+//   updateUserByUserId(user_id, updateUser);
+// };

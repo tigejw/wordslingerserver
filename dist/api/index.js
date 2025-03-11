@@ -10,17 +10,14 @@ const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({ origin: "*" }));
 app.use(express_1.default.json());
-console.log("index before /api router");
 //endpoint routing
 app.use("/api", apiRouters_1.default);
-console.log("index after /api router before invalid url check");
 //invalid URL handling
 app.all("/*", (req, res) => {
     res.status(404).send({ error: "Invalid URL!" });
 });
 //error handling middleware
 app.use((err, req, res, next) => {
-    console.log("in errorhandling ");
     if (err.code === "23502" || err.code === "22P02") {
         res.status(400).send({ error: "Bad request!" });
     }

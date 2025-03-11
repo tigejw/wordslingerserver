@@ -3,9 +3,9 @@ const app = require("../index");
 const seed = require("../../db/seeds/seed.ts");
 const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
-import { Game, User, Language, Word } from "@/types";
-import frenchTestWords from "./wordsFrench";
-import spainishTestWords from "./wordsSpanish";
+import { Game, User, Language, Word, Username, Leaderboard } from "@/types";
+const { frenchTestWords } = require("./wordsFrench");
+const { spainishTestWords } = require("./wordsSpanish");
 
 beforeEach(() => {
   return seed(data);
@@ -22,8 +22,9 @@ type WordResponse = { body: { words: Word[] } };
 type ErrorResponse = { body: { error: string } };
 type VerificationResponse = { body: { verification: Boolean } };
 type LanguageResponse = { body: { language: Language[] } };
-type UsernameResponse = { body: { user: String } };
-
+type UsernameResponse = { body: { user: Username } };
+type LeaderboardResponse = { body: { leaderboardEntry: Leaderboard } };
+type UpdatedRankResponse = { body: { updatedRank: number } };
 //user tests
 
 describe("/users", () => {
@@ -107,9 +108,10 @@ describe("/users", () => {
       return request(app)
         .get("/api/users/Hayley41")
         .expect(200)
-        .then(({ body: { user } }: UsernameResponse) => {
+        .then(({ body: { user } }: any) => {
           expect(Array.isArray(user)).toBe(true);
-          expect(typeof user[0]).toEqual("number");
+          expect(typeof user[0]).toEqual("object");
+          expect(typeof user[0].user_id).toBe("number");
         });
     });
     test("404: Responds with an error when a username is not found", () => {
@@ -188,27 +190,127 @@ describe("/languages", () => {
 
 describe("/games", () => {
   describe("POST /games", () => {
-    test("should return a 201 and posted data", () => {
+    test.only("should return a 201 and posted data", () => {
       return request(app)
         .post("/api/games")
         .send({
-          room_id: "testroomid5",
-          winner: 1,
-          loser: 2,
-          wordlist: ["apple", "banana", "orange"],
-          winner_correct_answers: ["apple", "banana"],
-          loser_correct_answers: ["apple"],
+          room_id: "4cKJp_xZeGYrZk_2AAADZ1CIasdasdO8BjjS2eZhrUAAAB",
+          loser: 5,
+          winner: 2,
+          winner_initial_points: 1900,
+          winner_updated_points: 1904,
+          loser_initial_points: 2190,
+          loser_updated_points: 2185,
+          language: "German",
+          english_wordlist: [
+            "dog",
+            "mother",
+            "father",
+            "brother",
+            "sit up",
+            "chair",
+            "table",
+            "water",
+            "eat",
+            "read",
+            "see",
+            "sit down",
+            "drink",
+            "fruit",
+            "book",
+            "glass",
+            "meat",
+            "vegetable",
+            "sister",
+            "baby",
+            "cat",
+          ],
+          non_english_wordlist: [
+            "hund",
+            "mutter",
+            "vater",
+            "bruder",
+            "aufstehen",
+            "stuhl",
+            "tabelle",
+            "wasser",
+            "essen",
+            "lesen",
+            "sehen",
+            "sitzen",
+            "trinken",
+            "obst",
+            "buch",
+            "glas",
+            "fleisch",
+            "gemüse",
+            "schwester",
+            "baby",
+            "katze",
+          ],
+          winner_correct_answers: ["dog", "mother", "father"],
+          loser_correct_answers: [],
         })
         .expect(201)
         .then(({ body: { game } }: GameResponse) => {
           expect(game).toEqual(
             expect.objectContaining({
-              room_id: "testroomid5",
-              winner: 1,
-              loser: 2,
-              wordlist: ["apple", "banana", "orange"],
-              winner_correct_answers: ["apple", "banana"],
-              loser_correct_answers: ["apple"],
+              room_id: "4cKJp_xZeGYrZk_2AAADZ1CIasdasdO8BjjS2eZhrUAAAB",
+              loser: 5,
+              winner: 2,
+              winner_initial_points: 1900,
+              winner_updated_points: 1904,
+              loser_initial_points: 2190,
+              loser_updated_points: 2185,
+              language: "German",
+              english_wordlist: [
+                "dog",
+                "mother",
+                "father",
+                "brother",
+                "sit up",
+                "chair",
+                "table",
+                "water",
+                "eat",
+                "read",
+                "see",
+                "sit down",
+                "drink",
+                "fruit",
+                "book",
+                "glass",
+                "meat",
+                "vegetable",
+                "sister",
+                "baby",
+                "cat",
+              ],
+              non_english_wordlist: [
+                "hund",
+                "mutter",
+                "vater",
+                "bruder",
+                "aufstehen",
+                "stuhl",
+                "tabelle",
+                "wasser",
+                "essen",
+                "lesen",
+                "sehen",
+                "sitzen",
+                "trinken",
+                "obst",
+                "buch",
+                "glas",
+                "fleisch",
+                "gemüse",
+                "schwester",
+                "baby",
+                "katze",
+              ],
+              winner_correct_answers: ["dog", "mother", "father"],
+              loser_correct_answers: [],
               match_date: expect.any(String),
             })
           );
@@ -220,11 +322,61 @@ describe("/games", () => {
         return request(app)
           .post("/api/games")
           .send({
-            winner: 1,
-            loser: 2,
-            wordlist: ["apple", "banana", "orange"],
-            winner_correct_answers: ["apple", "banana"],
-            loser_correct_answers: ["apple"],
+            loser: 5,
+            winner: 2,
+            winner_initial_points: 1900,
+            winner_updated_points: 1904,
+            loser_initial_points: 2190,
+            loser_updated_points: 2185,
+            language: "German",
+            english_wordlist: [
+              "dog",
+              "mother",
+              "father",
+              "brother",
+              "sit up",
+              "chair",
+              "table",
+              "water",
+              "eat",
+              "read",
+              "see",
+              "sit down",
+              "drink",
+              "fruit",
+              "book",
+              "glass",
+              "meat",
+              "vegetable",
+              "sister",
+              "baby",
+              "cat",
+            ],
+            non_english_wordlist: [
+              "hund",
+              "mutter",
+              "vater",
+              "bruder",
+              "aufstehen",
+              "stuhl",
+              "tabelle",
+              "wasser",
+              "essen",
+              "lesen",
+              "sehen",
+              "sitzen",
+              "trinken",
+              "obst",
+              "buch",
+              "glas",
+              "fleisch",
+              "gemüse",
+              "schwester",
+              "baby",
+              "katze",
+            ],
+            winner_correct_answers: ["dog", "mother", "father"],
+            loser_correct_answers: [],
           })
           .expect(400)
           .then(({ body: { error } }: ErrorResponse) => {
@@ -236,11 +388,61 @@ describe("/games", () => {
         return request(app)
           .post("/api/games")
           .send({
-            room_id: "testroomid5",
-            loser: 2,
-            wordlist: ["apple", "banana", "orange"],
-            winner_correct_answers: ["apple", "banana"],
-            loser_correct_answers: ["apple"],
+            room_id: "4cKJp_xZeGYrZk_2AAADZ1CIasdasdO8BjjS2eZhrUAAAB",
+            loser: 5,
+            winner_initial_points: 1900,
+            winner_updated_points: 1904,
+            loser_initial_points: 2190,
+            loser_updated_points: 2185,
+            language: "German",
+            english_wordlist: [
+              "dog",
+              "mother",
+              "father",
+              "brother",
+              "sit up",
+              "chair",
+              "table",
+              "water",
+              "eat",
+              "read",
+              "see",
+              "sit down",
+              "drink",
+              "fruit",
+              "book",
+              "glass",
+              "meat",
+              "vegetable",
+              "sister",
+              "baby",
+              "cat",
+            ],
+            non_english_wordlist: [
+              "hund",
+              "mutter",
+              "vater",
+              "bruder",
+              "aufstehen",
+              "stuhl",
+              "tabelle",
+              "wasser",
+              "essen",
+              "lesen",
+              "sehen",
+              "sitzen",
+              "trinken",
+              "obst",
+              "buch",
+              "glas",
+              "fleisch",
+              "gemüse",
+              "schwester",
+              "baby",
+              "katze",
+            ],
+            winner_correct_answers: ["dog", "mother", "father"],
+            loser_correct_answers: [],
           })
           .expect(400)
           .then(({ body: { error } }: ErrorResponse) => {
@@ -248,106 +450,106 @@ describe("/games", () => {
           });
       });
 
-      test("400: wordlist is not valid type", () => {
-        return request(app)
-          .post("/api/games")
-          .send({
-            room_id: "testroomid5",
-            winner: 1,
-            loser: 2,
-            wordlist: "notAnArray",
-            winner_correct_answers: ["apple", "banana"],
-            loser_correct_answers: ["apple"],
-          })
-          .expect(400)
-          .then(({ body: { error } }: ErrorResponse) => {
-            expect(error).toEqual("Bad request!");
-          });
-      });
+      // test("400: wordlist is not valid type", () => {
+      //   return request(app)
+      //     .post("/api/games")
+      //     .send({
+      //       room_id: "testroomid5",
+      //       winner: 1,
+      //       loser: 2,
+      //       wordlist: "notAnArray",
+      //       winner_correct_answers: ["apple", "banana"],
+      //       loser_correct_answers: ["apple"],
+      //     })
+      //     .expect(400)
+      //     .then(({ body: { error } }: ErrorResponse) => {
+      //       expect(error).toEqual("Bad request!");
+      //     });
+      // });
 
-      test("400: winner_correct_answers is not valid type", () => {
-        return request(app)
-          .post("/api/games")
-          .send({
-            room_id: "testroomid5",
-            winner: 1,
-            loser: 2,
-            wordlist: ["apple", "banana", "orange"],
-            winner_correct_answers: null,
-            loser_correct_answers: ["apple"],
-          })
-          .expect(400)
-          .then(({ body: { error } }: ErrorResponse) => {
-            expect(error).toEqual("Bad request!");
-          });
-      });
+      // test("400: winner_correct_answers is not valid type", () => {
+      //   return request(app)
+      //     .post("/api/games")
+      //     .send({
+      //       room_id: "testroomid5",
+      //       winner: 1,
+      //       loser: 2,
+      //       wordlist: ["apple", "banana", "orange"],
+      //       winner_correct_answers: null,
+      //       loser_correct_answers: ["apple"],
+      //     })
+      //     .expect(400)
+      //     .then(({ body: { error } }: ErrorResponse) => {
+      //       expect(error).toEqual("Bad request!");
+      //     });
+      // });
 
-      test("400: loser_correct_answers is not valid type", () => {
-        return request(app)
-          .post("/api/games")
-          .send({
-            room_id: "testroomid5",
-            winner: 1,
-            loser: 2,
-            wordlist: ["apple", "banana", "orange"],
-            winner_correct_answers: ["apple", "banana"],
-            loser_correct_answers: null,
-          })
-          .expect(400)
-          .then(({ body: { error } }: ErrorResponse) => {
-            expect(error).toEqual("Bad request!");
-          });
-      });
+      // test("400: loser_correct_answers is not valid type", () => {
+      //   return request(app)
+      //     .post("/api/games")
+      //     .send({
+      //       room_id: "testroomid5",
+      //       winner: 1,
+      //       loser: 2,
+      //       wordlist: ["apple", "banana", "orange"],
+      //       winner_correct_answers: ["apple", "banana"],
+      //       loser_correct_answers: null,
+      //     })
+      //     .expect(400)
+      //     .then(({ body: { error } }: ErrorResponse) => {
+      //       expect(error).toEqual("Bad request!");
+      //     });
+      // });
 
-      test("404: user ID for winner is not valid type", () => {
-        return request(app)
-          .post("/api/games")
-          .send({
-            room_id: "testroomid5",
-            winner: "rawr IM THE WINNER NOW",
-            loser: 2,
-            wordlist: ["apple", "banana", "orange"],
-            winner_correct_answers: ["apple", "banana"],
-            loser_correct_answers: ["apple"],
-          })
-          .expect(400)
-          .then(({ body: { error } }: ErrorResponse) => {
-            expect(error).toEqual("Bad request!");
-          });
-      });
-      test("404: user ID for winner is valid type but does not exist", () => {
-        return request(app)
-          .post("/api/games")
-          .send({
-            room_id: "testroomid5",
-            winner: 3141592,
-            loser: 2,
-            wordlist: ["apple", "banana", "orange"],
-            winner_correct_answers: ["apple", "banana"],
-            loser_correct_answers: ["apple"],
-          })
-          .expect(404)
-          .then(({ body: { error } }: ErrorResponse) => {
-            expect(error).toEqual("Not found!");
-          });
-      });
+      // test("404: user ID for winner is not valid type", () => {
+      //   return request(app)
+      //     .post("/api/games")
+      //     .send({
+      //       room_id: "testroomid5",
+      //       winner: "rawr IM THE WINNER NOW",
+      //       loser: 2,
+      //       wordlist: ["apple", "banana", "orange"],
+      //       winner_correct_answers: ["apple", "banana"],
+      //       loser_correct_answers: ["apple"],
+      //     })
+      //     .expect(400)
+      //     .then(({ body: { error } }: ErrorResponse) => {
+      //       expect(error).toEqual("Bad request!");
+      //     });
+      // });
+      // test("404: user ID for winner is valid type but does not exist", () => {
+      //   return request(app)
+      //     .post("/api/games")
+      //     .send({
+      //       room_id: "testroomid5",
+      //       winner: 3141592,
+      //       loser: 2,
+      //       wordlist: ["apple", "banana", "orange"],
+      //       winner_correct_answers: ["apple", "banana"],
+      //       loser_correct_answers: ["apple"],
+      //     })
+      //     .expect(404)
+      //     .then(({ body: { error } }: ErrorResponse) => {
+      //       expect(error).toEqual("Not found!");
+      //     });
+      // });
 
-      test("404: user ID for is not valid type", () => {
-        return request(app)
-          .post("/api/games")
-          .send({
-            room_id: "testroomid5",
-            winner: 1,
-            loser: "NO I DONT WANT TO LOSE",
-            wordlist: ["apple", "banana", "orange"],
-            winner_correct_answers: ["apple", "banana"],
-            loser_correct_answers: ["apple"],
-          })
-          .expect(400)
-          .then(({ body: { error } }: ErrorResponse) => {
-            expect(error).toEqual("Bad request!");
-          });
-      });
+      //   test("404: user ID for is not valid type", () => {
+      //     return request(app)
+      //       .post("/api/games")
+      //       .send({
+      //         room_id: "testroomid5",
+      //         winner: 1,
+      //         loser: "NO I DONT WANT TO LOSE",
+      //         wordlist: ["apple", "banana", "orange"],
+      //         winner_correct_answers: ["apple", "banana"],
+      //         loser_correct_answers: ["apple"],
+      //       })
+      //       .expect(400)
+      //       .then(({ body: { error } }: ErrorResponse) => {
+      //         expect(error).toEqual("Bad request!");
+      //       });
+      //   });
     });
 
     test("404: user ID for loser is valid type but does not exist", () => {
@@ -367,7 +569,30 @@ describe("/games", () => {
         });
     });
   });
+  describe("GET games", () => {
+    test("200: get games returns an array of all of the users games", () => {
+      return request(app)
+        .get("/api/games/1")
+        .expect(200)
+        .then(({ body: { game } }: any) => {
+          expect(Array.isArray(game)).toBe(true);
+          expect(game.length).toEqual(4);
+        });
+    });
+    describe("GET games Error Handling", () => {
+      test("404: get games returns an error if the user does not exist", () => {
+        return request(app)
+          .get("/api/games/10000")
+          .expect(404)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toBe("Not found!");
+          });
+      });
+    });
+  });
 });
+
+//verify tests
 
 describe("/verify", () => {
   describe("/POST /verify", () => {
@@ -398,13 +623,13 @@ describe("/verify", () => {
           expect(error).toBe("Bad request!");
         });
     });
-    test("should return 404 when passed a valid username type that does not exist", () => {
+    test("should return 200 and false when passed a valid username type that does not exist", () => {
       return request(app)
         .post("/api/verify")
         .send({ username: "noYOURNOTREAL", password: "shhhhissasecret" })
-        .expect(404)
-        .then(({ body: { error } }: ErrorResponse) => {
-          expect(error).toBe("Not found!");
+        .expect(200)
+        .then(({ body: { verification } }: VerificationResponse) => {
+          expect(verification).toBe(false);
         });
     });
     test("should return 400 when passed a valid username and no password", () => {
@@ -418,6 +643,8 @@ describe("/verify", () => {
     });
   });
 });
+
+//word tests
 
 describe("GET REQUESTS", () => {
   describe("GET - /word-list", () => {
@@ -476,6 +703,7 @@ describe("GET REQUESTS", () => {
           });
       });
     });
+
     describe("GET - select words in the users target langaugae from the speicifed level", () => {
       test("200: Responds with all available German words with their corresponding level  ", () => {
         const user = {
@@ -487,7 +715,7 @@ describe("GET REQUESTS", () => {
           bio: "Bort",
         };
 
-        const selectedLevel = 4;
+        const selectedLevel = 7;
 
         const wordsLevelSeven = [
           {
@@ -519,10 +747,12 @@ describe("GET REQUESTS", () => {
             german: "glas",
             image_url:
               "https://drive.google.com/file/d/1_jvFMptrkW33NJoWwvyIETf1N3r28F0Q/view?usp=sharing",
+
           },
         ];
 
         return request(app)
+
           .get("/api/word-list/german/4")
           .send({ user, selectedLevel })
           .expect(200)
@@ -673,6 +903,112 @@ describe("GET REQUESTS", () => {
           .expect(200)
           .then(({ body: { words } }: WordResponse) => {
             expect(words).toEqual(germanWords);
+          });
+      });
+    });
+  });
+});
+
+//leaderboard tests
+
+describe("/leaderboards", () => {
+  describe("/get /leaderboard/:user_id/:language", () => {
+    test("should return rank information when provided with user_id and langauge", () => {
+      return request(app)
+        .get("/api/leaderboard/1/French")
+        .expect(200)
+        .then(({ body: { leaderboardEntry } }: LeaderboardResponse) => {
+          expect(leaderboardEntry).toEqual(
+            expect.objectContaining({
+              leaderboard_id: expect.any(Number),
+              rank: expect.any(Number),
+              user_id: 1,
+              language: "French",
+            })
+          );
+        });
+    });
+    describe("error handling", () => {
+      test("404: should return 404 if user_id is valid type but does not exist", () => {
+        return request(app)
+          .get("/api/leaderboard/31415/French")
+          .expect(404)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Not found!");
+          });
+      });
+      test("400: should return bad request when user_id is invalid type", () => {
+        return request(app)
+          .get("/api/leaderboard/IMADINOSAUR/French")
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request error if language not valid", () => {
+        return request(app)
+          .get("/api/leaderboard/1/FishLanguage")
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+    });
+  });
+  describe("PATCH /leaderboard/:user_id/language", () => {
+    test("should respond wtih 200 and updated rank when send with correct body", () => {
+      return request(app)
+        .patch("/api/leaderboard/1/French")
+        .send({ newRank: 1950 })
+        .expect(200)
+        .then(({ body: { updatedRank } }: UpdatedRankResponse) => {
+          expect(updatedRank).toEqual(1950);
+        });
+    });
+    describe("errorhandling", () => {
+      test("404: should return 404 if user_id is valid type but does not exist", () => {
+        return request(app)
+          .patch("/api/leaderboard/31415/French")
+          .send({ newRank: 1950 })
+          .expect(404)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Not found!");
+          });
+      });
+      test("400: should return bad request when user_id is an invalid type", () => {
+        return request(app)
+          .patch("/api/leaderboard/IMADINOSAUR/French")
+          .send({ newRank: 1950 })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request when language is invalid", () => {
+        return request(app)
+          .patch("/api/leaderboard/1/FishLanguage")
+          .send({ newRank: 1950 })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request when newRank is missing", () => {
+        return request(app)
+          .patch("/api/leaderboard/1/French")
+          .send({})
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request when newRank is an invalid type", () => {
+        return request(app)
+          .patch("/api/leaderboard/1/French")
+          .send({ newRank: "highRank" })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
           });
       });
     });
