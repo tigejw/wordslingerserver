@@ -26,11 +26,25 @@ exports.selectWordByLevel = (
   level: number
 ) => {
   const queryString = format(
-    `SELECT english, %I FROM words WHERE word_level = %L`,
+    `SELECT english, %I, image_url FROM words WHERE word_level = %L`,
     targetLanguage,
     level
   );
 
+  return db.query(queryString).then((result: QueryResult<Word>) => {
+    return result.rows;
+  });
+};
+
+exports.selectWordForGame = (
+  targetLanguage: "german" | "spanish" | "french",
+  levelCeiling: number
+) => {
+  const queryString = format(
+    `SELECT english, %I, word_level, image_url FROM words WHERE word_level <= %L`,
+    targetLanguage,
+    levelCeiling
+  );
   return db.query(queryString).then((result: QueryResult<Word>) => {
     return result.rows;
   });

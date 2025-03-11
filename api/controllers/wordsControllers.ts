@@ -3,6 +3,7 @@ const {
   selectWordsIndex,
   selectWordByLevel,
   selectByTargetLanguage,
+  selectWordForGame,
 } = require("../model/wordsModel");
 import { Word } from "@/types";
 
@@ -38,4 +39,16 @@ function words_level(req: Request, res: Response, next: NextFunction) {
   });
 }
 
-export { words_index, words_targetLanguage, words_level };
+function words_game(req: Request, res: Response, next: NextFunction) {
+  const { targetLanguage } = req.params;
+  const { usersLanguage } = req.body.player1;
+  const player1Level = req.body.player1.user_level;
+  const player2Level = req.body.player2.user_level;
+  const levelCeiling = Math.min(player1Level, player2Level);
+
+  selectWordForGame(targetLanguage, levelCeiling).then((words: Word[]) => {
+    res.status(200).send({ words: words });
+  });
+}
+
+export { words_index, words_targetLanguage, words_level, words_game };

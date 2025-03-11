@@ -1,230 +1,152 @@
 export const germanTestWords = [
   {
-    german: "antwort",
-    word_level: 18,
+    english: "dog",
+    german: "hund",
+    word_level: 1,
+    image_url:
+      "https://drive.google.com/file/d/1kDdIkIYhdIStTkvAOW4eqlqxp87Frz0c/view?usp=sharing",
   },
   {
-    german: "fragen",
-    word_level: 18,
+    english: "mother",
+    german: "mutter",
+    word_level: 1,
+    image_url:
+      "https://drive.google.com/file/d/19beQ5NjylJTv7Zg0QoEWA9NTrr1Bl4a4/view?usp=sharing",
   },
   {
-    german: "kaufen",
-    word_level: 17,
+    english: "father",
+    german: "vater",
+    word_level: 1,
+    image_url:
+      "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
   },
   {
-    german: "schließen",
-    word_level: 21,
+    english: "brother",
+    german: "bruder",
+    word_level: 2,
+    image_url:
+      "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
   },
   {
-    german: "anziehen",
-    word_level: 20,
+    english: "sit up",
+    german: "aufstehen",
+    word_level: 4,
+    image_url:
+      "https://drive.google.com/file/d/1ucOGV9JYx5mZIyfgSQLjUZRW0AjYIbGY/view?usp=sharing",
   },
   {
-    german: "tragen",
-    word_level: 20,
+    english: "chair",
+    german: "stuhl",
+    word_level: 4,
+    image_url:
+      "https://drive.google.com/file/d/1GdE3IYBucgNpH1yguLUYcLQe5OJk1ahG/view?usp=sharing",
   },
   {
-    german: "tanzen",
-    word_level: 7,
+    english: "table",
+    german: "tabelle",
+    word_level: 4,
+    image_url:
+      "https://drive.google.com/file/d/1mAmzrFpHx3BUvBY80_RZ8-wbklLR-Lbz/view?usp=sharing",
   },
   {
-    german: "zeichnen",
-    word_level: 7,
+    english: "water",
+    german: "wasser",
+    word_level: 2,
+    image_url:
+      "https://drive.google.com/file/d/1GdE3IYBucgNpH1yguLUYcLQe5OJk1ahG/view?usp=sharing",
   },
   {
-    german: "trinken",
-    word_level: 3,
-  },
-  {
-    german: "fahren",
-    word_level: 12,
-  },
-  {
+    english: "eat",
     german: "essen",
     word_level: 3,
+    image_url:
+      "https://drive.google.com/file/d/1RE0y1vQdYpvK4FkfyVxNF0UWGx9ZrkWx/view?usp=sharing",
   },
   {
-    german: "fliegen",
-    word_level: 11,
-  },
-  {
-    german: "hören",
-    word_level: 15,
-  },
-  {
-    german: "mögen",
-    word_level: 11,
-  },
-  {
-    german: "zuhören",
-    word_level: 15,
-  },
-  {
-    german: "schauen",
-    word_level: 12,
-  },
-  {
-    german: "öffnen",
-    word_level: 21,
-  },
-  {
-    german: "spielen",
-    word_level: 7,
-  },
-  {
-    german: "regnen",
-    word_level: 19,
-  },
-  {
+    english: "read",
     german: "lesen",
     word_level: 3,
+    image_url:
+      "https://drive.google.com/file/d/12sXBkgDFV05DggW_envB7MsNGOETdgdr/view?usp=sharing",
   },
+
   {
-    german: "laufen",
-    word_level: 7,
-  },
-  {
+    english: "see",
     german: "sehen",
     word_level: 4,
+    image_url:
+      "https://drive.google.com/file/d/1V4wnzIodzTAoVN1lbAJYtCWGuKyZWY4o/view?usp=sharing",
   },
+
   {
-    german: "singen",
-    word_level: 7,
-  },
-  {
+    english: "sit down",
     german: "sitzen",
     word_level: 3,
+    image_url:
+      "https://drive.google.com/file/d/1mAmzrFpHx3BUvBY80_RZ8-wbklLR-Lbz/view?usp=sharing",
+  },
+  ,
+  {
+    english: "drink",
+    german: "trinken",
+    word_level: 3,
+    image_url:
+      "https://drive.google.com/file/d/1EITijBh-RsRAKy37QQhXk5NCgWTQe5Nh/view?usp=sharing",
   },
   {
-    german: "schlafen",
-    word_level: 5,
+    english: "fruit",
+    german: "obst",
+    word_level: 2,
+    image_url:
+      "https://drive.google.com/file/d/1m9KGsihezBmnsb1tu0G448e5wvQD7Xbq/view?usp=sharing",
   },
   {
-    german: "stoppen",
-    word_level: 21,
+    english: "book",
+    german: "buch",
+    word_level: 3,
+    image_url:
+      "https://drive.google.com/file/d/1_jvFMptrkW33NJoWwvyIETf1N3r28F0Q/view?usp=sharing",
   },
   {
-    german: "lernen",
-    word_level: 10,
+    english: "glass",
+    german: "glas",
+    word_level: 4,
+    image_url:
+      "https://drive.google.com/file/d/1_jvFMptrkW33NJoWwvyIETf1N3r28F0Q/view?usp=sharing",
   },
   {
-    german: "schwimmen",
-    word_level: 21,
+    english: "meat",
+    german: "fleisch",
+    word_level: 2,
+    image_url:
+      "https://drive.google.com/file/d/1kzo2BhwpTMj-8m89ohCGkiKSms3YmxwO/view?usp=sharing",
   },
   {
-    german: "sprechen",
-    word_level: 15,
+    english: "vegetable",
+    german: "gemüse",
+    word_level: 2,
+    image_url:
+      "https://drive.google.com/file/d/1utVAXTyVG3Kows7e7GodWLsISWLJe0XR/view?usp=sharing",
   },
   {
-    german: "lehren",
-    word_level: 11,
+    english: "sister",
+    german: "schwester",
+    word_level: 2,
+    image_url:
+      "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
   },
   {
-    german: "erzählen",
-    word_level: 21,
-  },
-  {
-    german: "denken",
-    word_level: 21,
-  },
-  {
-    german: "reisen",
-    word_level: 10,
-  },
-  {
-    german: "ausschalten",
-    word_level: 17,
-  },
-  {
-    german: "einschalten",
-    word_level: 17,
-  },
-  {
-    german: "aufwachen",
-    word_level: 12,
-  },
-  {
-    german: "gehen",
-    word_level: 11,
-  },
-  {
-    german: "schauen",
-    word_level: 17,
-  },
-  {
-    german: "arbeiten",
-    word_level: 18,
-  },
-  {
-    german: "schreiben",
-    word_level: 18,
-  },
-  {
-    german: "Hund",
+    english: "baby",
+    german: "baby",
     word_level: 1,
+    image_url:
+      "https://drive.google.com/file/d/1B5mP3pTvIphi_A3hJ1T1XZH-dJgSrTQR/view?usp=sharing",
   },
   {
-    german: "Katze",
+    english: "cat",
+    german: "katze",
     word_level: 1,
-  },
-  {
-    german: "Kaninchen",
-    word_level: 21,
-  },
-  {
-    german: "Schwein",
-    word_level: 21,
-  },
-  {
-    german: "Pferd",
-    word_level: 12,
-  },
-  {
-    german: "Kuh",
-    word_level: 12,
-  },
-  {
-    german: "Huhn",
-    word_level: 12,
-  },
-  {
-    german: "Schaf",
-    word_level: 21,
-  },
-  {
-    german: "Ziege",
-    word_level: 13,
-  },
-  {
-    german: "Fuchs",
-    word_level: 13,
-  },
-  {
-    german: "Bär",
-    word_level: 21,
-  },
-  {
-    german: "Elefant",
-    word_level: 13,
-  },
-  {
-    german: "Löwe",
-    word_level: 12,
-  },
-  {
-    german: "Wal",
-    word_level: 21,
-  },
-  {
-    german: "Pinguin",
-    word_level: 19,
-  },
-  {
-    german: "Vogel",
-    word_level: 12,
-  },
-  {
-    german: "Fisch",
-    word_level: 12,
+    image_url:
+      "https://drive.google.com/file/d/1xG7qc7KfMrUZ1oWPXk8B8e7A3Muaj2tc/view?usp=sharing",
   },
 ];
