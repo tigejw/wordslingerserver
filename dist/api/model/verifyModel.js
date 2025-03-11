@@ -12,11 +12,9 @@ exports.verifyUsernameAndPassword = ({ username, password, }) => {
             msg: "Bad request!",
         });
     }
-    console.log("in verifymodel");
     return db
         .query(`SELECT username FROM users WHERE username = $1 AND password = crypt($2, password)`, [username, password])
         .then(({ rows }) => {
-        console.log("in verifymodel after db req");
         return rows.length > 0;
     });
 };

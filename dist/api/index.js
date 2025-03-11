@@ -10,10 +10,8 @@ const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({ origin: "*" }));
 app.use(express_1.default.json());
-console.log("index before /api router");
 //endpoint routing
 app.use("/api", apiRouters_1.default);
-console.log("index after /api router before invalid url check");
 //invalid URL handling
 app.all("/*", (req, res) => {
     res.status(404).send({ error: "Invalid URL!" });

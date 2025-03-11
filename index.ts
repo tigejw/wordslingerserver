@@ -239,6 +239,7 @@ io.on("connection", (socket: Socket) => {
       winner,
       gameInstance,
     });
+    return axios.post("https://wordslingerserver.onrender.com/api/word-list/");
   }
 
   //timer function server side
