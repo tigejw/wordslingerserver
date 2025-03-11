@@ -3,7 +3,7 @@ const app = require("../index");
 const seed = require("../../db/seeds/seed.ts");
 const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
-import { Game, User, Language, Word, Username } from "@/types";
+import { Game, User, Language, Word, Username, Leaderboard } from "@/types";
 const { frenchTestWords } = require("./wordsFrench");
 const { spainishTestWords } = require("./wordsSpanish");
 
@@ -23,6 +23,7 @@ type ErrorResponse = { body: { error: string } };
 type VerificationResponse = { body: { verification: Boolean } };
 type LanguageResponse = { body: { language: Language[] } };
 type UsernameResponse = { body: { user: Username } };
+type LeaderboardResponse = { body: { leaderboardEntry: Leaderboard } };
 
 //user tests
 
@@ -391,13 +392,9 @@ describe("/games", () => {
   });
 });
 
-<<<<<<< HEAD
-describe.only("/verify", () => {
-=======
 //verify tests
 
 describe("/verify", () => {
->>>>>>> 3577b2513303447be17add3839f0f94c494c8cbe
   describe("/POST /verify", () => {
     test("should return 200 and true when passed a valid username and password", () => {
       return request(app)
@@ -426,7 +423,7 @@ describe("/verify", () => {
           expect(error).toBe("Bad request!");
         });
     });
-    test.only("should return 200 and false when passed a valid username type that does not exist", () => {
+    test("should return 200 and false when passed a valid username type that does not exist", () => {
       return request(app)
         .post("/api/verify")
         .send({ username: "noYOURNOTREAL", password: "shhhhissasecret" })
@@ -445,8 +442,9 @@ describe("/verify", () => {
         });
     });
   });
+});
 
-  //word tests
+//word tests
 
 describe("GET REQUESTS", () => {
   describe("GET - /word-list", () => {
@@ -545,6 +543,54 @@ describe("GET REQUESTS", () => {
             expect(words).toEqual(wordsLevelSeven);
           });
       });
+    });
+  });
+});
+
+//leaderboard tests
+
+describe("/leaderboards", () => {
+  describe("/get /leaderboard/:user_id/:language", () => {
+    test("should return rank information when provided with user_id and langauge", () => {
+      return request(app)
+        .get("/api/leaderboard/1/French")
+        .expect(200)
+        .then(({ body: { leaderboardEntry } }: LeaderboardResponse) => {
+          expect(leaderboardEntry).toEqual(
+            expect.objectContaining({
+              leaderboard_id: expect.any(Number),
+              rank: expect.any(Number),
+              user_id: 1,
+              language: "French",
+            })
+          );
+        });
+    });
+  });
+  describe("error handling", () => {
+    test("404: should return 404 if user_id is valid type but does not exist", () => {
+      return request(app)
+        .get("/api/leaderboard/31415/French")
+        .expect(404)
+        .then(({ body: { error } }: ErrorResponse) => {
+          expect(error).toEqual("Not found!");
+        });
+    });
+    test("400: should return bad request when user_id is invalid type", () => {
+      return request(app)
+        .get("/api/leaderboard/IMADINOSAUR/French")
+        .expect(400)
+        .then(({ body: { error } }: ErrorResponse) => {
+          expect(error).toEqual("Bad request!");
+        });
+    });
+    test("400: should return bad request error if language not valid", () => {
+      return request(app)
+        .get("/api/leaderboard/1/FishLanguage")
+        .expect(400)
+        .then(({ body: { error } }: ErrorResponse) => {
+          expect(error).toEqual("Bad request!");
+        });
     });
   });
 });

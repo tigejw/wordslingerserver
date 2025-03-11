@@ -55,6 +55,7 @@ export type Achievement = {
 };
 
 export type Leaderboard = {
+  leaderboard_id?: number;
   rank: number;
   user_id: number;
   language: string;

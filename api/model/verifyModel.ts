@@ -1,5 +1,4 @@
 const db = require("../../db/connection");
-const { checkExists } = require("../../db/seeds/utils");
 exports.verifyUsernameAndPassword = ({
   username,
   password,
