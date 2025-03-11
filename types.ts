@@ -43,7 +43,13 @@ export type Game = {
   room_id: string;
   winner: number;
   loser: number;
-  wordlist: string;
+  winner_initial_points: number;
+  winner_updated_points: number;
+  loser_initial_points: number;
+  loser_updated_points: number;
+  language: "German" | "French" | "Spanish";
+  english_wordlist: Array<string>;
+  non_english_wordlist: Array<string>;
   winner_correct_answers: Array<string>;
   loser_correct_answers: Array<string>;
 };
