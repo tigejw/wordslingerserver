@@ -24,7 +24,7 @@ type VerificationResponse = { body: { verification: Boolean } };
 type LanguageResponse = { body: { language: Language[] } };
 type UsernameResponse = { body: { user: Username } };
 type LeaderboardResponse = { body: { leaderboardEntry: Leaderboard } };
-
+type UpdatedRankResponse = { body: { updatedRank: number } };
 //user tests
 
 describe("/users", () => {
@@ -566,31 +566,89 @@ describe("/leaderboards", () => {
           );
         });
     });
+    describe("error handling", () => {
+      test("404: should return 404 if user_id is valid type but does not exist", () => {
+        return request(app)
+          .get("/api/leaderboard/31415/French")
+          .expect(404)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Not found!");
+          });
+      });
+      test("400: should return bad request when user_id is invalid type", () => {
+        return request(app)
+          .get("/api/leaderboard/IMADINOSAUR/French")
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request error if language not valid", () => {
+        return request(app)
+          .get("/api/leaderboard/1/FishLanguage")
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+    });
   });
-  describe("error handling", () => {
-    test("404: should return 404 if user_id is valid type but does not exist", () => {
+  describe("PATCH /leaderboard/:user_id/language", () => {
+    test("should respond wtih 200 and updated rank when send with correct body", () => {
       return request(app)
-        .get("/api/leaderboard/31415/French")
-        .expect(404)
-        .then(({ body: { error } }: ErrorResponse) => {
-          expect(error).toEqual("Not found!");
+        .patch("/api/leaderboard/1/French")
+        .send({ newRank: 1950 })
+        .expect(200)
+        .then(({ body: { updatedRank } }: UpdatedRankResponse) => {
+          expect(updatedRank).toEqual(1950);
         });
     });
-    test("400: should return bad request when user_id is invalid type", () => {
-      return request(app)
-        .get("/api/leaderboard/IMADINOSAUR/French")
-        .expect(400)
-        .then(({ body: { error } }: ErrorResponse) => {
-          expect(error).toEqual("Bad request!");
-        });
-    });
-    test("400: should return bad request error if language not valid", () => {
-      return request(app)
-        .get("/api/leaderboard/1/FishLanguage")
-        .expect(400)
-        .then(({ body: { error } }: ErrorResponse) => {
-          expect(error).toEqual("Bad request!");
-        });
+    describe("errorhandling", () => {
+      test("404: should return 404 if user_id is valid type but does not exist", () => {
+        return request(app)
+          .patch("/api/leaderboard/31415/French")
+          .send({ newRank: 1950 })
+          .expect(404)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Not found!");
+          });
+      });
+      test("400: should return bad request when user_id is an invalid type", () => {
+        return request(app)
+          .patch("/api/leaderboard/IMADINOSAUR/French")
+          .send({ newRank: 1950 })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request when language is invalid", () => {
+        return request(app)
+          .patch("/api/leaderboard/1/FishLanguage")
+          .send({ newRank: 1950 })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request when newRank is missing", () => {
+        return request(app)
+          .patch("/api/leaderboard/1/French")
+          .send({})
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request when newRank is an invalid type", () => {
+        return request(app)
+          .patch("/api/leaderboard/1/French")
+          .send({ newRank: "highRank" })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
     });
   });
 });

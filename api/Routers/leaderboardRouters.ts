@@ -1,6 +1,12 @@
 const leaderboardRouter = require("express").Router();
-const {getLeaderboardEntryByUserIdAndLanguage} = require("../controllers/leaderboardController");
+const {
+  getLeaderboardEntryByUserIdAndLanguage,
+  patchLeaderboardEntryByUserIdAndLanguage,
+} = require("../controllers/leaderboardController");
 
-leaderboardRouter.route("/:user_id/:language").get(getLeaderboardEntryByUserIdAndLanguage);
+leaderboardRouter
+  .route("/:user_id/:language")
+  .get(getLeaderboardEntryByUserIdAndLanguage)
+  .patch(patchLeaderboardEntryByUserIdAndLanguage);
 
 export default leaderboardRouter;
