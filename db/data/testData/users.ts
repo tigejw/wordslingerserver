@@ -41,14 +41,6 @@ module.exports = [
     password: "shhhhissasecret",
   },
   {
-    name: "Dalton",
-    avatar_url: "https://avatars.githubusercontent.com/u/20671915",
-    role: "admin",
-    bio: "musician, photographer, grad 🤷🏼‍♂️",
-    username: "Dalton15",
-    password: "shhhhissasecret",
-  },
-  {
     name: "Sister",
     avatar_url:
       "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/4.jpg",
@@ -74,46 +66,12 @@ module.exports = [
     password: "shhhhissasecret",
   },
   {
-    name: "Adell",
-    avatar_url: "https://avatars.githubusercontent.com/u/49577329",
-    role: "user",
-    bio: "developer, founder",
-    username: "Adell16",
-    password: "shhhhissasecret",
-  },
-  {
-    name: "Olen",
-    avatar_url:
-      "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/74.jpg",
-    role: "user",
-    bio: "developer, photographer",
-    username: "Olen_Bogisich95",
-    password: "shhhhissasecret",
-  },
-  {
     name: "Chelsie",
     avatar_url:
       "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/72.jpg",
     role: "user",
     bio: "activist, gamer, traveler Ⓜ️",
     username: "Chelsie_Trantow",
-    password: "shhhhissasecret",
-  },
-  {
-    name: "Cara",
-    avatar_url: "https://avatars.githubusercontent.com/u/26331501",
-    role: "admin",
-    bio: "teacher",
-    username: "Cara_Bartoletti13",
-    password: "shhhhissasecret",
-  },
-  {
-    name: "Orion",
-    avatar_url:
-      "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/96.jpg",
-    role: "admin",
-    bio: "model, photographer, nerd 🧣",
-    username: "Orion37",
     password: "shhhhissasecret",
   },
   {
@@ -125,60 +83,11 @@ module.exports = [
     password: "shhhhissasecret",
   },
   {
-    name: "Rosie",
-    avatar_url:
-      "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/36.jpg",
-    role: "user",
-    bio: "exasperation advocate",
-    username: "Rosie71",
-    password: "shhhhissasecret",
-  },
-  {
-    name: "Damian",
-    avatar_url: "https://avatars.githubusercontent.com/u/55070146",
-    role: "user",
-    bio: "dreamer, patriot, creator",
-    username: "Damian7",
-    password: "shhhhissasecret",
-  },
-  {
     name: "Eleanora",
     avatar_url: "https://avatars.githubusercontent.com/u/19152078",
     role: "user",
     bio: "pacemaker junkie, artist",
     username: "Eleanora86",
-    password: "shhhhissasecret",
-  },
-  {
-    name: "Mable",
-    avatar_url: "https://avatars.githubusercontent.com/u/87860147",
-    role: "user",
-    bio: "piglet supporter, educator",
-    username: "Mable_Nicolas73",
-    password: "shhhhissasecret",
-  },
-  {
-    name: "Axel",
-    avatar_url: "https://avatars.githubusercontent.com/u/24693797",
-    role: "user",
-    bio: "blogger, parent, scientist",
-    username: "Axel_Nicolas-Emmerich54",
-    password: "shhhhissasecret",
-  },
-  {
-    name: "Ladarius",
-    avatar_url: "https://avatars.githubusercontent.com/u/89153073",
-    role: "admin",
-    bio: "patriot",
-    username: "Ladarius_Leannon19",
-    password: "shhhhissasecret",
-  },
-  {
-    name: "Vito",
-    avatar_url: "https://avatars.githubusercontent.com/u/97268436",
-    role: "admin",
-    bio: "wallaby advocate  👰🏽‍♂️",
-    username: "Vito_Donnelly98",
     password: "shhhhissasecret",
   },
   {
@@ -190,31 +99,6 @@ module.exports = [
     password: "shhhhissasecret",
   },
   {
-    name: "Sister",
-    avatar_url:
-      "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/4.jpg",
-    role: "user",
-    bio: "hello enthusiast",
-    username: "Sister_Kessler",
-    password: "shhhhissasecret",
-  },
-  {
-    name: "Arden",
-    avatar_url: "https://avatars.githubusercontent.com/u/43840923",
-    role: "admin",
-    bio: "knight advocate, engineer 🦐",
-    username: "Arden28",
-    password: "shhhhissasecret",
-  },
-  {
-    name: "Schuyler",
-    avatar_url: "https://avatars.githubusercontent.com/u/86919454",
-    role: "admin",
-    bio: "activist, founder",
-    username: "Schuyler.Ledner",
-    password: "shhhhissasecret",
-  },
-  {
     name: "Adell",
     avatar_url: "https://avatars.githubusercontent.com/u/49577329",
     role: "user",
@@ -229,15 +113,6 @@ module.exports = [
     role: "user",
     bio: "developer, photographer",
     username: "Olen_Bogisich95",
-    password: "shhhhissasecret",
-  },
-  {
-    name: "Chelsie",
-    avatar_url:
-      "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/72.jpg",
-    role: "user",
-    bio: "activist, gamer, traveler Ⓜ️",
-    username: "Chelsie_Trantow",
     password: "shhhhissasecret",
   },
   {
@@ -258,14 +133,6 @@ module.exports = [
     password: "shhhhissasecret",
   },
   {
-    name: "Jordan",
-    avatar_url: "https://avatars.githubusercontent.com/u/87042769",
-    role: "user",
-    bio: "veteran, grad, environmentalist",
-    username: "Jordan_Ernser",
-    password: "shhhhissasecret",
-  },
-  {
     name: "Rosie",
     avatar_url:
       "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/36.jpg",
@@ -280,14 +147,6 @@ module.exports = [
     role: "user",
     bio: "dreamer, patriot, creator",
     username: "Damian7",
-    password: "shhhhissasecret",
-  },
-  {
-    name: "Eleanora",
-    avatar_url: "https://avatars.githubusercontent.com/u/19152078",
-    role: "user",
-    bio: "pacemaker junkie, artist",
-    username: "Eleanora86",
     password: "shhhhissasecret",
   },
   {
