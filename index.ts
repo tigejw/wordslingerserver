@@ -3,6 +3,7 @@ import http from "http";
 import { Server, Socket } from "socket.io";
 import cors from "cors";
 import axios from "axios";
+import eloRating from "./utils/sr_system";
 // Create an Express app and HTTP server
 const app = express();
 app.use(cors({ origin: "*" }));
@@ -17,6 +18,12 @@ const io = new Server(server, {
 
 type Language = "German" | "Spanish" | "French" | null;
 type validLanguage = "German" | "Spanish" | "French";
+type LeaderboardResponse = {
+  leaderboard_id: number;
+  rank: number;
+  user_id: number;
+  language: validLanguage;
+};
 // Define types for the players
 interface Player {
   correctAnswers: Array<string>;
@@ -252,6 +259,12 @@ io.on("connection", (socket: Socket) => {
     });
     let winnerUserId: string | null = null;
     let loserUserId: string | null = null;
+
+    let winner_initial_points: number | null = null;
+    let loser_initial_points: number | null = null;
+
+    let winner_updated_points: number | null = null;
+    let loser_updated_points: number | null = null;
     axios
       .get(`https://wordslingerserver.onrender.com/api/users/${winnerUsername}`)
       .then(({ data: { user } }) => {
@@ -267,19 +280,70 @@ io.on("connection", (socket: Socket) => {
       .then(({ data: { user } }) => {
         console.log(user, "<res from second");
         loserUserId = user[0].user_id;
-        return;
-      })
-      .then(() => {
         console.log(winnerSocketId, "<winner loser>", loserSocketId);
-        if (!winnerSocketId || !loserSocketId) {
-          console.log("hi");
+        return axios.get(
+          `https://wordslingerserver.onrender.com/api/leaderboard/${winnerUserId}/${gameInstance.language}`
+        );
+      })
+      .then(({ data: { leaderboardEntry } }) => {
+        winner_initial_points = leaderboardEntry.rank;
+        return axios.get(
+          `https://wordslingerserver.onrender.com/api/leaderboard/${loserUserId}/${gameInstance.language}`
+        );
+      })
+      .then(({ data: { leaderboardEntry } }) => {
+        loser_initial_points = leaderboardEntry.rank;
+        if (!winner_initial_points || !loser_initial_points) {
           return;
         }
+        const eloRatingResults = eloRating(
+          winner_initial_points,
+          loser_initial_points,
+          1
+        );
+        console.log(eloRatingResults, "<eloratingresults");
+        winner_updated_points = eloRatingResults[0];
+        loser_updated_points = eloRatingResults[1];
+        if (!winnerSocketId || !loserSocketId) {
+          return;
+        }
+        console.log(
+          "roomid",
+          roomId,
+          "loser",
+          loserUserId,
+          "winner",
+          winnerUserId,
+          "winner_initial_points",
+          winner_initial_points,
+          "winner_updated_points",
+          winner_updated_points,
+          "loser_initial_points",
+          loser_initial_points,
+          "loser_updated_points",
+          loser_updated_points,
+          "language",
+          gameInstance.language,
+          "english_wordlist",
+          gameInstance.englishTranslations,
+          "non_english_wordlist",
+          gameInstance.nonEnglishTranslations,
+          "winner_correct_answers",
+          gameInstance.players[winnerSocketId].correctAnswers,
+          "loser_correct_answers",
+          gameInstance.players[loserSocketId].correctAnswers
+        );
         return axios.post("https://wordslingerserver.onrender.com/api/games", {
           room_id: roomId,
           winner: winnerUserId,
           loser: loserUserId,
-          wordlist: gameInstance.nonEnglishTranslations,
+          winner_initial_points: winner_initial_points,
+          winner_updated_points: winner_updated_points,
+          loser_initial_points: loser_initial_points,
+          loser_updated_points: loser_updated_points,
+          language: gameInstance.language,
+          english_wordlist: gameInstance.englishTranslations,
+          non_english_wordlist: gameInstance.nonEnglishTranslations,
           winner_correct_answers:
             gameInstance.players[winnerSocketId].correctAnswers,
           loser_correct_answers:
