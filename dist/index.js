@@ -223,7 +223,6 @@ io.on("connection", (socket) => {
             if (!winnerSocketId || !loserSocketId) {
                 return;
             }
-            console.log("roomid", roomId, "loser", loserUserId, "winner", winnerUserId, "winner_initial_points", winner_initial_points, "winner_updated_points", winner_updated_points, "loser_initial_points", loser_initial_points, "loser_updated_points", loser_updated_points, "language", gameInstance.language, "english_wordlist", gameInstance.englishTranslations, "non_english_wordlist", gameInstance.nonEnglishTranslations, "winner_correct_answers", gameInstance.players[winnerSocketId].correctAnswers, "loser_correct_answers", gameInstance.players[loserSocketId].correctAnswers);
             return axios_1.default.post("https://wordslingerserver.onrender.com/api/games", {
                 room_id: roomId,
                 winner: winnerUserId,
@@ -239,8 +238,13 @@ io.on("connection", (socket) => {
                 loser_correct_answers: gameInstance.players[loserSocketId].correctAnswers,
             });
         })
+            .then(() => {
+            return axios_1.default.patch(`https://wordslingerserver.onrender.com/api/leaderboard/${winnerUserId}/${gameInstance.language}`, { newRank: winner_updated_points });
+        })
+            .then(() => {
+            return axios_1.default.patch(`https://wordslingerserver.onrender.com/api/leaderboard/${loserUserId}/${gameInstance.language}`, { newRank: loser_updated_points });
+        })
             .then((res) => {
-            console.log(res);
             console.log("success");
         })
             .catch((err) => {
