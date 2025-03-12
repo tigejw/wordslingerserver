@@ -37,18 +37,11 @@ let players = {};
 //refactor!!!!!!!
 //
 //
-let testWordList = [
-    "apple",
-    "banana",
-    "orange",
-    "grape",
-    "watermelon",
-];
 io.on("connection", (socket) => {
     console.log(`User connected: ${socket.id}`);
     // Handle when a player signals they're ready to start
     socket.on("playerReady", ({ user, language }) => {
-        var _a, _b;
+        var _a;
         console.log(user + "is ready");
         const waitingRoom = waitingRooms.filter((waitingRoom) => {
             return waitingRoom.language === language;
@@ -72,22 +65,34 @@ io.on("connection", (socket) => {
                 user +
                 "and" +
                 waitingRoom.user);
+            if (!waitingRoom.language)
+                return;
             //store unique gameInstance in the games object with info on players, answers, wordpool + timer
+            console.log(waitingRoom.language);
             return axios_1.default
-                .get(`https://wordslingerserver.onrender.com/api/word-list/${(_b = waitingRoom.language) === null || _b === void 0 ? void 0 : _b.toLowerCase()}`)
+                .get(`https://wordslingerserver.onrender.com/api/word-list/${waitingRoom.language.toLowerCase()}`)
                 .then(({ data: { words } }) => {
-                const englishTranslations = words.map((word) => {
+                console.log(words);
+                const shuffledWords = shuffleArray(words);
+                console.log(shuffledWords, "<shiuffledwords");
+                const englishTranslations = shuffledWords.map((word) => {
                     return word.english;
                 });
-                const nonEnglishTranslations = words.map((word) => {
+                const nonEnglishTranslations = shuffledWords
+                    .map((word) => {
                     const language = waitingRoom.language;
                     return language === "German"
                         ? word.german
                         : language === "French"
                             ? word.french
                             : word.spanish;
+                })
+                    .filter((translation) => {
+                    return translation !== undefined;
                 });
                 console.log(words);
+                if (!englishTranslations || !nonEnglishTranslations)
+                    return;
                 console.log(englishTranslations, "<<<<  eng translkations");
                 games[roomId] = {
                     players: {},
@@ -264,6 +269,17 @@ io.on("connection", (socket) => {
                 }
             }, i * 1000);
         }
+    }
+    function shuffleArray(array) {
+        console.log(array);
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        console.log(array);
+        return array;
     }
     // Handle player disconnect
     socket.on("disconnect", (roomId) => {
