@@ -28,11 +28,8 @@ function words_targetLanguage(req, res, next) {
     });
 }
 function words_level(req, res, next) {
-    const { targetLanguage } = req.params;
-    const { usersLanguage } = req.body.user;
-    const level = req.body.selectedLevel;
-    selectWordByLevel(targetLanguage, level)
-        .then((words) => {
+    const { targetLanguage, level_id } = req.params;
+    selectWordByLevel(targetLanguage, level_id).then((words) => {
         res.status(200).send({ words: words });
     })
         .catch((err) => {
@@ -42,7 +39,6 @@ function words_level(req, res, next) {
 }
 function words_game(req, res, next) {
     const { targetLanguage } = req.params;
-    const { usersLanguage } = req.body.player1;
     const player1Level = req.body.player1.user_level;
     const player2Level = req.body.player2.user_level;
     const levelCeiling = Math.min(player1Level, player2Level);

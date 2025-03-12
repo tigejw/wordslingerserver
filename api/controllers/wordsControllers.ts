@@ -47,7 +47,6 @@ function words_level(req: Request, res: Response, next: NextFunction) {
 
 function words_game(req: Request, res: Response, next: NextFunction) {
   const { targetLanguage } = req.params;
-  const { usersLanguage } = req.body.player1;
   const player1Level = req.body.player1.user_level;
   const player2Level = req.body.player2.user_level;
   const levelCeiling = Math.min(player1Level, player2Level);
