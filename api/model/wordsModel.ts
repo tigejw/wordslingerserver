@@ -16,6 +16,7 @@ exports.selectByTargetLanguage = (
     `SELECT english, %I, image_url, word_level FROM words`,
     targetLanguage
   );
+  console.log(queryString);
   return db.query(queryString).then((result: QueryResult<Word>) => {
     return result.rows;
   });
