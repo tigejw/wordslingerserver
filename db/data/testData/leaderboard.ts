@@ -59,7 +59,6 @@ module.exports = [
   { user_id: 20, rank: 123, language: "French" },
   { user_id: 20, rank: 894, language: "German" },
   { user_id: 20, rank: 223, language: "Spanish" },
-  { user_id: 21, rank: 894, language: "French" },
   { user_id: 21, rank: 223, language: "German" },
   { user_id: 21, rank: 894, language: "Spanish" },
 ];

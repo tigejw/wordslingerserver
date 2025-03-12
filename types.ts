@@ -19,6 +19,7 @@ export type Language = {
   language_id: number;
 };
 
+export type ValidLanguage = "German" | "Spanish" | "French";
 export type Word = {
   english: string;
   french: string;
