@@ -13,8 +13,8 @@ exports.selectByTargetLanguage = (targetLanguage) => {
         return result.rows;
     });
 };
-exports.selectWordByLevel = (targetLanguage, level) => {
-    const queryString = format(`SELECT english, %I, image_url FROM words WHERE word_level = %L`, targetLanguage, level);
+exports.selectWordByLevel = (targetLanguage, level_id) => {
+    const queryString = format(`SELECT english, %I, image_url FROM words WHERE word_level = %L`, targetLanguage, level_id);
     return db.query(queryString).then((result) => {
         return result.rows;
     });
