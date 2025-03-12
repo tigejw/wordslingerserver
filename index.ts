@@ -24,6 +24,8 @@ type LeaderboardResponse = {
   user_id: number;
   language: validLanguage;
 };
+
+type WordListResponse = { body: { words: string[] } };
 // Define types for the players
 interface Player {
   correctAnswers: Array<string>;
@@ -80,13 +82,6 @@ let players: Players = {};
 //refactor!!!!!!!
 //
 //
-let testWordList: string[] = [
-  "apple",
-  "banana",
-  "orange",
-  "grape",
-  "watermelon",
-];
 
 io.on("connection", (socket: Socket) => {
   console.log(`User connected: ${socket.id}`);
@@ -122,26 +117,34 @@ io.on("connection", (socket: Socket) => {
             "and" +
             waitingRoom.user
         );
-
+        if (!waitingRoom.language) return;
         //store unique gameInstance in the games object with info on players, answers, wordpool + timer
+        console.log(waitingRoom.language);
         return axios
           .get(
-            `https://wordslingerserver.onrender.com/api/word-list/${waitingRoom.language?.toLowerCase()}`
+            `https://wordslingerserver.onrender.com/api/word-list/${waitingRoom.language.toLowerCase()}`
           )
           .then(({ data: { words } }) => {
-            const englishTranslations = words.map((word: Word) => {
+            console.log(words);
+            const shuffledWords = shuffleArray(words);
+            console.log(shuffledWords, "<shiuffledwords");
+            const englishTranslations = shuffledWords.map((word: Word) => {
               return word.english;
             });
-            const nonEnglishTranslations = words.map((word: Word) => {
-              const language = waitingRoom.language;
-              return language === "German"
-                ? word.german
-                : language === "French"
-                ? word.french
-                : word.spanish;
-            });
+            const nonEnglishTranslations = shuffledWords
+              .map((word: Word) => {
+                const language = waitingRoom.language;
+                return language === "German"
+                  ? word.german
+                  : language === "French"
+                  ? word.french
+                  : word.spanish;
+              })
+              .filter((translation) => {
+                return translation !== undefined;
+              });
             console.log(words);
-
+            if (!englishTranslations || !nonEnglishTranslations) return;
             console.log(englishTranslations, "<<<<  eng translkations");
             games[roomId] = {
               players: {},
@@ -359,6 +362,17 @@ io.on("connection", (socket: Socket) => {
     }
   }
 
+  function shuffleArray(array: Array<Word>) {
+    console.log(array);
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+    console.log(array);
+    return array;
+  }
   // Handle player disconnect
   socket.on("disconnect", (roomId: string) => {
     console.log(`User disconnected: ${socket.id}`);

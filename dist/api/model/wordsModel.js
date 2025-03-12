@@ -14,7 +14,13 @@ exports.selectByTargetLanguage = (targetLanguage) => {
     });
 };
 exports.selectWordByLevel = (targetLanguage, level) => {
-    const queryString = format(`SELECT english, %I FROM words WHERE word_level = %L`, targetLanguage, level);
+    const queryString = format(`SELECT english, %I, image_url FROM words WHERE word_level = %L`, targetLanguage, level);
+    return db.query(queryString).then((result) => {
+        return result.rows;
+    });
+};
+exports.selectWordForGame = (targetLanguage, levelCeiling) => {
+    const queryString = format(`SELECT english, %I, word_level, image_url FROM words WHERE word_level <= %L`, targetLanguage, levelCeiling);
     return db.query(queryString).then((result) => {
         return result.rows;
     });

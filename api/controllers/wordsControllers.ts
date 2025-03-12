@@ -20,10 +20,8 @@ async function words_index(req: Request, res: Response, next: NextFunction) {
 }
 
 function words_targetLanguage(req: Request, res: Response, next: NextFunction) {
-  // const { targetLanguage, userLanguage } = req.query;
   const { targetLanguage } = req.params;
-  const { usersLanguage } = req.body;
-  selectByTargetLanguage(targetLanguage, usersLanguage).then(
+  selectByTargetLanguage(targetLanguage).then(
     (words: Word[]) => {
       res.status(200).send({ words: words });
     }

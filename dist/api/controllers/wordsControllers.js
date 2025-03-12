@@ -3,7 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.words_index = words_index;
 exports.words_targetLanguage = words_targetLanguage;
 exports.words_level = words_level;
-const { selectWordsIndex, selectWordByLevel, selectByTargetLanguage, } = require("../model/wordsModel");
+exports.words_game = words_game;
+const { selectWordsIndex, selectWordByLevel, selectByTargetLanguage, selectWordForGame, } = require("../model/wordsModel");
 async function words_index(req, res, next) {
     const { targetLanguage, userLanguage } = req.query;
     selectWordsIndex(targetLanguage, userLanguage)
@@ -16,10 +17,8 @@ async function words_index(req, res, next) {
     });
 }
 function words_targetLanguage(req, res, next) {
-    // const { targetLanguage, userLanguage } = req.query;
     const { targetLanguage } = req.params;
-    const { usersLanguage } = req.body;
-    selectByTargetLanguage(targetLanguage, usersLanguage).then((words) => {
+    selectByTargetLanguage(targetLanguage).then((words) => {
         res.status(200).send({ words: words });
     });
 }
@@ -28,6 +27,16 @@ function words_level(req, res, next) {
     const { usersLanguage } = req.body.user;
     const level = req.body.selectedLevel;
     selectWordByLevel(targetLanguage, level).then((words) => {
+        res.status(200).send({ words: words });
+    });
+}
+function words_game(req, res, next) {
+    const { targetLanguage } = req.params;
+    const { usersLanguage } = req.body.player1;
+    const player1Level = req.body.player1.user_level;
+    const player2Level = req.body.player2.user_level;
+    const levelCeiling = Math.min(player1Level, player2Level);
+    selectWordForGame(targetLanguage, levelCeiling).then((words) => {
         res.status(200).send({ words: words });
     });
 }
