@@ -3,10 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db = require("../../db/connection");
 const { checkExists } = require("../../db/seeds/utils");
 const format = require("pg-format");
-exports.insertGame = ({ room_id, winner, loser, wordlist, winner_correct_answers, loser_correct_answers, }) => {
+exports.insertGame = ({ room_id, winner, loser, winner_initial_points, winner_updated_points, loser_initial_points, loser_updated_points, language, english_wordlist, non_english_wordlist, winner_correct_answers, loser_correct_answers, }) => {
     if (winner === undefined ||
         loser === undefined ||
-        !Array.isArray(wordlist) ||
+        !Array.isArray(english_wordlist) ||
+        !Array.isArray(non_english_wordlist) ||
         !Array.isArray(winner_correct_answers) ||
         !Array.isArray(loser_correct_answers)) {
         return Promise.reject({
@@ -19,11 +20,29 @@ exports.insertGame = ({ room_id, winner, loser, wordlist, winner_correct_answers
         return checkExists("users", "user_id", loser);
     })
         .then(() => {
-        return db.query("INSERT INTO games (room_id, winner, loser, wordlist, winner_correct_answers, loser_correct_answers) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *", [
+        return db.query(`INSERT INTO games 
+        (room_id, 
+        winner, 
+        loser, 
+        winner_initial_points,
+        winner_updated_points, 
+        loser_initial_points,
+      loser_updated_points,
+      english_wordlist,
+      non_english_wordlist,
+      language, 
+      winner_correct_answers, 
+      loser_correct_answers) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *`, [
             room_id,
             winner,
             loser,
-            JSON.stringify(wordlist),
+            winner_initial_points,
+            winner_updated_points,
+            loser_initial_points,
+            loser_updated_points,
+            JSON.stringify(english_wordlist),
+            JSON.stringify(non_english_wordlist),
+            language,
             JSON.stringify(winner_correct_answers),
             JSON.stringify(loser_correct_answers),
         ]);

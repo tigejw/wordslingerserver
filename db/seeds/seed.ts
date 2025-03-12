@@ -104,7 +104,7 @@ function seed(data: Data) {
 function createUsersTable() {
   return db.query(`CREATE TABLE users(
         user_id SERIAL PRIMARY KEY,
-        username VARCHAR NOT NULL,
+        username VARCHAR NOT NULL UNIQUE,
         password TEXT NOT NULL,
         name VARCHAR NOT NULL,
         avatar_url VARCHAR,
@@ -133,6 +133,7 @@ function createGamesTable() {
         loser INT REFERENCES users(user_id) ON DELETE SET NULL,
         winner_correct_answers JSONB NOT NULL,
         loser_correct_answers JSONB NOT NULL,
+
         winner_initial_points INT,
         winner_updated_points INT,
         loser_initial_points INT,
@@ -141,6 +142,7 @@ function createGamesTable() {
         english_wordlist JSONB NOT NULL,
         non_english_wordlist JSONB NOT NULL,
         match_date TIMESTAMP NOT NULL DEFAULT NOW()
+
         )`);
 }
 //need util that returns user_id when inputted username string!
@@ -203,9 +205,9 @@ function createWordMasteryTable() {
             german_mastery mastery_level,
             spanish_mastery mastery_level,
             french_mastery mastery_level,
-            german_last_review TIMESTAMP,
-            spanish_last_review TIMESTAMP,
-            french_last_review TIMESTAMP 
+            german_last_review TIMESTAMPTZ DEFAULT NOW(),
+            spanish_last_review TIMESTAMPTZ DEFAULT NOW(),
+            french_last_review TIMESTAMPTZ DEFAULT NOW()
             )`);
     });
 }

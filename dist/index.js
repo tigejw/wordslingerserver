@@ -8,6 +8,7 @@ const http_1 = __importDefault(require("http"));
 const socket_io_1 = require("socket.io");
 const cors_1 = __importDefault(require("cors"));
 const axios_1 = __importDefault(require("axios"));
+const sr_system_1 = __importDefault(require("./utils/sr_system"));
 // Create an Express app and HTTP server
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({ origin: "*" }));
@@ -186,6 +187,10 @@ io.on("connection", (socket) => {
         });
         let winnerUserId = null;
         let loserUserId = null;
+        let winner_initial_points = null;
+        let loser_initial_points = null;
+        let winner_updated_points = null;
+        let loser_updated_points = null;
         axios_1.default
             .get(`https://wordslingerserver.onrender.com/api/users/${winnerUsername}`)
             .then(({ data: { user } }) => {
@@ -199,25 +204,47 @@ io.on("connection", (socket) => {
             .then(({ data: { user } }) => {
             console.log(user, "<res from second");
             loserUserId = user[0].user_id;
-            return;
-        })
-            .then(() => {
             console.log(winnerSocketId, "<winner loser>", loserSocketId);
+            return axios_1.default.get(`https://wordslingerserver.onrender.com/api/leaderboard/${winnerUserId}/${gameInstance.language}`);
+        })
+            .then(({ data: { leaderboardEntry } }) => {
+            winner_initial_points = leaderboardEntry.rank;
+            return axios_1.default.get(`https://wordslingerserver.onrender.com/api/leaderboard/${loserUserId}/${gameInstance.language}`);
+        })
+            .then(({ data: { leaderboardEntry } }) => {
+            loser_initial_points = leaderboardEntry.rank;
+            if (!winner_initial_points || !loser_initial_points) {
+                return;
+            }
+            const eloRatingResults = (0, sr_system_1.default)(winner_initial_points, loser_initial_points, 1);
+            console.log(eloRatingResults, "<eloratingresults");
+            winner_updated_points = eloRatingResults[0];
+            loser_updated_points = eloRatingResults[1];
             if (!winnerSocketId || !loserSocketId) {
-                console.log("hi");
                 return;
             }
             return axios_1.default.post("https://wordslingerserver.onrender.com/api/games", {
                 room_id: roomId,
                 winner: winnerUserId,
                 loser: loserUserId,
-                wordlist: gameInstance.nonEnglishTranslations,
+                winner_initial_points: winner_initial_points,
+                winner_updated_points: winner_updated_points,
+                loser_initial_points: loser_initial_points,
+                loser_updated_points: loser_updated_points,
+                language: gameInstance.language,
+                english_wordlist: gameInstance.englishTranslations,
+                non_english_wordlist: gameInstance.nonEnglishTranslations,
                 winner_correct_answers: gameInstance.players[winnerSocketId].correctAnswers,
                 loser_correct_answers: gameInstance.players[loserSocketId].correctAnswers,
             });
         })
+            .then(() => {
+            return axios_1.default.patch(`https://wordslingerserver.onrender.com/api/leaderboard/${winnerUserId}/${gameInstance.language}`, { newRank: winner_updated_points });
+        })
+            .then(() => {
+            return axios_1.default.patch(`https://wordslingerserver.onrender.com/api/leaderboard/${loserUserId}/${gameInstance.language}`, { newRank: loser_updated_points });
+        })
             .then((res) => {
-            console.log(res);
             console.log("success");
         })
             .catch((err) => {
