@@ -121,5 +121,44 @@
         "word_level": 1
       }
     ]
+  },
+  "Get /api/reviews/:user_id":{
+    "description": "Serves an array of all the users words in review, by language",
+    "exampleResponse": {"reviewData": {
+      "germanReviewData": [
+        {
+          "english": "dog",
+          "german": "hund",
+          "image_url": "https://drive.google.com/file/d/1kDdIkIYhdIStTkvAOW4eqlqxp87Frz0c/view?usp=sharing",
+          "german_mastery": "master",
+          "german_review_interval_sec": 1458.801921
+        },
+        {
+          "english": "cat",
+          "german": "katze",
+          "image_url": "https://drive.google.com/file/d/1xG7qc7KfMrUZ1oWPXk8B8e7A3Muaj2tc/view?usp=sharing",
+          "german_mastery": "beginner",
+          "german_review_interval_sec": 1458.801921
+        }
+      ],
+      "spanishReviewData": [
+        {
+          "english": "dog",
+          "spanish": "perro",
+          "image_url": "https://drive.google.com/file/d/1kDdIkIYhdIStTkvAOW4eqlqxp87Frz0c/view?usp=sharing",
+          "spanish_mastery": null,
+          "spanish_review_interval_sec": 1458.801921
+        }
+      ],
+      "frenchReviewData": [
+        {
+          "english": "dog",
+          "french": "chien",
+          "image_url": "https://drive.google.com/file/d/1kDdIkIYhdIStTkvAOW4eqlqxp87Frz0c/view?usp=sharing",
+          "french_mastery": null,
+          "french_review_interval_sec": 1458.801921
+        }    
+      ]
+    }}
   }
 }
