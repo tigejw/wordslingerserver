@@ -4,6 +4,7 @@ const seed = require("../../db/seeds/seed.ts");
 const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
 import { Game, User, Language, Word, Username, Leaderboard } from "@/types";
+import { stringify } from "querystring";
 const { frenchTestWords } = require("./wordsFrench");
 const { spainishTestWords } = require("./wordsSpanish");
 
@@ -24,6 +25,8 @@ type VerificationResponse = { body: { verification: Boolean } };
 type LanguageResponse = { body: { language: Language[] } };
 type UsernameResponse = { body: { user: Username } };
 type LeaderboardResponse = { body: { leaderboardEntry: Leaderboard } };
+type LeaderboardAllResponse = { body: { leaderboardEntries: Leaderboard[] } };
+
 type UpdatedRankResponse = { body: { updatedRank: number } };
 //user tests
 
@@ -190,7 +193,7 @@ describe("/languages", () => {
 
 describe("/games", () => {
   describe("POST /games", () => {
-    test.only("should return a 201 and posted data", () => {
+    test("should return a 201 and posted data", () => {
       return request(app)
         .post("/api/games")
         .send({
@@ -758,7 +761,7 @@ describe("GET REQUESTS", () => {
             expect(words).toEqual(wordsLevelSeven);
           });
       });
-      test.only("200: Responds with all available German words within a range set by word_level", () => {
+      test("200: Responds with all available German words within a range set by word_level", () => {
         const player1 = {
           user_id: 12,
           username: "bandOnTheWall",
@@ -1011,4 +1014,86 @@ describe("/leaderboards", () => {
       });
     });
   });
+  describe.only("GET /leaderboard.", () => {
+    test("200: should return with an array of all leaderboard entries", () => {
+      return request(app)
+        .get("/api/leaderboard")
+        .expect(200)
+        .then(({ body: { leaderboardEntries } }: LeaderboardAllResponse) => {
+          expect(Array.isArray(leaderboardEntries)).toBe(true);
+          expect(leaderboardEntries.length).toBe(62);
+          expect(leaderboardEntries[1]).toEqual(
+            expect.objectContaining({
+              leaderboard_id: expect.any(Number),
+              rank: expect.any(Number),
+              user_id: expect.any(Number),
+              language: expect.any(String),
+            })
+          );
+        });
+    });
+  });
+  describe("POST /leaderboard", () => {
+    test("201: should respond with posted leaderboard entry on call", () => {
+      return request(app)
+        .post("/api/leaderboard")
+        .send({ user_id: 21, language: "French" })
+        .then(({ body: { leaderboardEntry } }: LeaderboardResponse) => {
+          expect(leaderboardEntry).toEqual({
+            language: "French",
+            leaderboard_id: 63,
+            rank: 200,
+            user_id: 21,
+          });
+        });
+    });
+    describe("errorhandling", () => {
+      test("400: should return bad request when user_id is missing", () => {
+        return request(app)
+          .post("/api/leaderboard")
+          .send({ language: "French" })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request when language is missing", () => {
+        return request(app)
+          .post("/api/leaderboard")
+          .send({ user_id: 21 })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request when user_id is an invalid type", () => {
+        return request(app)
+          .post("/api/leaderboard")
+          .send({ user_id: "not_a_number", language: "French" })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request when language is not valid", () => {
+        return request(app)
+          .post("/api/leaderboard")
+          .send({ user_id: 21, language: "NotARealLanguage" })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("404: should return not found when user_id does not exist", () => {
+        return request(app)
+          .post("/api/leaderboard")
+          .send({ user_id: 31415, language: "French" })
+          .expect(404)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Not found!");
+          });
+      });
+    });
+  });
 });
+//
