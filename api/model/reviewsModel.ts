@@ -78,3 +78,49 @@ WHERE user_id = %s;`,
     });
   });
 }
+
+export function updateWordMasteryByUserID(
+  user_id: string,
+  english: string,
+  target_language: string,
+  new_mastery: string
+) {
+  return checkExists("users", "user_id", user_id).then(() => {
+    let language_mastery;
+    let language_last_review;
+    switch (target_language) {
+      case "german":
+        language_mastery = "german_mastery";
+        language_last_review = "german_last_review";
+        break;
+      case "spanish":
+        language_mastery = "spanish_mastery";
+        language_last_review = "spanish_last_review";
+        break;
+      case "french":
+        language_mastery = "french_mastery";
+        language_last_review = "french_last_review";
+        break;
+      default:
+        return Promise.reject({ status: 400, msg: "Bad request!" });
+    }
+    if (english === undefined || new_mastery === undefined) {
+      return Promise.reject({ status: 400, msg: "Bad request!" });
+    }
+
+    const sqlString = format(
+      `UPDATE word_mastery
+      SET %I = $1,
+      %I = NOW()
+      WHERE user_id = $2 and english = $3
+      RETURNING *`,
+      language_mastery,
+      language_last_review
+    );
+    return db
+      .query(sqlString, [new_mastery, user_id, english])
+      .then((result: QueryResult<any>) => {
+        return result.rows[0];
+      });
+  });
+}

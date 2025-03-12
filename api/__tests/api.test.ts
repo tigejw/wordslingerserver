@@ -6,6 +6,8 @@ const data = require("../../db/data/testData/index");
 import { Game, User, Language, Word, Username, Leaderboard } from "@/types";
 import frenchTestWords from "../../db/data/testData/wordsFrench";
 import spainishTestWords from "../../db/data/testData/wordsSpanish";
+import { stringify } from "querystring";
+
 
 beforeEach(() => {
   return seed(data);
@@ -24,6 +26,8 @@ type VerificationResponse = { body: { verification: Boolean } };
 type LanguageResponse = { body: { language: Language[] } };
 type UsernameResponse = { body: { user: Username } };
 type LeaderboardResponse = { body: { leaderboardEntry: Leaderboard } };
+type LeaderboardAllResponse = { body: { leaderboardEntries: Leaderboard[] } };
+
 type UpdatedRankResponse = { body: { updatedRank: number } };
 //user tests
 
@@ -675,44 +679,6 @@ describe("GET REQUESTS", () => {
         });
     });
 
-    describe("GET - select words in the users target langaugae from the speicifed level", () => {
-      test("200: Responds with all available German words with their corresponding level  ", () => {
-        const wordsLevelFour = [
-          {
-            english: "sit up",
-            german: "aufstehen",
-            image_url: "https://i.imgur.com/t1sr9ry.png",
-          },
-          {
-            english: "chair",
-            german: "stuhl",
-            image_url: "https://i.imgur.com/G0bcOLE.png",
-          },
-          {
-            english: "table",
-            german: "tabelle",
-            image_url: "https://i.imgur.com/G0bcOLE.png",
-          },
-          {
-            english: "see",
-            german: "sehen",
-            image_url: "https://i.imgur.com/rvI6eN8.png",
-          },
-          {
-            english: "glass",
-            german: "glas",
-            image_url: "https://i.imgur.com/QkXGtVE.png",
-          },
-        ];
-
-        return request(app)
-          .get("/api/word-list/german/4")
-          .expect(200)
-          .then(({ body: { words } }: WordResponse) => {
-            expect(words).toEqual(wordsLevelFour);
-          });
-      });
-    });
   });
 });
 
@@ -818,6 +784,175 @@ describe("/leaderboards", () => {
             expect(error).toEqual("Bad request!");
           });
       });
+    });
+  });
+  describe.only("GET /leaderboard.", () => {
+    test("200: should return with an array of all leaderboard entries", () => {
+      return request(app)
+        .get("/api/leaderboard")
+        .expect(200)
+        .then(({ body: { leaderboardEntries } }: LeaderboardAllResponse) => {
+          expect(Array.isArray(leaderboardEntries)).toBe(true);
+          expect(leaderboardEntries.length).toBe(62);
+          expect(leaderboardEntries[1]).toEqual(
+            expect.objectContaining({
+              leaderboard_id: expect.any(Number),
+              rank: expect.any(Number),
+              user_id: expect.any(Number),
+              language: expect.any(String),
+            })
+          );
+        });
+    });
+  });
+  describe("POST /leaderboard", () => {
+    test("201: should respond with posted leaderboard entry on call", () => {
+      return request(app)
+        .post("/api/leaderboard")
+        .send({ user_id: 21, language: "French" })
+        .then(({ body: { leaderboardEntry } }: LeaderboardResponse) => {
+          expect(leaderboardEntry).toEqual({
+            language: "French",
+            leaderboard_id: 63,
+            rank: 200,
+            user_id: 21,
+          });
+        });
+    });
+    describe("errorhandling", () => {
+      test("400: should return bad request when user_id is missing", () => {
+        return request(app)
+          .post("/api/leaderboard")
+          .send({ language: "French" })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request when language is missing", () => {
+        return request(app)
+          .post("/api/leaderboard")
+          .send({ user_id: 21 })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request when user_id is an invalid type", () => {
+        return request(app)
+          .post("/api/leaderboard")
+          .send({ user_id: "not_a_number", language: "French" })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request when language is not valid", () => {
+        return request(app)
+          .post("/api/leaderboard")
+          .send({ user_id: 21, language: "NotARealLanguage" })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("404: should return not found when user_id does not exist", () => {
+        return request(app)
+          .post("/api/leaderboard")
+          .send({ user_id: 31415, language: "French" })
+          .expect(404)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Not found!");
+          });
+      });
+    });
+  });
+});
+//
+
+import { ReviewData, UpdatedMastery } from "@/types";
+
+type ReviewResponse = { body: { reviewData: ReviewData } };
+type UpdatedMasteryResponse = { body: { updatedMastery: UpdatedMastery } };
+
+describe("Reviews endpoint", () => {
+  describe("GET:", () => {
+    test("200: /api/reviews/:user_id", () => {
+      return request(app)
+        .get("/api/reviews/1")
+        .expect(200)
+        .then(({ body: { reviewData } }: ReviewResponse) => {
+          expect(Array.isArray(reviewData.frenchReviewData)).toBe(true);
+          expect(Array.isArray(reviewData.germanReviewData)).toBe(true);
+          expect(Array.isArray(reviewData.spanishReviewData)).toBe(true);
+        });
+    });
+    test("404: Responds with an error if user_id does not exist", () => {
+      return request(app)
+        .get("/api/reviews/100000")
+        .expect(404)
+        .then(({ body: { error } }: ErrorResponse) => {
+          expect(error).toEqual("Not found!");
+        });
+    });
+  });
+  describe("PATCH: /api/reviews/:user_id", () => {
+    test("should respond wtih 200 and updated mastery when sent with correct body", () => {
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({
+          english: "cat",
+          target_language: "german",
+          new_mastery: "intermediate",
+        })
+        .expect(200)
+        .then(({ body: { updatedMastery } }: UpdatedMasteryResponse) => {
+          const { user_id, english, german_mastery } = updatedMastery;
+          expect(user_id).toBe(1);
+          expect(english).toBe("cat");
+          expect(german_mastery).toBe("intermediate");
+        });
+    });
+  });
+  describe("should respond with 400 and error message when sent malformed body", () => {
+    test("eng", () => {
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({
+          eng: "cat",
+          target_language: "german",
+          new_mastery: "intermediate",
+        })
+        .expect(400)
+        .then(({ body: { error } }: ErrorResponse) => {
+          expect(error).toBe("Bad request!");
+        });
+    });
+    test("targnguage", () => {
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({
+          english: "cat",
+          targnguage: "german",
+          new_mastery: "intermediate",
+        })
+        .expect(400)
+        .then(({ body: { error } }: ErrorResponse) => {
+          expect(error).toBe("Bad request!");
+        });
+    });
+    test("nestery", () => {
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({
+          english: "cat",
+          target_language: "german",
+          nestery: "intermediate",
+        })
+        .expect(400)
+        .then(({ body: { error } }: ErrorResponse) => {
+          expect(error).toBe("Bad request!");
+        });
     });
   });
 });

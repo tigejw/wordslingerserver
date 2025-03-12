@@ -19,6 +19,7 @@ export type Language = {
   language_id: number;
 };
 
+export type ValidLanguage = "German" | "Spanish" | "French";
 export type Word = {
   english: string;
   french: string;
@@ -102,4 +103,16 @@ export type ReviewData = {
     french_mastery: string | null;
     french_review_interval_sec: number;
   }>;
+};
+
+export type UpdatedMastery = {
+  mastery_id: number;
+  user_id: number;
+  english: string;
+  german_mastery: "beginner" | "intermediate" | "master" | null;
+  spanish_mastery: "beginner" | "intermediate" | "master" | null;
+  french_mastery: "beginner" | "intermediate" | "master" | null;
+  german_last_review: any;
+  spanish_last_review: any;
+  french_last_review: any;
 };
