@@ -104,7 +104,7 @@ function seed(data: Data) {
 function createUsersTable() {
   return db.query(`CREATE TABLE users(
         user_id SERIAL PRIMARY KEY,
-        username VARCHAR NOT NULL,
+        username VARCHAR NOT NULL UNIQUE,
         password TEXT NOT NULL,
         name VARCHAR NOT NULL,
         avatar_url VARCHAR,
@@ -133,8 +133,16 @@ function createGamesTable() {
         loser INT REFERENCES users(user_id) ON DELETE SET NULL,
         winner_correct_answers JSONB NOT NULL,
         loser_correct_answers JSONB NOT NULL,
-        wordlist JSONB NOT NULL,
-        match_date TIMESTAMPTZ NOT NULL DEFAULT NOW()
+
+        winner_initial_points INT,
+        winner_updated_points INT,
+        loser_initial_points INT,
+        loser_updated_points INT,
+        language VARCHAR REFERENCES available_languages(language),
+        english_wordlist JSONB NOT NULL,
+        non_english_wordlist JSONB NOT NULL,
+        match_date TIMESTAMP NOT NULL DEFAULT NOW()
+
         )`);
 }
 //need util that returns user_id when inputted username string!
@@ -246,7 +254,13 @@ function insertGamesData(gamesData: Array<Game>) {
       room_id,
       winner,
       loser,
-      wordlist,
+      winner_initial_points,
+      winner_updated_points,
+      loser_initial_points,
+      loser_updated_points,
+      english_wordlist,
+      non_english_wordlist,
+      language,
       winner_correct_answers,
       loser_correct_answers,
     } = gameData;
@@ -255,13 +269,25 @@ function insertGamesData(gamesData: Array<Game>) {
       room_id,
       winner,
       loser,
-      wordlist,
+      winner_initial_points,
+      winner_updated_points,
+      loser_initial_points,
+      loser_updated_points,
+      english_wordlist,
+      non_english_wordlist,
+      language,
       winner_correct_answers,
       loser_correct_answers,
     ];
   });
   const queryString = format(
-    `INSERT INTO games (room_id, winner, loser, wordlist, winner_correct_answers, loser_correct_answers)
+    `INSERT INTO games (room_id, winner, loser, winner_initial_points,
+      winner_updated_points,
+      loser_initial_points,
+      loser_updated_points,
+      english_wordlist,
+      non_english_wordlist,
+      language, winner_correct_answers, loser_correct_answers)
     VALUES %L RETURNING *`,
     formattedData
   );

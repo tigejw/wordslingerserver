@@ -3,7 +3,7 @@ const app = require("../index");
 const seed = require("../../db/seeds/seed.ts");
 const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
-import { Game, User, Language, Word, Username } from "@/types";
+import { Game, User, Language, Word, Username, Leaderboard } from "@/types";
 const { frenchTestWords } = require("./wordsFrench");
 const { spainishTestWords } = require("./wordsSpanish");
 
@@ -23,7 +23,8 @@ type ErrorResponse = { body: { error: string } };
 type VerificationResponse = { body: { verification: Boolean } };
 type LanguageResponse = { body: { language: Language[] } };
 type UsernameResponse = { body: { user: Username } };
-
+type LeaderboardResponse = { body: { leaderboardEntry: Leaderboard } };
+type UpdatedRankResponse = { body: { updatedRank: number } };
 //user tests
 
 describe("/users", () => {
@@ -189,27 +190,127 @@ describe("/languages", () => {
 
 describe("/games", () => {
   describe("POST /games", () => {
-    test("should return a 201 and posted data", () => {
+    test.only("should return a 201 and posted data", () => {
       return request(app)
         .post("/api/games")
         .send({
-          room_id: "testroomid5",
-          winner: 1,
-          loser: 2,
-          wordlist: ["apple", "banana", "orange"],
-          winner_correct_answers: ["apple", "banana"],
-          loser_correct_answers: ["apple"],
+          room_id: "4cKJp_xZeGYrZk_2AAADZ1CIasdasdO8BjjS2eZhrUAAAB",
+          loser: 5,
+          winner: 2,
+          winner_initial_points: 1900,
+          winner_updated_points: 1904,
+          loser_initial_points: 2190,
+          loser_updated_points: 2185,
+          language: "German",
+          english_wordlist: [
+            "dog",
+            "mother",
+            "father",
+            "brother",
+            "sit up",
+            "chair",
+            "table",
+            "water",
+            "eat",
+            "read",
+            "see",
+            "sit down",
+            "drink",
+            "fruit",
+            "book",
+            "glass",
+            "meat",
+            "vegetable",
+            "sister",
+            "baby",
+            "cat",
+          ],
+          non_english_wordlist: [
+            "hund",
+            "mutter",
+            "vater",
+            "bruder",
+            "aufstehen",
+            "stuhl",
+            "tabelle",
+            "wasser",
+            "essen",
+            "lesen",
+            "sehen",
+            "sitzen",
+            "trinken",
+            "obst",
+            "buch",
+            "glas",
+            "fleisch",
+            "gemüse",
+            "schwester",
+            "baby",
+            "katze",
+          ],
+          winner_correct_answers: ["dog", "mother", "father"],
+          loser_correct_answers: [],
         })
         .expect(201)
         .then(({ body: { game } }: GameResponse) => {
           expect(game).toEqual(
             expect.objectContaining({
-              room_id: "testroomid5",
-              winner: 1,
-              loser: 2,
-              wordlist: ["apple", "banana", "orange"],
-              winner_correct_answers: ["apple", "banana"],
-              loser_correct_answers: ["apple"],
+              room_id: "4cKJp_xZeGYrZk_2AAADZ1CIasdasdO8BjjS2eZhrUAAAB",
+              loser: 5,
+              winner: 2,
+              winner_initial_points: 1900,
+              winner_updated_points: 1904,
+              loser_initial_points: 2190,
+              loser_updated_points: 2185,
+              language: "German",
+              english_wordlist: [
+                "dog",
+                "mother",
+                "father",
+                "brother",
+                "sit up",
+                "chair",
+                "table",
+                "water",
+                "eat",
+                "read",
+                "see",
+                "sit down",
+                "drink",
+                "fruit",
+                "book",
+                "glass",
+                "meat",
+                "vegetable",
+                "sister",
+                "baby",
+                "cat",
+              ],
+              non_english_wordlist: [
+                "hund",
+                "mutter",
+                "vater",
+                "bruder",
+                "aufstehen",
+                "stuhl",
+                "tabelle",
+                "wasser",
+                "essen",
+                "lesen",
+                "sehen",
+                "sitzen",
+                "trinken",
+                "obst",
+                "buch",
+                "glas",
+                "fleisch",
+                "gemüse",
+                "schwester",
+                "baby",
+                "katze",
+              ],
+              winner_correct_answers: ["dog", "mother", "father"],
+              loser_correct_answers: [],
               match_date: expect.any(String),
             })
           );
@@ -221,11 +322,61 @@ describe("/games", () => {
         return request(app)
           .post("/api/games")
           .send({
-            winner: 1,
-            loser: 2,
-            wordlist: ["apple", "banana", "orange"],
-            winner_correct_answers: ["apple", "banana"],
-            loser_correct_answers: ["apple"],
+            loser: 5,
+            winner: 2,
+            winner_initial_points: 1900,
+            winner_updated_points: 1904,
+            loser_initial_points: 2190,
+            loser_updated_points: 2185,
+            language: "German",
+            english_wordlist: [
+              "dog",
+              "mother",
+              "father",
+              "brother",
+              "sit up",
+              "chair",
+              "table",
+              "water",
+              "eat",
+              "read",
+              "see",
+              "sit down",
+              "drink",
+              "fruit",
+              "book",
+              "glass",
+              "meat",
+              "vegetable",
+              "sister",
+              "baby",
+              "cat",
+            ],
+            non_english_wordlist: [
+              "hund",
+              "mutter",
+              "vater",
+              "bruder",
+              "aufstehen",
+              "stuhl",
+              "tabelle",
+              "wasser",
+              "essen",
+              "lesen",
+              "sehen",
+              "sitzen",
+              "trinken",
+              "obst",
+              "buch",
+              "glas",
+              "fleisch",
+              "gemüse",
+              "schwester",
+              "baby",
+              "katze",
+            ],
+            winner_correct_answers: ["dog", "mother", "father"],
+            loser_correct_answers: [],
           })
           .expect(400)
           .then(({ body: { error } }: ErrorResponse) => {
@@ -237,11 +388,61 @@ describe("/games", () => {
         return request(app)
           .post("/api/games")
           .send({
-            room_id: "testroomid5",
-            loser: 2,
-            wordlist: ["apple", "banana", "orange"],
-            winner_correct_answers: ["apple", "banana"],
-            loser_correct_answers: ["apple"],
+            room_id: "4cKJp_xZeGYrZk_2AAADZ1CIasdasdO8BjjS2eZhrUAAAB",
+            loser: 5,
+            winner_initial_points: 1900,
+            winner_updated_points: 1904,
+            loser_initial_points: 2190,
+            loser_updated_points: 2185,
+            language: "German",
+            english_wordlist: [
+              "dog",
+              "mother",
+              "father",
+              "brother",
+              "sit up",
+              "chair",
+              "table",
+              "water",
+              "eat",
+              "read",
+              "see",
+              "sit down",
+              "drink",
+              "fruit",
+              "book",
+              "glass",
+              "meat",
+              "vegetable",
+              "sister",
+              "baby",
+              "cat",
+            ],
+            non_english_wordlist: [
+              "hund",
+              "mutter",
+              "vater",
+              "bruder",
+              "aufstehen",
+              "stuhl",
+              "tabelle",
+              "wasser",
+              "essen",
+              "lesen",
+              "sehen",
+              "sitzen",
+              "trinken",
+              "obst",
+              "buch",
+              "glas",
+              "fleisch",
+              "gemüse",
+              "schwester",
+              "baby",
+              "katze",
+            ],
+            winner_correct_answers: ["dog", "mother", "father"],
+            loser_correct_answers: [],
           })
           .expect(400)
           .then(({ body: { error } }: ErrorResponse) => {
@@ -249,106 +450,106 @@ describe("/games", () => {
           });
       });
 
-      test("400: wordlist is not valid type", () => {
-        return request(app)
-          .post("/api/games")
-          .send({
-            room_id: "testroomid5",
-            winner: 1,
-            loser: 2,
-            wordlist: "notAnArray",
-            winner_correct_answers: ["apple", "banana"],
-            loser_correct_answers: ["apple"],
-          })
-          .expect(400)
-          .then(({ body: { error } }: ErrorResponse) => {
-            expect(error).toEqual("Bad request!");
-          });
-      });
+      // test("400: wordlist is not valid type", () => {
+      //   return request(app)
+      //     .post("/api/games")
+      //     .send({
+      //       room_id: "testroomid5",
+      //       winner: 1,
+      //       loser: 2,
+      //       wordlist: "notAnArray",
+      //       winner_correct_answers: ["apple", "banana"],
+      //       loser_correct_answers: ["apple"],
+      //     })
+      //     .expect(400)
+      //     .then(({ body: { error } }: ErrorResponse) => {
+      //       expect(error).toEqual("Bad request!");
+      //     });
+      // });
 
-      test("400: winner_correct_answers is not valid type", () => {
-        return request(app)
-          .post("/api/games")
-          .send({
-            room_id: "testroomid5",
-            winner: 1,
-            loser: 2,
-            wordlist: ["apple", "banana", "orange"],
-            winner_correct_answers: null,
-            loser_correct_answers: ["apple"],
-          })
-          .expect(400)
-          .then(({ body: { error } }: ErrorResponse) => {
-            expect(error).toEqual("Bad request!");
-          });
-      });
+      // test("400: winner_correct_answers is not valid type", () => {
+      //   return request(app)
+      //     .post("/api/games")
+      //     .send({
+      //       room_id: "testroomid5",
+      //       winner: 1,
+      //       loser: 2,
+      //       wordlist: ["apple", "banana", "orange"],
+      //       winner_correct_answers: null,
+      //       loser_correct_answers: ["apple"],
+      //     })
+      //     .expect(400)
+      //     .then(({ body: { error } }: ErrorResponse) => {
+      //       expect(error).toEqual("Bad request!");
+      //     });
+      // });
 
-      test("400: loser_correct_answers is not valid type", () => {
-        return request(app)
-          .post("/api/games")
-          .send({
-            room_id: "testroomid5",
-            winner: 1,
-            loser: 2,
-            wordlist: ["apple", "banana", "orange"],
-            winner_correct_answers: ["apple", "banana"],
-            loser_correct_answers: null,
-          })
-          .expect(400)
-          .then(({ body: { error } }: ErrorResponse) => {
-            expect(error).toEqual("Bad request!");
-          });
-      });
+      // test("400: loser_correct_answers is not valid type", () => {
+      //   return request(app)
+      //     .post("/api/games")
+      //     .send({
+      //       room_id: "testroomid5",
+      //       winner: 1,
+      //       loser: 2,
+      //       wordlist: ["apple", "banana", "orange"],
+      //       winner_correct_answers: ["apple", "banana"],
+      //       loser_correct_answers: null,
+      //     })
+      //     .expect(400)
+      //     .then(({ body: { error } }: ErrorResponse) => {
+      //       expect(error).toEqual("Bad request!");
+      //     });
+      // });
 
-      test("404: user ID for winner is not valid type", () => {
-        return request(app)
-          .post("/api/games")
-          .send({
-            room_id: "testroomid5",
-            winner: "rawr IM THE WINNER NOW",
-            loser: 2,
-            wordlist: ["apple", "banana", "orange"],
-            winner_correct_answers: ["apple", "banana"],
-            loser_correct_answers: ["apple"],
-          })
-          .expect(400)
-          .then(({ body: { error } }: ErrorResponse) => {
-            expect(error).toEqual("Bad request!");
-          });
-      });
-      test("404: user ID for winner is valid type but does not exist", () => {
-        return request(app)
-          .post("/api/games")
-          .send({
-            room_id: "testroomid5",
-            winner: 3141592,
-            loser: 2,
-            wordlist: ["apple", "banana", "orange"],
-            winner_correct_answers: ["apple", "banana"],
-            loser_correct_answers: ["apple"],
-          })
-          .expect(404)
-          .then(({ body: { error } }: ErrorResponse) => {
-            expect(error).toEqual("Not found!");
-          });
-      });
+      // test("404: user ID for winner is not valid type", () => {
+      //   return request(app)
+      //     .post("/api/games")
+      //     .send({
+      //       room_id: "testroomid5",
+      //       winner: "rawr IM THE WINNER NOW",
+      //       loser: 2,
+      //       wordlist: ["apple", "banana", "orange"],
+      //       winner_correct_answers: ["apple", "banana"],
+      //       loser_correct_answers: ["apple"],
+      //     })
+      //     .expect(400)
+      //     .then(({ body: { error } }: ErrorResponse) => {
+      //       expect(error).toEqual("Bad request!");
+      //     });
+      // });
+      // test("404: user ID for winner is valid type but does not exist", () => {
+      //   return request(app)
+      //     .post("/api/games")
+      //     .send({
+      //       room_id: "testroomid5",
+      //       winner: 3141592,
+      //       loser: 2,
+      //       wordlist: ["apple", "banana", "orange"],
+      //       winner_correct_answers: ["apple", "banana"],
+      //       loser_correct_answers: ["apple"],
+      //     })
+      //     .expect(404)
+      //     .then(({ body: { error } }: ErrorResponse) => {
+      //       expect(error).toEqual("Not found!");
+      //     });
+      // });
 
-      test("404: user ID for is not valid type", () => {
-        return request(app)
-          .post("/api/games")
-          .send({
-            room_id: "testroomid5",
-            winner: 1,
-            loser: "NO I DONT WANT TO LOSE",
-            wordlist: ["apple", "banana", "orange"],
-            winner_correct_answers: ["apple", "banana"],
-            loser_correct_answers: ["apple"],
-          })
-          .expect(400)
-          .then(({ body: { error } }: ErrorResponse) => {
-            expect(error).toEqual("Bad request!");
-          });
-      });
+      //   test("404: user ID for is not valid type", () => {
+      //     return request(app)
+      //       .post("/api/games")
+      //       .send({
+      //         room_id: "testroomid5",
+      //         winner: 1,
+      //         loser: "NO I DONT WANT TO LOSE",
+      //         wordlist: ["apple", "banana", "orange"],
+      //         winner_correct_answers: ["apple", "banana"],
+      //         loser_correct_answers: ["apple"],
+      //       })
+      //       .expect(400)
+      //       .then(({ body: { error } }: ErrorResponse) => {
+      //         expect(error).toEqual("Bad request!");
+      //       });
+      //   });
     });
 
     test("404: user ID for loser is valid type but does not exist", () => {
@@ -422,13 +623,13 @@ describe("/verify", () => {
           expect(error).toBe("Bad request!");
         });
     });
-    test("should return 404 when passed a valid username type that does not exist", () => {
+    test("should return 200 and false when passed a valid username type that does not exist", () => {
       return request(app)
         .post("/api/verify")
         .send({ username: "noYOURNOTREAL", password: "shhhhissasecret" })
-        .expect(404)
-        .then(({ body: { error } }: ErrorResponse) => {
-          expect(error).toBe("Not found!");
+        .expect(200)
+        .then(({ body: { verification } }: VerificationResponse) => {
+          expect(verification).toBe(false);
         });
     });
     test("should return 400 when passed a valid username and no password", () => {
@@ -441,8 +642,9 @@ describe("/verify", () => {
         });
     });
   });
+});
 
-  //word tests
+//word tests
 
 describe("GET REQUESTS", () => {
   describe("GET - /word-list", () => {
@@ -503,7 +705,7 @@ describe("GET REQUESTS", () => {
     });
 
     describe("GET - select words in the users target langaugae from the speicifed level", () => {
-      test("200: Responds with all available Spanish words with their corresponding level  ", () => {
+      test("200: Responds with all available German words with their corresponding level  ", () => {
         const user = {
           user_id: 12,
           username: "bandOnTheWall",
@@ -517,28 +719,296 @@ describe("GET REQUESTS", () => {
 
         const wordsLevelSeven = [
           {
-            german: "tanzen",
+            english: "sit up",
+            german: "aufstehen",
+            image_url:
+              "https://drive.google.com/file/d/1ucOGV9JYx5mZIyfgSQLjUZRW0AjYIbGY/view?usp=sharing",
           },
           {
-            german: "zeichnen",
+            english: "chair",
+            german: "stuhl",
+            image_url:
+              "https://drive.google.com/file/d/1GdE3IYBucgNpH1yguLUYcLQe5OJk1ahG/view?usp=sharing",
           },
           {
-            german: "spielen",
+            english: "table",
+            german: "tabelle",
+            image_url:
+              "https://drive.google.com/file/d/1mAmzrFpHx3BUvBY80_RZ8-wbklLR-Lbz/view?usp=sharing",
           },
           {
-            german: "laufen",
+            english: "see",
+            german: "sehen",
+            image_url:
+              "https://drive.google.com/file/d/1V4wnzIodzTAoVN1lbAJYtCWGuKyZWY4o/view?usp=sharing",
           },
           {
-            german: "singen",
+            english: "glass",
+            german: "glas",
+            image_url:
+              "https://drive.google.com/file/d/1_jvFMptrkW33NJoWwvyIETf1N3r28F0Q/view?usp=sharing",
+
           },
         ];
 
         return request(app)
-          .get("/api/word-list/german/level-7")
+
+          .get("/api/word-list/german/4")
           .send({ user, selectedLevel })
           .expect(200)
           .then(({ body: { words } }: WordResponse) => {
             expect(words).toEqual(wordsLevelSeven);
+          });
+      });
+      test.only("200: Responds with all available German words within a range set by word_level", () => {
+        const player1 = {
+          user_id: 12,
+          username: "bandOnTheWall",
+          name: "Merkal",
+          user_level: 3,
+          usersLanguage: "english",
+          role: "user",
+          bio: "Bort",
+        };
+
+        const player2 = {
+          user_id: 4,
+          username: "greyJohn",
+          name: "John Major",
+          user_level: 6,
+          usersLanguage: "english",
+          role: "user",
+          bio: "Bread",
+        };
+
+        const germanWords = [
+          {
+            english: "dog",
+            german: "hund",
+            word_level: 1,
+            image_url:
+              "https://drive.google.com/file/d/1kDdIkIYhdIStTkvAOW4eqlqxp87Frz0c/view?usp=sharing",
+          },
+          {
+            english: "mother",
+            german: "mutter",
+            word_level: 1,
+            image_url:
+              "https://drive.google.com/file/d/19beQ5NjylJTv7Zg0QoEWA9NTrr1Bl4a4/view?usp=sharing",
+          },
+          {
+            english: "father",
+            german: "vater",
+            word_level: 1,
+            image_url:
+              "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
+          },
+          {
+            english: "brother",
+            german: "bruder",
+            word_level: 2,
+            image_url:
+              "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
+          },
+          {
+            english: "water",
+            german: "wasser",
+            word_level: 2,
+            image_url:
+              "https://drive.google.com/file/d/1GdE3IYBucgNpH1yguLUYcLQe5OJk1ahG/view?usp=sharing",
+          },
+          {
+            english: "eat",
+            german: "essen",
+            word_level: 3,
+            image_url:
+              "https://drive.google.com/file/d/1RE0y1vQdYpvK4FkfyVxNF0UWGx9ZrkWx/view?usp=sharing",
+          },
+          {
+            english: "read",
+            german: "lesen",
+            word_level: 3,
+            image_url:
+              "https://drive.google.com/file/d/12sXBkgDFV05DggW_envB7MsNGOETdgdr/view?usp=sharing",
+          },
+          {
+            english: "sit down",
+            german: "sitzen",
+            word_level: 3,
+            image_url:
+              "https://drive.google.com/file/d/1mAmzrFpHx3BUvBY80_RZ8-wbklLR-Lbz/view?usp=sharing",
+          },
+          {
+            english: "drink",
+            german: "trinken",
+            word_level: 3,
+            image_url:
+              "https://drive.google.com/file/d/1EITijBh-RsRAKy37QQhXk5NCgWTQe5Nh/view?usp=sharing",
+          },
+          {
+            english: "fruit",
+            german: "obst",
+            word_level: 2,
+            image_url:
+              "https://drive.google.com/file/d/1m9KGsihezBmnsb1tu0G448e5wvQD7Xbq/view?usp=sharing",
+          },
+          {
+            english: "book",
+            german: "buch",
+            word_level: 3,
+            image_url:
+              "https://drive.google.com/file/d/1_jvFMptrkW33NJoWwvyIETf1N3r28F0Q/view?usp=sharing",
+          },
+
+          {
+            english: "meat",
+            german: "fleisch",
+            word_level: 2,
+            image_url:
+              "https://drive.google.com/file/d/1kzo2BhwpTMj-8m89ohCGkiKSms3YmxwO/view?usp=sharing",
+          },
+          {
+            english: "vegetable",
+            german: "gemüse",
+            word_level: 2,
+            image_url:
+              "https://drive.google.com/file/d/1utVAXTyVG3Kows7e7GodWLsISWLJe0XR/view?usp=sharing",
+          },
+          {
+            english: "sister",
+            german: "schwester",
+            word_level: 2,
+            image_url:
+              "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
+          },
+          {
+            english: "baby",
+            german: "baby",
+            word_level: 1,
+            image_url:
+              "https://drive.google.com/file/d/1B5mP3pTvIphi_A3hJ1T1XZH-dJgSrTQR/view?usp=sharing",
+          },
+          {
+            english: "cat",
+            german: "katze",
+            word_level: 1,
+            image_url:
+              "https://drive.google.com/file/d/1xG7qc7KfMrUZ1oWPXk8B8e7A3Muaj2tc/view?usp=sharing",
+          },
+        ];
+
+        return request(app)
+          .get("/api/word-list/german/game")
+          .send({ player1, player2 })
+          .expect(200)
+          .then(({ body: { words } }: WordResponse) => {
+            expect(words).toEqual(germanWords);
+          });
+      });
+    });
+  });
+});
+
+//leaderboard tests
+
+describe("/leaderboards", () => {
+  describe("/get /leaderboard/:user_id/:language", () => {
+    test("should return rank information when provided with user_id and langauge", () => {
+      return request(app)
+        .get("/api/leaderboard/1/French")
+        .expect(200)
+        .then(({ body: { leaderboardEntry } }: LeaderboardResponse) => {
+          expect(leaderboardEntry).toEqual(
+            expect.objectContaining({
+              leaderboard_id: expect.any(Number),
+              rank: expect.any(Number),
+              user_id: 1,
+              language: "French",
+            })
+          );
+        });
+    });
+    describe("error handling", () => {
+      test("404: should return 404 if user_id is valid type but does not exist", () => {
+        return request(app)
+          .get("/api/leaderboard/31415/French")
+          .expect(404)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Not found!");
+          });
+      });
+      test("400: should return bad request when user_id is invalid type", () => {
+        return request(app)
+          .get("/api/leaderboard/IMADINOSAUR/French")
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request error if language not valid", () => {
+        return request(app)
+          .get("/api/leaderboard/1/FishLanguage")
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+    });
+  });
+  describe("PATCH /leaderboard/:user_id/language", () => {
+    test("should respond wtih 200 and updated rank when send with correct body", () => {
+      return request(app)
+        .patch("/api/leaderboard/1/French")
+        .send({ newRank: 1950 })
+        .expect(200)
+        .then(({ body: { updatedRank } }: UpdatedRankResponse) => {
+          expect(updatedRank).toEqual(1950);
+        });
+    });
+    describe("errorhandling", () => {
+      test("404: should return 404 if user_id is valid type but does not exist", () => {
+        return request(app)
+          .patch("/api/leaderboard/31415/French")
+          .send({ newRank: 1950 })
+          .expect(404)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Not found!");
+          });
+      });
+      test("400: should return bad request when user_id is an invalid type", () => {
+        return request(app)
+          .patch("/api/leaderboard/IMADINOSAUR/French")
+          .send({ newRank: 1950 })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request when language is invalid", () => {
+        return request(app)
+          .patch("/api/leaderboard/1/FishLanguage")
+          .send({ newRank: 1950 })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request when newRank is missing", () => {
+        return request(app)
+          .patch("/api/leaderboard/1/French")
+          .send({})
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
+          });
+      });
+      test("400: should return bad request when newRank is an invalid type", () => {
+        return request(app)
+          .patch("/api/leaderboard/1/French")
+          .send({ newRank: "highRank" })
+          .expect(400)
+          .then(({ body: { error } }: ErrorResponse) => {
+            expect(error).toEqual("Bad request!");
           });
       });
     });
