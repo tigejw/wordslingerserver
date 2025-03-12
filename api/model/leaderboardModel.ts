@@ -1,4 +1,6 @@
-import { Language } from "@/types";
+import { ValidLanguage, Leaderboard } from "@/types";
+import languageRouter from "../Routers/languageRouters";
+import { QueryResult } from "pg";
 
 const db = require("../../db/connection");
 const { checkExists } = require("../../db/seeds/utils");
@@ -62,5 +64,35 @@ exports.updateLeaderboardEntryByUserIdAndLanguage = (
     .then(({ rows }: { rows: any }) => {
       console.log(rows);
       return rows[0].rank;
+    });
+};
+
+exports.selectAllLeaderboardEntries = () => {
+  return db
+    .query("SELECT * FROM leaderboard")
+    .then(({ rows }: { rows: Array<Leaderboard> }) => {
+      return rows;
+    });
+};
+
+exports.insertNewLeaderboardEntry = (
+  user_id: Number,
+  language: ValidLanguage
+) => {
+  if (!user_id || !language) {
+    return Promise.reject({
+      status: 400,
+      msg: "Bad request!",
+    });
+  }
+  return checkExists("users", "user_id", user_id)
+    .then(() => {
+      return db.query(
+        "INSERT into leaderboard (user_id, rank, language) VALUES ($1, $2, $3) RETURNING *",
+        [user_id, 200, language]
+      );
+    })
+    .then((result: QueryResult<Leaderboard>) => {
+      return result.rows[0];
     });
 };
