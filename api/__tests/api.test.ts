@@ -5,7 +5,7 @@ const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
 import { Game, User, Language, Word, Username, Leaderboard } from "@/types";
 import frenchTestWords from "../../db/data/testData/wordsFrench";
-import spainishTestWords from "../../db/data/testData/wordsFrench";
+import spainishTestWords from "../../db/data/testData/wordsSpanish";
 
 beforeEach(() => {
   return seed(data);
@@ -671,7 +671,7 @@ describe("GET REQUESTS", () => {
         .get("/api/word-list/spanish")
         .expect(200)
         .then(({ body: { words } }: WordResponse) => {
-          expect(words).toEqual(words);
+          expect(words).toEqual(spainishTestWords);
         });
     });
 
@@ -681,32 +681,27 @@ describe("GET REQUESTS", () => {
           {
             english: "sit up",
             german: "aufstehen",
-            image_url:
-              "https://drive.google.com/file/d/1ucOGV9JYx5mZIyfgSQLjUZRW0AjYIbGY/view?usp=sharing",
+            image_url: "https://i.imgur.com/t1sr9ry.png",
           },
           {
             english: "chair",
             german: "stuhl",
-            image_url:
-              "https://drive.google.com/file/d/1GdE3IYBucgNpH1yguLUYcLQe5OJk1ahG/view?usp=sharing",
+            image_url: "https://i.imgur.com/G0bcOLE.png",
           },
           {
             english: "table",
             german: "tabelle",
-            image_url:
-              "https://drive.google.com/file/d/1mAmzrFpHx3BUvBY80_RZ8-wbklLR-Lbz/view?usp=sharing",
+            image_url: "https://i.imgur.com/G0bcOLE.png",
           },
           {
             english: "see",
             german: "sehen",
-            image_url:
-              "https://drive.google.com/file/d/1V4wnzIodzTAoVN1lbAJYtCWGuKyZWY4o/view?usp=sharing",
+            image_url: "https://i.imgur.com/rvI6eN8.png",
           },
           {
             english: "glass",
             german: "glas",
-            image_url:
-              "https://drive.google.com/file/d/1_jvFMptrkW33NJoWwvyIETf1N3r28F0Q/view?usp=sharing",
+            image_url: "https://i.imgur.com/QkXGtVE.png",
           },
         ];
 
