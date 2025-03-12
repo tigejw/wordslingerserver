@@ -5,8 +5,7 @@ module.exports = [
     german: "hund",
     spanish: "perro",
     word_level: 1,
-    image_url:
-      "https://drive.google.com/file/d/1kDdIkIYhdIStTkvAOW4eqlqxp87Frz0c/view?usp=sharing",
+    image_url: "https://i.imgur.com/du8Ctb2.png",
   },
   {
     english: "mother",
@@ -14,8 +13,7 @@ module.exports = [
     german: "mutter",
     spanish: "madre",
     word_level: 1,
-    image_url:
-      "https://drive.google.com/file/d/19beQ5NjylJTv7Zg0QoEWA9NTrr1Bl4a4/view?usp=sharing",
+    image_url: "https://i.imgur.com/HnH94oL.png",
   },
   {
     english: "father",
@@ -23,8 +21,7 @@ module.exports = [
     german: "vater",
     spanish: "padre",
     word_level: 1,
-    image_url:
-      "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
+    image_url: "https://i.imgur.com/squr4Ol.png",
   },
   {
     english: "brother",
@@ -32,8 +29,7 @@ module.exports = [
     german: "bruder",
     spanish: "hermano",
     word_level: 2,
-    image_url:
-      "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
+    image_url: "https://i.imgur.com/WSZh1GA.png",
   },
   {
     english: "sit up",
@@ -41,8 +37,7 @@ module.exports = [
     german: "aufstehen",
     spanish: "levántate",
     word_level: 4,
-    image_url:
-      "https://drive.google.com/file/d/1ucOGV9JYx5mZIyfgSQLjUZRW0AjYIbGY/view?usp=sharing",
+    image_url: "https://i.imgur.com/t1sr9ry.png",
   },
   {
     english: "chair",
@@ -50,8 +45,7 @@ module.exports = [
     german: "stuhl",
     spanish: "silla",
     word_level: 4,
-    image_url:
-      "https://drive.google.com/file/d/1GdE3IYBucgNpH1yguLUYcLQe5OJk1ahG/view?usp=sharing",
+    image_url: "https://i.imgur.com/G0bcOLE.png",
   },
   {
     english: "table",
@@ -59,8 +53,7 @@ module.exports = [
     german: "tabelle",
     spanish: "mesa",
     word_level: 4,
-    image_url:
-      "https://drive.google.com/file/d/1mAmzrFpHx3BUvBY80_RZ8-wbklLR-Lbz/view?usp=sharing",
+    image_url: "https://i.imgur.com/G0bcOLE.png",
   },
   {
     english: "water",
@@ -68,8 +61,7 @@ module.exports = [
     german: "wasser",
     spanish: "agua",
     word_level: 2,
-    image_url:
-      "https://drive.google.com/file/d/1GdE3IYBucgNpH1yguLUYcLQe5OJk1ahG/view?usp=sharing",
+    image_url: "https://i.imgur.com/2EjIjlN.png",
   },
   {
     english: "eat",
@@ -77,8 +69,7 @@ module.exports = [
     german: "essen",
     spanish: "comer",
     word_level: 3,
-    image_url:
-      "https://drive.google.com/file/d/1RE0y1vQdYpvK4FkfyVxNF0UWGx9ZrkWx/view?usp=sharing",
+    image_url: "https://i.imgur.com/izH3D8U.jpg",
   },
   {
     english: "read",
@@ -86,38 +77,31 @@ module.exports = [
     german: "lesen",
     spanish: "leer",
     word_level: 3,
-    image_url:
-      "https://drive.google.com/file/d/12sXBkgDFV05DggW_envB7MsNGOETdgdr/view?usp=sharing",
+    image_url: "https://i.imgur.com/egwC13K.png",
   },
-
   {
     english: "see",
     french: "voir",
     german: "sehen",
     spanish: "ver",
     word_level: 4,
-    image_url:
-      "https://drive.google.com/file/d/1V4wnzIodzTAoVN1lbAJYtCWGuKyZWY4o/view?usp=sharing",
+    image_url: "https://i.imgur.com/rvI6eN8.png",
   },
-
   {
     english: "sit down",
     french: "s´assoir",
     german: "sitzen",
     spanish: "sentar",
     word_level: 3,
-    image_url:
-      "https://drive.google.com/file/d/1mAmzrFpHx3BUvBY80_RZ8-wbklLR-Lbz/view?usp=sharing",
+    image_url: "https://i.imgur.com/62YOj4B.png",
   },
-  ,
   {
     english: "drink",
     french: "boire",
     german: "trinken",
     spanish: "beber",
     word_level: 3,
-    image_url:
-      "https://drive.google.com/file/d/1EITijBh-RsRAKy37QQhXk5NCgWTQe5Nh/view?usp=sharing",
+    image_url: "https://i.imgur.com/WSZh1GA.png",
   },
   {
     english: "fruit",
@@ -125,8 +109,7 @@ module.exports = [
     german: "obst",
     spanish: "fruta",
     word_level: 2,
-    image_url:
-      "https://drive.google.com/file/d/1m9KGsihezBmnsb1tu0G448e5wvQD7Xbq/view?usp=sharing",
+    image_url: "https://i.imgur.com/SCpneLo.jpg",
   },
   {
     english: "book",
@@ -134,8 +117,7 @@ module.exports = [
     german: "buch",
     spanish: "libro",
     word_level: 3,
-    image_url:
-      "https://drive.google.com/file/d/1_jvFMptrkW33NJoWwvyIETf1N3r28F0Q/view?usp=sharing",
+    image_url: "https://i.imgur.com/Qz35D8c.png",
   },
   {
     english: "glass",
@@ -143,8 +125,7 @@ module.exports = [
     german: "glas",
     spanish: "vaso",
     word_level: 4,
-    image_url:
-      "https://drive.google.com/file/d/1_jvFMptrkW33NJoWwvyIETf1N3r28F0Q/view?usp=sharing",
+    image_url: "https://i.imgur.com/QkXGtVE.png",
   },
   {
     english: "meat",
@@ -152,8 +133,7 @@ module.exports = [
     german: "fleisch",
     spanish: "carne",
     word_level: 2,
-    image_url:
-      "https://drive.google.com/file/d/1kzo2BhwpTMj-8m89ohCGkiKSms3YmxwO/view?usp=sharing",
+    image_url: "https://i.imgur.com/zjOzOVU.png",
   },
   {
     english: "vegetable",
@@ -161,8 +141,7 @@ module.exports = [
     german: "gemüse",
     spanish: "vegetal",
     word_level: 2,
-    image_url:
-      "https://drive.google.com/file/d/1utVAXTyVG3Kows7e7GodWLsISWLJe0XR/view?usp=sharing",
+    image_url: "https://i.imgur.com/G7zSak7.png",
   },
   {
     english: "sister",
@@ -170,8 +149,7 @@ module.exports = [
     german: "schwester",
     spanish: "hermana",
     word_level: 2,
-    image_url:
-      "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
+    image_url: "https://i.imgur.com/jwGSjxL.png",
   },
   {
     english: "baby",
@@ -179,8 +157,7 @@ module.exports = [
     german: "baby",
     spanish: "bebé",
     word_level: 1,
-    image_url:
-      "https://drive.google.com/file/d/1B5mP3pTvIphi_A3hJ1T1XZH-dJgSrTQR/view?usp=sharing",
+    image_url: "https://i.imgur.com/X598zpO.png",
   },
   {
     english: "cat",
@@ -188,7 +165,6 @@ module.exports = [
     german: "katze",
     spanish: "gato",
     word_level: 1,
-    image_url:
-      "https://drive.google.com/file/d/1xG7qc7KfMrUZ1oWPXk8B8e7A3Muaj2tc/view?usp=sharing",
+    image_url: "https://i.imgur.com/dtuOMc3.png",
   },
 ];

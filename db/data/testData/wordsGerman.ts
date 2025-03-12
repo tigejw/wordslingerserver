@@ -1,152 +1,130 @@
-export const germanTestWords = [
+const germanTestWords = [
   {
     english: "dog",
     german: "hund",
     word_level: 1,
-    image_url:
-      "https://drive.google.com/file/d/1kDdIkIYhdIStTkvAOW4eqlqxp87Frz0c/view?usp=sharing",
+    image_url: "https://i.imgur.com/du8Ctb2.png",
   },
   {
     english: "mother",
     german: "mutter",
     word_level: 1,
-    image_url:
-      "https://drive.google.com/file/d/19beQ5NjylJTv7Zg0QoEWA9NTrr1Bl4a4/view?usp=sharing",
+    image_url: "https://i.imgur.com/HnH94oL.png",
   },
   {
     english: "father",
     german: "vater",
     word_level: 1,
-    image_url:
-      "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
+    image_url: "https://i.imgur.com/squr4Ol.png",
   },
   {
     english: "brother",
     german: "bruder",
     word_level: 2,
-    image_url:
-      "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
+    image_url: "https://i.imgur.com/WSZh1GA.png",
   },
   {
     english: "sit up",
     german: "aufstehen",
     word_level: 4,
-    image_url:
-      "https://drive.google.com/file/d/1ucOGV9JYx5mZIyfgSQLjUZRW0AjYIbGY/view?usp=sharing",
+    image_url: "https://i.imgur.com/t1sr9ry.png",
   },
   {
     english: "chair",
     german: "stuhl",
     word_level: 4,
-    image_url:
-      "https://drive.google.com/file/d/1GdE3IYBucgNpH1yguLUYcLQe5OJk1ahG/view?usp=sharing",
+    image_url: "https://i.imgur.com/G0bcOLE.png",
   },
   {
     english: "table",
     german: "tabelle",
     word_level: 4,
-    image_url:
-      "https://drive.google.com/file/d/1mAmzrFpHx3BUvBY80_RZ8-wbklLR-Lbz/view?usp=sharing",
+    image_url: "https://i.imgur.com/G0bcOLE.png",
   },
   {
     english: "water",
     german: "wasser",
     word_level: 2,
-    image_url:
-      "https://drive.google.com/file/d/1GdE3IYBucgNpH1yguLUYcLQe5OJk1ahG/view?usp=sharing",
+    image_url: "https://i.imgur.com/2EjIjlN.png",
   },
   {
     english: "eat",
     german: "essen",
     word_level: 3,
-    image_url:
-      "https://drive.google.com/file/d/1RE0y1vQdYpvK4FkfyVxNF0UWGx9ZrkWx/view?usp=sharing",
+    image_url: "https://i.imgur.com/izH3D8U.jpg",
   },
   {
     english: "read",
     german: "lesen",
     word_level: 3,
-    image_url:
-      "https://drive.google.com/file/d/12sXBkgDFV05DggW_envB7MsNGOETdgdr/view?usp=sharing",
+    image_url: "https://i.imgur.com/egwC13K.png",
   },
-
   {
     english: "see",
     german: "sehen",
     word_level: 4,
-    image_url:
-      "https://drive.google.com/file/d/1V4wnzIodzTAoVN1lbAJYtCWGuKyZWY4o/view?usp=sharing",
+    image_url: "https://i.imgur.com/rvI6eN8.png",
   },
-
   {
     english: "sit down",
     german: "sitzen",
     word_level: 3,
-    image_url:
-      "https://drive.google.com/file/d/1mAmzrFpHx3BUvBY80_RZ8-wbklLR-Lbz/view?usp=sharing",
+    image_url: "https://i.imgur.com/62YOj4B.png",
   },
-  ,
   {
     english: "drink",
     german: "trinken",
     word_level: 3,
-    image_url:
-      "https://drive.google.com/file/d/1EITijBh-RsRAKy37QQhXk5NCgWTQe5Nh/view?usp=sharing",
+    image_url: "https://i.imgur.com/WSZh1GA.png",
   },
   {
     english: "fruit",
     german: "obst",
     word_level: 2,
-    image_url:
-      "https://drive.google.com/file/d/1m9KGsihezBmnsb1tu0G448e5wvQD7Xbq/view?usp=sharing",
+    image_url: "https://i.imgur.com/SCpneLo.jpg",
   },
   {
     english: "book",
     german: "buch",
     word_level: 3,
-    image_url:
-      "https://drive.google.com/file/d/1_jvFMptrkW33NJoWwvyIETf1N3r28F0Q/view?usp=sharing",
+    image_url: "https://i.imgur.com/Qz35D8c.png",
   },
   {
     english: "glass",
     german: "glas",
     word_level: 4,
-    image_url:
-      "https://drive.google.com/file/d/1_jvFMptrkW33NJoWwvyIETf1N3r28F0Q/view?usp=sharing",
+    image_url: "https://i.imgur.com/QkXGtVE.png",
   },
   {
     english: "meat",
     german: "fleisch",
     word_level: 2,
-    image_url:
-      "https://drive.google.com/file/d/1kzo2BhwpTMj-8m89ohCGkiKSms3YmxwO/view?usp=sharing",
+    image_url: "https://i.imgur.com/zjOzOVU.png",
   },
   {
     english: "vegetable",
     german: "gemüse",
     word_level: 2,
-    image_url:
-      "https://drive.google.com/file/d/1utVAXTyVG3Kows7e7GodWLsISWLJe0XR/view?usp=sharing",
+    image_url: "https://i.imgur.com/G7zSak7.png",
   },
   {
     english: "sister",
     german: "schwester",
     word_level: 2,
-    image_url:
-      "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
+    image_url: "https://i.imgur.com/jwGSjxL.png",
   },
   {
     english: "baby",
     german: "baby",
     word_level: 1,
-    image_url:
-      "https://drive.google.com/file/d/1B5mP3pTvIphi_A3hJ1T1XZH-dJgSrTQR/view?usp=sharing",
+    image_url: "https://i.imgur.com/X598zpO.png",
   },
   {
     english: "cat",
     german: "katze",
     word_level: 1,
-    image_url:
-      "https://drive.google.com/file/d/1xG7qc7KfMrUZ1oWPXk8B8e7A3Muaj2tc/view?usp=sharing",
+    image_url: "https://i.imgur.com/dtuOMc3.png",
   },
 ];
+
+export deafult germanTestWords

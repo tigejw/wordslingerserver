@@ -5,9 +5,8 @@ const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
 import { Game, User, Language, Word, Username, Leaderboard } from "@/types";
 import frenchTestWords from "../../db/data/testData/wordsFrench";
-import spainishTestWords from "../../db/data/testData/wordsFrench";
+import spainishTestWords from "../../db/data/testData/wordsSpanish";
 import { stringify } from "querystring";
-
 
 
 beforeEach(() => {
@@ -676,9 +675,10 @@ describe("GET REQUESTS", () => {
         .get("/api/word-list/spanish")
         .expect(200)
         .then(({ body: { words } }: WordResponse) => {
-          expect(words).toEqual(words);
+          expect(words).toEqual(spainishTestWords);
         });
     });
+
   });
 });
 
