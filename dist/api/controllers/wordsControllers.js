@@ -18,14 +18,23 @@ async function words_index(req, res, next) {
 }
 function words_targetLanguage(req, res, next) {
     const { targetLanguage } = req.params;
-    selectByTargetLanguage(targetLanguage).then((words) => {
+    selectByTargetLanguage(targetLanguage)
+        .then((words) => {
         res.status(200).send({ words: words });
+    })
+        .catch((err) => {
+        console.log(err);
+        next();
     });
 }
 function words_level(req, res, next) {
     const { targetLanguage, level_id } = req.params;
     selectWordByLevel(targetLanguage, level_id).then((words) => {
         res.status(200).send({ words: words });
+    })
+        .catch((err) => {
+        console.log(err);
+        next();
     });
 }
 function words_game(req, res, next) {
