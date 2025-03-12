@@ -134,7 +134,7 @@ function createGamesTable() {
         winner_correct_answers JSONB NOT NULL,
         loser_correct_answers JSONB NOT NULL,
         wordlist JSONB NOT NULL,
-        match_date TIMESTAMP NOT NULL DEFAULT NOW()
+        match_date TIMESTAMPTZ NOT NULL DEFAULT NOW()
         )`);
 }
 //need util that returns user_id when inputted username string!
@@ -197,9 +197,9 @@ function createWordMasteryTable() {
             german_mastery mastery_level,
             spanish_mastery mastery_level,
             french_mastery mastery_level,
-            german_last_review TIMESTAMP,
-            spanish_last_review TIMESTAMP,
-            french_last_review TIMESTAMP 
+            german_last_review TIMESTAMPTZ DEFAULT NOW(),
+            spanish_last_review TIMESTAMPTZ DEFAULT NOW(),
+            french_last_review TIMESTAMPTZ DEFAULT NOW()
             )`);
     });
 }

@@ -73,3 +73,26 @@ export type WordMastery = {
   spanish_mastery: "beginner" | "intermediate" | "master";
   french_mastery: "beginner" | "intermediate" | "master";
 };
+export type ReviewData = {
+  germanReviewData: Array<{
+    english: string;
+    german: string;
+    image_url: string | null;
+    german_mastery: string | null;
+    german_review_interval_sec: number;
+  }>;
+  spanishReviewData: Array<{
+    english: string;
+    spanish: string;
+    image_url: string | null;
+    spanish_mastery: string | null;
+    spanish_review_interval_sec: number;
+  }>;
+  frenchReviewData: Array<{
+    english: string;
+    french: string;
+    image_url: string | null;
+    french_mastery: string | null;
+    french_review_interval_sec: number;
+  }>;
+};
