@@ -16,7 +16,6 @@ apiRouter.use("/language", languageRouters_1.default);
 apiRouter.use("/games", gameRouters_1.default);
 apiRouter.use("/word-list", wordsRouter_1.default);
 apiRouter.use("/reviews", reviewsRouter_1.default);
-console.log("in apirouter");
 apiRouter.use("/verify", verifyRouter_1.default);
 apiRouter.use("/leaderboard", leaderboardRouters_1.default);
 exports.default = apiRouter;

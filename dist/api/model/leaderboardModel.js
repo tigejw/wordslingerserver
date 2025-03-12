@@ -45,3 +45,25 @@ exports.updateLeaderboardEntryByUserIdAndLanguage = (user_id, language, newRank)
         return rows[0].rank;
     });
 };
+exports.selectAllLeaderboardEntries = () => {
+    return db
+        .query("SELECT * FROM leaderboard")
+        .then(({ rows }) => {
+        return rows;
+    });
+};
+exports.insertNewLeaderboardEntry = (user_id, language) => {
+    if (!user_id || !language) {
+        return Promise.reject({
+            status: 400,
+            msg: "Bad request!",
+        });
+    }
+    return checkExists("users", "user_id", user_id)
+        .then(() => {
+        return db.query("INSERT into leaderboard (user_id, rank, language) VALUES ($1, $2, $3) RETURNING *", [user_id, 200, language]);
+    })
+        .then((result) => {
+        return result.rows[0];
+    });
+};
