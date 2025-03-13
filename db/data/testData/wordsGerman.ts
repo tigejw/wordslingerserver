@@ -127,4 +127,4 @@ const germanTestWords = [
   },
 ];
 
-export deafult germanTestWords
+export default germanTestWords;

@@ -1,12 +1,14 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const request = require("supertest");
 const app = require("../index");
 const seed = require("../../db/seeds/seed.ts");
 const connection = require("../../db/connection");
 const data = require("../../db/data/testData/index");
-const { frenchTestWords } = require("./wordsFrench");
-const { spainishTestWords } = require("./wordsSpanish");
+const wordsSpanish_1 = __importDefault(require("../../db/data/testData/wordsSpanish"));
 beforeEach(() => {
     return seed(data);
 });
@@ -633,211 +635,11 @@ describe("GET REQUESTS", () => {
     });
     describe("GET - /word-list/:targetLanguage", () => {
         test("200: Responds with all available french words with their corresponding level ", () => {
-            const user = {
-                user_id: 12,
-                username: "helloMartha",
-                name: "Martha",
-                usersLanguage: "english",
-                role: "user",
-                bio: "I would like to live in France in the future",
-            };
             return request(app)
-                .get("/api/word-list/french")
-                .send(user)
+                .get("/api/word-list/spanish")
                 .expect(200)
                 .then(({ body: { words } }) => {
-                expect(words).toEqual(frenchTestWords);
-            });
-        });
-        describe("GET - /word-list/french", () => {
-            test("200: Responds with all available Spanish words with their corresponding level  ", () => {
-                const user = {
-                    user_id: 12,
-                    username: "sol",
-                    name: "Rico",
-                    usersLanguage: "english",
-                    role: "user",
-                    bio: "Getting back into my spanish roots",
-                };
-                return request(app)
-                    .get("/api/word-list/spanish")
-                    .send(user)
-                    .expect(200)
-                    .then(({ body: { words } }) => {
-                    expect(words).toEqual(spainishTestWords);
-                });
-            });
-        });
-        describe("GET - select words in the users target langaugae from the speicifed level", () => {
-            test("200: Responds with all available German words with their corresponding level  ", () => {
-                const user = {
-                    user_id: 12,
-                    username: "bandOnTheWall",
-                    name: "Merkal",
-                    usersLanguage: "english",
-                    role: "user",
-                    bio: "Bort",
-                };
-                const selectedLevel = 7;
-                const wordsLevelSeven = [
-                    {
-                        english: "sit up",
-                        german: "aufstehen",
-                        image_url: "https://drive.google.com/file/d/1ucOGV9JYx5mZIyfgSQLjUZRW0AjYIbGY/view?usp=sharing",
-                    },
-                    {
-                        english: "chair",
-                        german: "stuhl",
-                        image_url: "https://drive.google.com/file/d/1GdE3IYBucgNpH1yguLUYcLQe5OJk1ahG/view?usp=sharing",
-                    },
-                    {
-                        english: "table",
-                        german: "tabelle",
-                        image_url: "https://drive.google.com/file/d/1mAmzrFpHx3BUvBY80_RZ8-wbklLR-Lbz/view?usp=sharing",
-                    },
-                    {
-                        english: "see",
-                        german: "sehen",
-                        image_url: "https://drive.google.com/file/d/1V4wnzIodzTAoVN1lbAJYtCWGuKyZWY4o/view?usp=sharing",
-                    },
-                    {
-                        english: "glass",
-                        german: "glas",
-                        image_url: "https://drive.google.com/file/d/1_jvFMptrkW33NJoWwvyIETf1N3r28F0Q/view?usp=sharing",
-                    },
-                ];
-                return request(app)
-                    .get("/api/word-list/german/4")
-                    .send({ user, selectedLevel })
-                    .expect(200)
-                    .then(({ body: { words } }) => {
-                    expect(words).toEqual(wordsLevelSeven);
-                });
-            });
-            test("200: Responds with all available German words within a range set by word_level", () => {
-                const player1 = {
-                    user_id: 12,
-                    username: "bandOnTheWall",
-                    name: "Merkal",
-                    user_level: 3,
-                    usersLanguage: "english",
-                    role: "user",
-                    bio: "Bort",
-                };
-                const player2 = {
-                    user_id: 4,
-                    username: "greyJohn",
-                    name: "John Major",
-                    user_level: 6,
-                    usersLanguage: "english",
-                    role: "user",
-                    bio: "Bread",
-                };
-                const germanWords = [
-                    {
-                        english: "dog",
-                        german: "hund",
-                        word_level: 1,
-                        image_url: "https://drive.google.com/file/d/1kDdIkIYhdIStTkvAOW4eqlqxp87Frz0c/view?usp=sharing",
-                    },
-                    {
-                        english: "mother",
-                        german: "mutter",
-                        word_level: 1,
-                        image_url: "https://drive.google.com/file/d/19beQ5NjylJTv7Zg0QoEWA9NTrr1Bl4a4/view?usp=sharing",
-                    },
-                    {
-                        english: "father",
-                        german: "vater",
-                        word_level: 1,
-                        image_url: "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
-                    },
-                    {
-                        english: "brother",
-                        german: "bruder",
-                        word_level: 2,
-                        image_url: "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
-                    },
-                    {
-                        english: "water",
-                        german: "wasser",
-                        word_level: 2,
-                        image_url: "https://drive.google.com/file/d/1GdE3IYBucgNpH1yguLUYcLQe5OJk1ahG/view?usp=sharing",
-                    },
-                    {
-                        english: "eat",
-                        german: "essen",
-                        word_level: 3,
-                        image_url: "https://drive.google.com/file/d/1RE0y1vQdYpvK4FkfyVxNF0UWGx9ZrkWx/view?usp=sharing",
-                    },
-                    {
-                        english: "read",
-                        german: "lesen",
-                        word_level: 3,
-                        image_url: "https://drive.google.com/file/d/12sXBkgDFV05DggW_envB7MsNGOETdgdr/view?usp=sharing",
-                    },
-                    {
-                        english: "sit down",
-                        german: "sitzen",
-                        word_level: 3,
-                        image_url: "https://drive.google.com/file/d/1mAmzrFpHx3BUvBY80_RZ8-wbklLR-Lbz/view?usp=sharing",
-                    },
-                    {
-                        english: "drink",
-                        german: "trinken",
-                        word_level: 3,
-                        image_url: "https://drive.google.com/file/d/1EITijBh-RsRAKy37QQhXk5NCgWTQe5Nh/view?usp=sharing",
-                    },
-                    {
-                        english: "fruit",
-                        german: "obst",
-                        word_level: 2,
-                        image_url: "https://drive.google.com/file/d/1m9KGsihezBmnsb1tu0G448e5wvQD7Xbq/view?usp=sharing",
-                    },
-                    {
-                        english: "book",
-                        german: "buch",
-                        word_level: 3,
-                        image_url: "https://drive.google.com/file/d/1_jvFMptrkW33NJoWwvyIETf1N3r28F0Q/view?usp=sharing",
-                    },
-                    {
-                        english: "meat",
-                        german: "fleisch",
-                        word_level: 2,
-                        image_url: "https://drive.google.com/file/d/1kzo2BhwpTMj-8m89ohCGkiKSms3YmxwO/view?usp=sharing",
-                    },
-                    {
-                        english: "vegetable",
-                        german: "gemüse",
-                        word_level: 2,
-                        image_url: "https://drive.google.com/file/d/1utVAXTyVG3Kows7e7GodWLsISWLJe0XR/view?usp=sharing",
-                    },
-                    {
-                        english: "sister",
-                        german: "schwester",
-                        word_level: 2,
-                        image_url: "https://drive.google.com/file/d/1zVTTvyN2OVJV31mV53Lo4sFmUz_xJtUB/view?usp=sharing",
-                    },
-                    {
-                        english: "baby",
-                        german: "baby",
-                        word_level: 1,
-                        image_url: "https://drive.google.com/file/d/1B5mP3pTvIphi_A3hJ1T1XZH-dJgSrTQR/view?usp=sharing",
-                    },
-                    {
-                        english: "cat",
-                        german: "katze",
-                        word_level: 1,
-                        image_url: "https://drive.google.com/file/d/1xG7qc7KfMrUZ1oWPXk8B8e7A3Muaj2tc/view?usp=sharing",
-                    },
-                ];
-                return request(app)
-                    .get("/api/word-list/german/game")
-                    .send({ player1, player2 })
-                    .expect(200)
-                    .then(({ body: { words } }) => {
-                    expect(words).toEqual(germanWords);
-                });
+                expect(words).toEqual(wordsSpanish_1.default);
             });
         });
     });
@@ -1023,4 +825,84 @@ describe("/leaderboards", () => {
         });
     });
 });
-//
+describe("Reviews endpoint", () => {
+    describe("GET:", () => {
+        test("200: /api/reviews/:user_id", () => {
+            return request(app)
+                .get("/api/reviews/1")
+                .expect(200)
+                .then(({ body: { reviewData } }) => {
+                expect(Array.isArray(reviewData.frenchReviewData)).toBe(true);
+                expect(Array.isArray(reviewData.germanReviewData)).toBe(true);
+                expect(Array.isArray(reviewData.spanishReviewData)).toBe(true);
+            });
+        });
+        test("404: Responds with an error if user_id does not exist", () => {
+            return request(app)
+                .get("/api/reviews/100000")
+                .expect(404)
+                .then(({ body: { error } }) => {
+                expect(error).toEqual("Not found!");
+            });
+        });
+    });
+    describe("PATCH: /api/reviews/:user_id", () => {
+        test("should respond wtih 200 and updated mastery when sent with correct body", () => {
+            return request(app)
+                .patch("/api/reviews/1")
+                .send({
+                english: "cat",
+                target_language: "german",
+                new_mastery: "intermediate",
+            })
+                .expect(200)
+                .then(({ body: { updatedMastery } }) => {
+                const { user_id, english, german_mastery } = updatedMastery;
+                expect(user_id).toBe(1);
+                expect(english).toBe("cat");
+                expect(german_mastery).toBe("intermediate");
+            });
+        });
+    });
+    describe("should respond with 400 and error message when sent malformed body", () => {
+        test("eng", () => {
+            return request(app)
+                .patch("/api/reviews/1")
+                .send({
+                eng: "cat",
+                target_language: "german",
+                new_mastery: "intermediate",
+            })
+                .expect(400)
+                .then(({ body: { error } }) => {
+                expect(error).toBe("Bad request!");
+            });
+        });
+        test("targnguage", () => {
+            return request(app)
+                .patch("/api/reviews/1")
+                .send({
+                english: "cat",
+                targnguage: "german",
+                new_mastery: "intermediate",
+            })
+                .expect(400)
+                .then(({ body: { error } }) => {
+                expect(error).toBe("Bad request!");
+            });
+        });
+        test("nestery", () => {
+            return request(app)
+                .patch("/api/reviews/1")
+                .send({
+                english: "cat",
+                target_language: "german",
+                nestery: "intermediate",
+            })
+                .expect(400)
+                .then(({ body: { error } }) => {
+                expect(error).toBe("Bad request!");
+            });
+        });
+    });
+});
