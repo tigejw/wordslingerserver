@@ -9,6 +9,7 @@ exports.selectWordsIndex = () => {
 };
 exports.selectByTargetLanguage = (targetLanguage) => {
     const queryString = format(`SELECT english, %I, image_url, word_level FROM words`, targetLanguage);
+    console.log(queryString);
     return db.query(queryString).then((result) => {
         return result.rows;
     });

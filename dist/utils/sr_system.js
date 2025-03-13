@@ -5,18 +5,18 @@ function eloRating(rating1, rating2, winner) {
     //input initial ratings of two players + winner is 1 for player1 win 0 for player 2 win.
     function getK(rating) {
         if (rating < 1000)
-            return 50; // More responsiveness in the 0-1000 range
+            return 50;
         if (rating < 1500)
             return 40;
         if (rating < 2000)
             return 30;
         if (rating < 2500)
             return 20;
-        return 10; // Very stable for high-rated players
+        return 10;
     }
     const k1 = getK(rating1);
     const k2 = getK(rating2);
-    const k = Math.min(k1, k2); // Use the lower K-factor for fairness
+    const k = Math.min(k1, k2);
     //function calculates probability of players winning
     function probability(rating1, rating2) {
         return 1 / (1 + Math.pow(10, (rating1 - rating2) / 400));

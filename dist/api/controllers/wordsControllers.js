@@ -28,8 +28,11 @@ function words_targetLanguage(req, res, next) {
     });
 }
 function words_level(req, res, next) {
-    const { targetLanguage, level_id } = req.params;
-    selectWordByLevel(targetLanguage, level_id).then((words) => {
+    const { targetLanguage } = req.params;
+    const { usersLanguage } = req.body.user;
+    const level = req.body.selectedLevel;
+    selectWordByLevel(targetLanguage, level)
+        .then((words) => {
         res.status(200).send({ words: words });
     })
         .catch((err) => {
